@@ -1,0 +1,2 @@
+#Removing public form url:
+https://mantanprogrammer.medium.com/remove-public-and-index-php-from-codeigniter-4-d8c51c3b1a8b
