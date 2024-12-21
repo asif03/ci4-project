@@ -1,2 +1,5 @@
 #Removing public form url:
 https://mantanprogrammer.medium.com/remove-public-and-index-php-from-codeigniter-4-d8c51c3b1a8b
+
+# Trying to remove index.php from url in latest codeigniter 4.5.1
+https://forum.codeigniter.com/showthread.php?tid=90779
