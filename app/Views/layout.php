@@ -16,6 +16,13 @@
 
   <!-- Bootstrap core CSS -->
   <link href="<?php echo base_url(); ?>public/assets/css/global.min.css" rel="stylesheet">
+
+  <!-- Font Awesome 5 -->
+  <link href="<?php echo base_url(); ?>public/assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
+
+  <!-- Custom CSS Files -->
+  <link href="<?php echo base_url(); ?>public/assets/css/styles.min.css" rel="stylesheet">
+
   <style>
     .poppins-regular {
       font-family: "Poppins", serif;
@@ -46,8 +53,54 @@
 </head>
 
 <body class="poppins-regular">
-  <main role="main"><?php $this->renderSection('main') ?></main>
-  <script src="<?php echo base_url(); ?>public/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script><?php $this->renderSection('pageScripts') ?>
+  <div class="wrapper">
+    <aside class="sidebar" data-background-color="white">
+      <?= $this->include('templates/sidebar') ?>
+    </aside>
+    <div class="main-panel">
+      <header class="main-header"><?= $this->include('templates/header') ?></header>
+      <main role="main" class="container">
+        <div class="page-inner">
+          <div class="page-header">
+            <h4 class="page-title">Dashboard</h4>
+            <ul class="breadcrumbs">
+              <li class="nav-home">
+                <a href="#">
+                  <i class="icon-home"></i>
+                </a>
+              </li>
+              <li class="separator">
+                <i class="icon-arrow-right"></i>
+              </li>
+              <li class="nav-item">
+                <a href="#">Pages</a>
+              </li>
+              <li class="separator">
+                <i class="icon-arrow-right"></i>
+              </li>
+              <li class="nav-item">
+                <a href="#">Starter Page</a>
+              </li>
+            </ul>
+          </div>
+          <div class="page-category"><?php $this->renderSection('main') ?></div>
+        </div>
+      </main>
+      <footer class="footer"><?= $this->include('templates/footer') ?></footer>
+    </div>
+  </div>
+
+  <!--   Core JS Files   -->
+  <script src="<?php echo base_url(); ?>public/assets/libs/jquery/jquery-3.7.1.min.js"></script>
+  <script src="<?php echo base_url(); ?>public/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- jQuery Scrollbar -->
+  <script src="<?php echo base_url(); ?>public/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+  <!-- Kaiadmin JS -->
+  <script src="<?php echo base_url(); ?>public/assets/js/kaiadmin.min.js"></script>
+
+  <?php $this->renderSection('pageScripts') ?>
 </body>
 
 </html>
