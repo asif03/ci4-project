@@ -1,12 +1,13 @@
 <div class="sidebar-logo">
   <!-- Logo Header -->
   <div class="logo-header" data-background-color="white">
-    <a href="index.html" class="logo">
+    <a href="<?php echo base_url(); ?>" class="logo">
       <img
-        src="assets/img/kaiadmin/logo_light.svg"
+        src="<?php echo base_url(); ?>public/logo.png"
         alt="navbar brand"
         class="navbar-brand"
-        height="20" />
+        height="36"
+        width="36" />
     </a>
     <div class="nav-toggle">
       <button class="btn btn-toggle toggle-sidebar">
@@ -31,7 +32,7 @@
           href="#dashboard"
 
           aria-expanded="false">
-          <i class="fas fa-home"></i>
+          <img src="<?php echo base_url(); ?>public/assets/icons/dashboard.svg" alt="icon" width="20" height="20" />
           <p>Dashboard</p>
 
         </a>

@@ -9,6 +9,8 @@
   <meta name="author" content="Md. Asif Iqbal, Programmer, Bangladesh College of Physicians & Surgeons (BCPS)">
   <title>BCPS :: <?php $this->renderSection('title') ?></title>
 
+  <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url(); ?>public/favicon.ico">
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +21,9 @@
 
   <!-- Font Awesome 5 -->
   <link href="<?php echo base_url(); ?>public/assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
+  <!-- DataTables -->
+  <link href="<?php echo base_url(); ?>public/assets/libs/datatables/css/datatables.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/2.2.1/css/dataTables.bootstrap5.css" rel="stylesheet">
 
   <!-- Custom CSS Files -->
   <link href="<?php echo base_url(); ?>public/assets/css/styles.min.css" rel="stylesheet">
@@ -96,6 +101,9 @@
 
   <!-- jQuery Scrollbar -->
   <script src="<?php echo base_url(); ?>public/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+  <!-- DataTables -->
+  <script src="<?php echo base_url(); ?>public/assets/libs/datatables/js/datatables.min.js"></script>
 
   <!-- Kaiadmin JS -->
   <script src="<?php echo base_url(); ?>public/assets/js/kaiadmin.min.js"></script>
