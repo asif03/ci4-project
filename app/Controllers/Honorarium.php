@@ -25,8 +25,8 @@ class Honorarium extends BaseController
 
     public function getSearchedHonorariums()
     {
-        $_GET['search']['value'] = 'Asif';
-        $_GET['columns'][0]      = 'department_name';
+        //$_GET['search']['value'] = 'Asif';
+        //$_GET['columns'][0]      = 'department_name';
 
         $result = $this->honorariumModel->getSearchHonorariums($_GET);
 

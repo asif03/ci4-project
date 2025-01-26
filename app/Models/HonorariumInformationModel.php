@@ -77,16 +77,12 @@ class HonorariumInformationModel extends Model
         $limit"
         );*/
 
-        echo $where;
-        die();
+        //echo $where;
+        //die();
         // Main query to actually get the data
         $sql  = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table` $where $order $limit";
         $data = $this->db->query($sql, [
-            ':binding_0:' => $request['search']['value'],
-            ':binding_1:' => $request['search']['value'],
-            ':binding_2:' => $request['search']['value'],
-            ':binding_3:' => $request['search']['value'],
-            ':binding_4:' => $request['search']['value'],
+            ':binding_0:' => 'An',
         ])->getResultArray();
 
         // Data set length after filtering
