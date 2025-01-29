@@ -151,8 +151,9 @@ function filter($request, $columns, &$bindings)
 if (!function_exists('bind')) {
     function bind(&$a, $val, $type)
     {
-        $key = ':binding_' . count($a) . ':';
+        //$key = ':binding_' . count($a) . ':';
         //$key = '?' . count($a);
+        $key = '?';
 
         $a[] = array(
             'key'  => $key,

@@ -68,27 +68,35 @@ class HonorariumInformationModel extends Model
         $order = order($request, $columns);
         $where = filter($request, $columns, $bindings);
 
-        // Main query to actually get the data
-        /*$data = self::sql_exec($db, $bindings,
-        "SELECT `" . implode("`, `", self::pluck($columns, 'db')) . "`
-        FROM `$table`
-        $where
-        $order
-        $limit"
-        );*/
+        $likeWhat = '';
 
-        //echo $where;
-        //die();
+        for ($i = 0, $ien = count($request['columns']); $i < $ien; $i++) {
+            //$requestColumn = $request['columns'][$i];
+
+            //if ($requestColumn['searchable'] == 'true' && $requestColumn['search']['value'] != '') {
+            if ($i == $ien - 1) {
+                $likeWhat = $likeWhat . '%' . $request['search']['value'] . '%';
+            } else {
+                $likeWhat = $likeWhat . '%' . $request['search']['value'] . '% ,';
+            }
+            //}
+        }
+
         // Main query to actually get the data
-        $sql  = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table` $where $order $limit";
+        $sql = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table` $where $order $limit";
+        /*$data = $this->db->query($sql, [
+        '%' . $request['search']['value'] . '%',
+        ])->getResultArray();*/
         $data = $this->db->query($sql, [
-            ':binding_0:' => 'An',
+            $likeWhat,
         ])->getResultArray();
 
         // Data set length after filtering
         $sqlFilterLength      = "SELECT COUNT(`{$primaryKey}`) AS CNT FROM `$table` $where";
-        $exeQueryFilterLength = $this->db->query($sqlFilterLength);
-        $rowFilterLength      = $exeQueryFilterLength->getRow();
+        $exeQueryFilterLength = $this->db->query($sqlFilterLength, [
+            $likeWhat,
+        ]);
+        $rowFilterLength = $exeQueryFilterLength->getRow();
 
         if (isset($rowFilterLength)) {
             $recordsFiltered = $rowFilterLength->CNT;
