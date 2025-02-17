@@ -1,49 +1,73 @@
-<?php $this->extend(config('Auth')->views['layout'])?>
+<?= $this->extend(config('Auth')->views['layout']) ?>
 
-<?php $this->section('title')?><?php lang('Auth.login')?><?php $this->endSection()?>
+<?= $this->section('title') ?><?= lang('Auth.login') ?> <?= $this->endSection() ?>
 
-<?php $this->section('main')?>
+<?= $this->section('main') ?>
 
-<div
-  class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-  <div class="d-flex align-items-center justify-content-center w-100">
-    <div class="row justify-content-center w-100">
-      <div class="col-md-8 col-lg-6 col-xxl-3">
-        <div class="card mb-0">
-          <div class="card-body">
-            <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-              <img src="<?php echo base_url(); ?>public/logo.png" width="60" height="60" alt="BCPS Logo"> BCPS
-            </a>
-            <h5 class="text-center mb-4">Sign In</h5>
-            <form>
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Username</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-              </div>
-              <div class="mb-4">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
-              </div>
-              <div class="d-flex align-items-center justify-content-between mb-4">
-                <div class="form-check">
-                  <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
-                  <label class="form-check-label text-dark" for="flexCheckChecked">
-                    Remeber this Device
-                  </label>
+<div class="container d-flex justify-content-center p-5">
+    <div class="card col-12 col-md-5 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title mb-5"><?= lang('Auth.login') ?></h5>
+
+            <?php if (session('error') !== null) : ?>
+                <div class="alert alert-danger" role="alert"><?= session('error') ?></div>
+            <?php elseif (session('errors') !== null) : ?>
+                <div class="alert alert-danger" role="alert">
+                    <?php if (is_array(session('errors'))) : ?>
+                        <?php foreach (session('errors') as $error) : ?>
+                            <?= $error ?>
+                            <br>
+                        <?php endforeach ?>
+                    <?php else : ?>
+                        <?= session('errors') ?>
+                    <?php endif ?>
                 </div>
-                <a class="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
-              </div>
-              <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</a>
-              <div class="d-flex align-items-center justify-content-center">
-                <p class="fs-4 mb-0 fw-bold">New to Modernize?</p>
-                <a class="text-primary fw-bold ms-2" href="./authentication-register.html">Create an account</a>
-              </div>
+            <?php endif ?>
+
+            <?php if (session('message') !== null) : ?>
+                <div class="alert alert-success" role="alert"><?= session('message') ?></div>
+            <?php endif ?>
+
+            <form action="<?= url_to('login') ?>" method="post">
+                <?= csrf_field() ?>
+
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingEmailInput" name="email" inputmode="email" autocomplete="email" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>" required>
+                    <label for="floatingEmailInput"><?= lang('Auth.email') ?></label>
+                </div>
+
+                <!-- Password -->
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="floatingPasswordInput" name="password" inputmode="text" autocomplete="current-password" placeholder="<?= lang('Auth.password') ?>" required>
+                    <label for="floatingPasswordInput"><?= lang('Auth.password') ?></label>
+                </div>
+
+                <!-- Remember me -->
+                <?php if (setting('Auth.sessionConfig')['allowRemembering']): ?>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" name="remember" class="form-check-input" <?php if (old('remember')): ?> checked<?php endif ?>>
+                            <?= lang('Auth.rememberMe') ?>
+                        </label>
+                    </div>
+                <?php endif; ?>
+
+                <div class="d-grid col-12 col-md-8 mx-auto m-3">
+                    <button type="submit" class="btn btn-primary btn-block"><?= lang('Auth.login') ?></button>
+                </div>
+
+                <?php if (setting('Auth.allowMagicLinkLogins')) : ?>
+                    <p class="text-center"><?= lang('Auth.forgotPassword') ?> <a href="<?= url_to('magic-link') ?>"><?= lang('Auth.useMagicLink') ?></a></p>
+                <?php endif ?>
+
+                <?php if (setting('Auth.allowRegistration')) : ?>
+                    <p class="text-center"><?= lang('Auth.needAccount') ?> <a href="<?= url_to('register') ?>"><?= lang('Auth.register') ?></a></p>
+                <?php endif ?>
+
             </form>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
-<?php $this->endSection()?>
+<?php $this->endSection() ?>

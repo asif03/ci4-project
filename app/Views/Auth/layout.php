@@ -13,7 +13,26 @@
 
   <?php $this->renderSection('pageStyles')?>
 
+  <style>
+  .radial-gradient {
+    position: relative;
+  }
+
+  .radial-gradient:before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0.3;
+    background: radial-gradient(rgb(210, 241, 223),
+        rgb(211, 215, 250),
+        rgb(186, 216, 244)) 0% 0%/400% 400%;
+    -webkit-animation: 15s ease 0s infinite normal none running gradient;
+    animation: 15s ease 0s infinite normal none running gradient;
+  }
   </style>
+
+
 </head>
 
 <body>

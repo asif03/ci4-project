@@ -52,12 +52,12 @@ class Filters extends BaseFilters
     public array $required = [
         'before' => [
             'forcehttps', // Force Global Secure Requests
-            'pagecache',  // Web Page Caching
+            'pagecache', // Web Page Caching
         ],
-        'after' => [
-            'pagecache',   // Web Page Caching
+        'after'  => [
+            'pagecache', // Web Page Caching
             'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
+            'toolbar', // Debug Toolbar
         ],
     ];
 
@@ -72,8 +72,9 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
+            'session' => ['except' => ['login*', 'register', 'logout']],
         ],
-        'after' => [
+        'after'  => [
             // 'honeypot',
             // 'secureheaders',
         ],
