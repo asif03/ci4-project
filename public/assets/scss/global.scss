@@ -16,5 +16,13 @@ a {
   color: #2a3547;
 }
 
+.fs-sm {
+  font-size: $font-size-sm !important;
+}
+
+.fs-lg {
+  font-size: $font-size-lg !important;
+}
+
 // Then import Bootstrap
 @import "../../../node_modules/bootstrap/scss/bootstrap";
