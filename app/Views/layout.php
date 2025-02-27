@@ -7,7 +7,7 @@
   <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <meta name="description" content="">
   <meta name="author" content="Md. Asif Iqbal, Programmer, Bangladesh College of Physicians & Surgeons (BCPS)">
-  <title>BCPS :: <?php $this->renderSection('title') ?></title>
+  <title>BCPS ::                 <?php $this->renderSection('title')?></title>
 
   <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url(); ?>public/favicon.ico">
 
@@ -29,41 +29,41 @@
   <link href="<?php echo base_url(); ?>public/assets/css/styles.min.css" rel="stylesheet">
 
   <style>
-    .poppins-regular {
-      font-family: "Poppins", serif;
-      font-weight: 400;
-      font-style: normal;
-    }
+  .poppins-regular {
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
 
-    .poppins-medium {
-      font-family: "Poppins", serif;
-      font-weight: 500;
-      font-style: normal;
-    }
+  .poppins-medium {
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+  }
 
-    .poppins-semibold {
-      font-family: "Poppins", serif;
-      font-weight: 600;
-      font-style: normal;
-    }
+  .poppins-semibold {
+    font-family: "Poppins", serif;
+    font-weight: 600;
+    font-style: normal;
+  }
 
-    .poppins-bold {
-      font-family: "Poppins", serif;
-      font-weight: 700;
-      font-style: normal;
-    }
+  .poppins-bold {
+    font-family: "Poppins", serif;
+    font-weight: 700;
+    font-style: normal;
+  }
   </style>
 
-  <?php $this->renderSection('pageStyles') ?>
+  <?php $this->renderSection('pageStyles')?>
 </head>
 
 <body class="poppins-regular">
   <div class="wrapper">
-    <aside class="sidebar" data-background-color="white">
-      <?= $this->include('templates/sidebar') ?>
+    <aside class="sidebar" data-background-color="bg-primary">
+      <?=$this->include('templates/sidebar')?>
     </aside>
     <div class="main-panel">
-      <header class="main-header"><?= $this->include('templates/header') ?></header>
+      <header class="main-header"><?=$this->include('templates/header')?></header>
       <main role="main" class="container">
         <div class="page-inner">
           <div class="page-header">
@@ -88,10 +88,10 @@
               </li>
             </ul>
           </div>
-          <div class="page-category"><?php $this->renderSection('main') ?></div>
+          <div class="page-category"><?php $this->renderSection('main')?></div>
         </div>
       </main>
-      <footer class="footer"><?= $this->include('templates/footer') ?></footer>
+      <footer class="footer"><?=$this->include('templates/footer')?></footer>
     </div>
   </div>
 
@@ -108,7 +108,7 @@
   <!-- Kaiadmin JS -->
   <script src="<?php echo base_url(); ?>public/assets/js/kaiadmin.min.js"></script>
 
-  <?php $this->renderSection('pageScripts') ?>
+  <?php $this->renderSection('pageScripts')?>
 </body>
 
 </html>
