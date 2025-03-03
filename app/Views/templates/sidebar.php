@@ -24,8 +24,7 @@
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
       <ul class="nav nav-secondary">
-        <?php echo base_url('dashboard'); ?>
-        <li class="nav-item <?=(current_url() === base_url('dashboard')) ? 'active' : ''?>">
+        <li class="nav-item <?=set_active('dashboard', true)?>">
           <a href="<?=base_url('dashboard')?>">
             <i class="fas fa-home"></i>
             <p>Dashboard</p>
@@ -37,17 +36,17 @@
           </span>
           <h4 class="text-section">Admin</h4>
         </li>
-        <li class="nav-item active submenu">
+        <li class="nav-item <?=set_active('applications')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarApplications">
             <i class="fas fa-th-list"></i>
             <p>Applications</p>
             <span class="caret"></span>
           </a>
-          <div class="collapse show" id="sidebarApplications">
+          <div class="collapse <?=set_show('applications')?>" id="sidebarApplications">
             <ul class="nav nav-collapse">
-              <li class="active">
-                <a href="sidebar-style-2.html">
-                  <span class="sub-item">Sidebar Style 2</span>
+              <li class="<?=set_active('applications')?>">
+                <a href="<?=base_url('applications')?>">
+                  <span class="sub-item">Applicant List</span>
                 </a>
               </li>
               <li>
@@ -58,24 +57,20 @@
             </ul>
           </div>
         </li>
-        <li class="nav-item <?=(current_url() === base_url('honorariums')) ? 'active' : ''?> submenu">
-          <a data-bs-toggle="collapse" href="#sidebarHonourariums">
+        <li class="nav-item <?=set_active('bills')?> submenu">
+          <a data-bs-toggle="collapse" href="#sidebarBills">
             <i class="fas fa-th-list"></i>
-            <p>Honorariums</p>
+            <p>Bills</p>
             <span class="caret"></span>
           </a>
-          <div class="collapse show" id="sidebarHonourariums">
+          <div class="collapse <?=set_show('bills')?>" id="sidebarBills">
             <ul class="nav nav-collapse">
-              <li class="active">
-                <a href="sidebar-style-2.html">
-                  <span class="sub-item">Sidebar Style 2</span>
+              <li class="<?=set_active('bills')?>">
+                <a href="<?=base_url('bills')?>">
+                  <span class="sub-item">Honorarium List</span>
                 </a>
               </li>
-              <li>
-                <a href="icon-menu.html">
-                  <span class="sub-item">Icon Menu</span>
-                </a>
-              </li>
+
             </ul>
           </div>
         </li>

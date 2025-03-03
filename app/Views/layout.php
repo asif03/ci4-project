@@ -71,17 +71,17 @@
             <ul class="breadcrumbs">
               <li class="nav-home">
                 <a href="#">
-                  <i class="icon-home"></i>
+                  <i class="fas fa-home"></i>
                 </a>
               </li>
               <li class="separator">
-                <i class="icon-arrow-right"></i>
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
               </li>
               <li class="nav-item">
                 <a href="#">Pages</a>
               </li>
               <li class="separator">
-                <i class="icon-arrow-right"></i>
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
               </li>
               <li class="nav-item">
                 <a href="#">Starter Page</a>

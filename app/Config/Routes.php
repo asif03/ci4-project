@@ -7,10 +7,15 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
-$routes->get('/dashboard', 'Dashboard::index', ['as' => 'dashboard']);
+$routes->get('/dashboard', 'Dashboard::index');
 
-$routes->group('honorariums', static function ($routes) {
-    $routes->get('/', 'Honorarium::getIndex', ['as' => 'honorariums']);
+$routes->group('applications', static function ($routes) {
+    $routes->get('/', 'Application::index');
+
+});
+
+$routes->group('bills', static function ($routes) {
+    $routes->get('/', 'Honorarium::getIndex');
     /*$routes->get('/users', 'Admin::users', ['as' => 'admin.users']);
 $routes->get('/users/(:num)', 'Admin::user/$1', ['as' => 'admin.user']);
 $routes->get('/roles', 'Admin::roles', ['as' => 'admin.roles']);
