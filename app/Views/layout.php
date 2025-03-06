@@ -7,7 +7,7 @@
   <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <meta name="description" content="">
   <meta name="author" content="Md. Asif Iqbal, Programmer, Bangladesh College of Physicians & Surgeons (BCPS)">
-  <title>BCPS ::                 <?php $this->renderSection('title')?></title>
+  <title>BCPS :: <?php $this->renderSection('title')?></title>
 
   <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url(); ?>public/favicon.ico">
 
@@ -19,14 +19,16 @@
   <!-- Bootstrap core CSS -->
   <link href="<?php echo base_url(); ?>public/assets/css/global.min.css" rel="stylesheet">
 
+  <!-- Custom CSS Files -->
+  <link href="<?php echo base_url(); ?>public/assets/css/styles.min.css" rel="stylesheet">
+
   <!-- Font Awesome 5 -->
   <link href="<?php echo base_url(); ?>public/assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
   <!-- DataTables -->
   <link href="<?php echo base_url(); ?>public/assets/libs/datatables/css/datatables.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/2.2.1/css/dataTables.bootstrap5.css" rel="stylesheet">
 
-  <!-- Custom CSS Files -->
-  <link href="<?php echo base_url(); ?>public/assets/css/styles.min.css" rel="stylesheet">
+
 
   <style>
   .poppins-regular {
@@ -67,26 +69,7 @@
       <main role="main" class="container">
         <div class="page-inner">
           <div class="page-header">
-            <h4 class="page-title">Dashboard</h4>
-            <ul class="breadcrumbs">
-              <li class="nav-home">
-                <a href="#">
-                  <i class="fas fa-home"></i>
-                </a>
-              </li>
-              <li class="separator">
-                <i class="fa fa-chevron-right" aria-hidden="true"></i>
-              </li>
-              <li class="nav-item">
-                <a href="#">Pages</a>
-              </li>
-              <li class="separator">
-                <i class="fa fa-chevron-right" aria-hidden="true"></i>
-              </li>
-              <li class="nav-item">
-                <a href="#">Starter Page</a>
-              </li>
-            </ul>
+            <?php $this->renderSection('pageheader')?>
           </div>
           <div class="page-category"><?php $this->renderSection('main')?></div>
         </div>

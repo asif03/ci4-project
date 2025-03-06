@@ -60,12 +60,12 @@ class HonorariumInformationModel extends Model
         }
 
         $columns = array(
-            array('db' => 'honorarium_year', 'dt' => 0, 'tbl' => 'honorarium_information'),
-            array('db' => 'slot_name', 'dt' => 1, 'tbl' => 'honorarium_slot'),
-            array('db' => 'department_name', 'dt' => 2, 'tbl' => 'honorarium_information'),
+            //array('db' => 'honorarium_year', 'dt' => 0),
+            array('db' => 'department_name', 'dt' => 0),
+            array('db' => 'honorarium_year', 'dt' => 1),
         );
 
-        $join = 'JOIN honorarium_slot ON honorarium_information.honorarium_slot_id = honorarium_slot.id';
+        //$join = 'JOIN honorarium_slot ON honorarium_information.honorarium_slot_id = honorarium_slot.id';
 
         // Build the SQL query string from the request
         $limit = limit($request, $columns);
@@ -89,13 +89,13 @@ class HonorariumInformationModel extends Model
         '%' . $request['search']['value'] . '%',
         ])->getResultArray();*/
 
-        $sql = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table` $join $where $order $limit";
+        $sql = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table` $where $order $limit";
         //$sql = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table`  $where $order $limit";
 
         $data = $this->db->query($sql, $likeWhat)->getResultArray();
 
         // Data set length after filtering
-        $sqlFilterLength      = "SELECT COUNT(honorarium_information.`{$primaryKey}`) AS CNT FROM `$table` $join $where";
+        $sqlFilterLength      = "SELECT COUNT(`{$primaryKey}`) AS CNT FROM `$table` $where";
         $exeQueryFilterLength = $this->db->query($sqlFilterLength, $likeWhat);
         $rowFilterLength      = $exeQueryFilterLength->getRow();
 
@@ -106,7 +106,7 @@ class HonorariumInformationModel extends Model
         }
 
         // Total data set length
-        $sqlTotalLength      = "SELECT COUNT(honorarium_information.`{$primaryKey}`) AS CNT FROM `$table` $join";
+        $sqlTotalLength      = "SELECT COUNT(`{$primaryKey}`) AS CNT FROM `$table`";
         $exeQueryTotalLength = $this->db->query($sqlTotalLength);
         $rowTotalLength      = $exeQueryTotalLength->getRow();
 

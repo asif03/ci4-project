@@ -94,6 +94,7 @@ function filter($request, $columns, &$bindings)
                 if (!empty($column['db'])) {
                     $binding        = bind($bindings, '%' . $str . '%', PDO::PARAM_STR);
                     $globalSearch[] = "`" . $column['db'] . "` LIKE " . $binding;
+                    //$globalSearch[] = "`" . $column['tbl'] . "`.`" . $column['db'] . "` LIKE " . $binding;
                 }
             }
         }
@@ -113,6 +114,7 @@ function filter($request, $columns, &$bindings)
                 if (!empty($column['db'])) {
                     $binding        = bind($bindings, '%' . $str . '%', PDO::PARAM_STR);
                     $columnSearch[] = "`" . $column['db'] . "` LIKE " . $binding;
+                    //$columnSearch[] = "`" . $column['tbl'] . "`.`" . $column['db'] . "` LIKE " . $binding;
                 }
             }
         }

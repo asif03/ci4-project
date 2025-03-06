@@ -13,10 +13,11 @@ class Honorarium extends BaseController
         $this->honorariumModel = new HonorariumInformationModel();
     }
 
-    public function getIndex()
+    public function index()
     {
         $data = [
             'title'       => 'Honorarium',
+            'pageTitle'   => 'Bills Information',
             'honorariums' => $this->honorariumModel->getHonorariums(),
         ];
 
