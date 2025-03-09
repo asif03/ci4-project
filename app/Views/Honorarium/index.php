@@ -57,16 +57,20 @@
         <table id="billList" class="display" style="width:100%">
           <thead>
             <tr>
-              <th>Applied Year</th>
-              <th>Session</th>
-              <th>Department name</th>
+              <th>Name</th>
+              <th>Father/Spouse Name</th>
+              <th>BMDC Reg. No.</th>
+              <th>Application Session</th>
+              <th>Application Year</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <th>Applied Year</th>
-              <th>Session</th>
-              <th>Department name</th>
+              <th>Name</th>
+              <th>Father/Spouse Name</th>
+              <th>BMDC Reg. No.</th>
+              <th>Application Session</th>
+              <th>Application Year</th>
             </tr>
           </tfoot>
         </table>

@@ -60,12 +60,16 @@ class HonorariumInformationModel extends Model
         }
 
         $columns = array(
-            array('db' => 'honorarium_year', 'dt' => 0, 'tbl' => 'honorarium_information'),
-            array('db' => 'slot_name', 'dt' => 1, 'tbl' => 'honorarium_slot'),
-            array('db' => 'department_name', 'dt' => 2, 'tbl' => 'honorarium_information'),
+            array('db' => 'name', 'dt' => 0, 'tbl' => 'applicant_information'),
+            array('db' => 'father_spouse_name', 'dt' => 1, 'tbl' => 'applicant_information'),
+            array('db' => 'bmdc_reg_no', 'dt' => 2, 'tbl' => 'honorarium_information'),
+            array('db' => 'slot_name', 'dt' => 3, 'tbl' => 'honorarium_slot'),
+            array('db' => 'honorarium_year', 'dt' => 2, 'tbl' => 'honorarium_information'),
+
         );
 
-        $join = 'JOIN honorarium_slot ON honorarium_information.honorarium_slot_id = honorarium_slot.id';
+        $join = 'LEFT JOIN honorarium_slot ON honorarium_information.honorarium_slot_id = honorarium_slot.id';
+        $join .= ' LEFT JOIN applicant_information ON honorarium_information.applicant_id = applicant_information.applicant_id';
 
         // Build the SQL query string from the request
         $limit = limit($request, $columns);
