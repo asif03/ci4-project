@@ -7,6 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+$routes->get('/profile', 'UserController::profile');
+
 $routes->get('/dashboard', 'Dashboard::index');
 
 $routes->group('applications', static function ($routes) {
