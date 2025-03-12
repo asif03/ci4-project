@@ -40,7 +40,9 @@
               <th>Name</th>
               <th>Father/Spouse Name</th>
               <th>Mother Name</th>
-              <th>Status</th>
+              <th>BMDC Reg. No.</th>
+              <th>Files</th>
+              <th>Eligible Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -50,11 +52,28 @@
               <th>Name</th>
               <th>Father/Spouse Name</th>
               <th>Mother Name</th>
-              <th>Status</th>
+              <th>BMDC Reg. No.</th>
+              <th>Files</th>
+              <th>Eligible Status</th>
               <th>Action</th>
             </tr>
           </tfoot>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="applicationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalContents"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -66,6 +85,7 @@
 $('#applicantList').DataTable({
   "processing": true,
   "serverSide": true,
+  "responsive": true,
   "ajax": {
     "url": "<?=base_url('applications/fetch-applicants')?>",
     "type": "POST"
@@ -80,24 +100,48 @@ $('#applicantList').DataTable({
       "data": "father_spouse_name"
     },
     {
-      "data": "bank_name"
+      "data": "mother_name"
+    },
+    {
+      "data": "bmdc_reg_no"
+    },
+    {
+      "data": null,
+      "render": function(data, type, row) {
+        // return `<button class="btn btn-primary btn-view" data-id="${row.applicant_id}">View</button>`;
+        return `<button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#applicationModal" onclick="getFilesInfo(${row.applicant_id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
+      }
     },
     {
       "data": "eligible_status",
       "render": function(data, type, row) {
-        if (data == '1') {
-          return '<span class="badge badge-success">Eligible</span>';
+        if (data == 'P') {
+          return `<span class="badge rounded-pill badge-warning">Pending</span>`;
+        } else if (data == 'Y') {
+          return `<span class="badge rounded-pill badge-success">Eligible</span>`;
+        } else if (data == 'N') {
+          return `<span class="badge rounded-pill badge-warning">Not Eligible</span>`;
         } else {
-          return '<span class="badge badge-danger">Not Eligible</span>';
+          return `<span class="badge rounded-pill badge-danger">Rejected</span>`;
         }
-
-        //return `<button class="btn btn-primary btn-view" data-id="${row.applicant_id}">${data}</button>`;
       }
     },
     {
       "data": null,
       "render": function(data, type, row) {
-        return `<button class="btn btn-primary btn-view" data-id="${row.applicant_id}">View</button>`;
+        $action = '';
+        if (row.eligible_status == 'P') {
+          $action +=
+            `<button class="btn btn-primary btn-approve btn-sm" data-id="${row.applicant_id}">Approve</button> `;
+          $action +=
+            `<button class="btn btn-danger btn-reject btn-sm" data-id="${row.applicant_id}">Reject</button> `;
+        }
+        $action +=
+          `<button class="btn btn-outline-info btn-sm btn-view" data-id="${row.applicant_id}"><i class="fa fa-eye" aria-hidden="true"></i></button> `;
+        $action +=
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#applicationModal" onclick="getFilesInfo(${row.applicant_id})"><i class="fas fa-edit"></i></button>`;
+
+        return $action;
       }
     }
   ],
@@ -107,14 +151,23 @@ $('#applicantList').DataTable({
       "searchable": false
     },
     {
-      "target": 4,
+      "target": 5,
       "orderable": false,
       "searchable": false
     },
     {
-      "target": 5,
+      "target": 6,
+      "orderable": false,
+      "searchable": false
+    },
+    {
+      "target": 7,
       "orderable": false
-    }
+    },
+    {
+      "targets": [4],
+      "className": "dt-left"
+    },
   ]
 });
 
@@ -126,5 +179,23 @@ $('#applicantList tbody').on('click', '.btn-view', function() {
   // Example: Redirect to applicant details page
   // window.location.href = "<?=base_url('applications/details/')?>" + applicantId;
 });
+
+function getFilesInfo(applicationId) {
+
+  $.ajax({
+    url: '<?=base_url('applications/fetch-files')?>',
+    type: 'POST',
+    data: {
+      applicationId: applicationId
+    },
+    dataType: 'html',
+    success: function(response) {
+      $('#modalContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
 </script>
 <?php $this->endSection()?>

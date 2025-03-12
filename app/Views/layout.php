@@ -27,8 +27,7 @@
   <!-- DataTables -->
   <link href="<?php echo base_url(); ?>public/assets/libs/datatables/css/datatables.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/2.2.1/css/dataTables.bootstrap5.css" rel="stylesheet">
-
-
+  <link href="https://cdn.datatables.net/responsive/3.0.4/css/responsive.bootstrap5.css" rel="stylesheet">
 
   <style>
   .poppins-regular {
@@ -87,6 +86,9 @@
 
   <!-- DataTables -->
   <script src="<?php echo base_url(); ?>public/assets/libs/datatables/js/datatables.min.js"></script>
+
+  <script src="https://cdn.datatables.net/responsive/3.0.4/js/dataTables.responsive.js"></script>
+  <script src="https://cdn.datatables.net/responsive/3.0.4/js/responsive.bootstrap5.js"></script>
 
   <!-- Kaiadmin JS -->
   <script src="<?php echo base_url(); ?>public/assets/js/kaiadmin.min.js"></script>

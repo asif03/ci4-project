@@ -14,6 +14,7 @@ $routes->get('/dashboard', 'Dashboard::index');
 $routes->group('applications', static function ($routes) {
     $routes->get('/', 'Application::index');
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants');
+    $routes->post('fetch-files', 'Application::getFilesInfo');
 
 });
 

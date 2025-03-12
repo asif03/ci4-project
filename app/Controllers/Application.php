@@ -48,4 +48,15 @@ class Application extends BaseController
         return $this->response->setJSON($response);
     }
 
+    public function getFilesInfo()
+    {
+        $request = service('request');
+
+        $applicationId = $request->getPost('applicationId');
+
+        $files = $this->applicationModel->getAttachements($applicationId);
+
+        return view('Application/view-attachments', ['files' => $files]);
+    }
+
 }

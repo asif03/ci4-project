@@ -12,14 +12,17 @@ class ApplicantInformationModel extends Model
     public function getData($searchValue = '', $start = 0, $length = 10)
     {
         $builder = $this->db->table('applicant_information ap');
-        $builder->select('ap.applicant_id, ap.name, ap.father_spouse_name, ap.eligible_status, bnk.bank_name');
+        $builder->select('ap.applicant_id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, UPPER(ap.mother_name) as mother_name, ap.bmdc_reg_no, ap.eligible_status, bnk.bank_name');
         $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
+        //$builder->orderBy('ap.applicant_id', 'DESC');
 
         // Apply search filter
         if (!empty($searchValue)) {
             $builder->groupStart()
                 ->like('ap.name', $searchValue)
                 ->orLike('ap.father_spouse_name', $searchValue)
+                ->orLike('ap.mother_name', $searchValue)
+                ->orLike('ap.bmdc_reg_no', $searchValue)
                 ->groupEnd();
         }
 
@@ -43,9 +46,21 @@ class ApplicantInformationModel extends Model
             $builder->groupStart()
                 ->like('ap.name', $searchValue)
                 ->orLike('ap.father_spouse_name', $searchValue)
+                ->orLike('ap.father_spouse_name', $searchValue)
+                ->orLike('ap.mother_name', $searchValue)
+                ->orLike('ap.bmdc_reg_no', $searchValue)
                 ->groupEnd();
         }
 
         return $builder->countAllResults();
+    }
+
+    public function getAttachements($applicantId)
+    {
+        $builder = $this->db->table('applicant_files');
+        $builder->select('fiile_id, file_name, type');
+        $builder->where('applicant_id', $applicantId);
+
+        return $builder->get()->getResultArray();
     }
 }
