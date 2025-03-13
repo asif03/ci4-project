@@ -86,9 +86,12 @@
 
   <!-- DataTables -->
   <script src="<?php echo base_url(); ?>public/assets/libs/datatables/js/datatables.min.js"></script>
-
   <script src="https://cdn.datatables.net/responsive/3.0.4/js/dataTables.responsive.js"></script>
   <script src="https://cdn.datatables.net/responsive/3.0.4/js/responsive.bootstrap5.js"></script>
+
+  <!-- Sweet Alert -->
+  <!-- <script src="<?php //echo base_url(); ?>public/assets/libs/sweetalert2/js/sweetalert2.all.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Kaiadmin JS -->
   <script src="<?php echo base_url(); ?>public/assets/js/kaiadmin.min.js"></script>

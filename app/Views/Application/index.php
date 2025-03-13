@@ -26,6 +26,104 @@
 <?php $this->endSection()?>
 
 <?php $this->section('main')?>
+<div class="row row-card-no-pd">
+  <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h6><b>Total Application</b></h6>
+            <p class="text-muted">Applied applicants</p>
+          </div>
+          <h4 class="text-info fw-bold"><?=$statistics['totalApplications'];?></h4>
+        </div>
+        <div class="progress progress-sm">
+          <div class="progress-bar bg-info w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+            aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <p class="text-muted mb-0">Change</p>
+          <p class="text-muted mb-0">100%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h6><b>Total Pending Applications</b></h6>
+            <p class="text-muted">Pending verification</p>
+          </div>
+          <h4 class="text-warning fw-bold"><?=$statistics['totalPendingApplications'];?></h4>
+        </div>
+        <div class="progress progress-sm">
+          <div class="progress-bar bg-warning"
+            style="width: <?=round($statistics['totalPendingApplications'] / $statistics['totalApplications'] * 100);?>%"
+            role="progressbar"
+            aria-valuenow="<?=round($statistics['totalPendingApplications'] / $statistics['totalApplications'] * 100);?>"
+            aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <p class="text-muted mb-0">Change</p>
+          <p class="text-muted mb-0">
+            <?=round($statistics['totalPendingApplications'] / $statistics['totalApplications'] * 100);?>%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h6><b>Total Eligible Applications</b></h6>
+            <p class="text-muted">Verified Applicants</p>
+          </div>
+          <h4 class="text-success fw-bold"><?=$statistics['totalVerifiedApplications'];?></h4>
+        </div>
+        <div class="progress progress-sm">
+          <div class="progress-bar bg-success"
+            style="width: <?=round($statistics['totalVerifiedApplications'] / $statistics['totalApplications'] * 100);?>%"
+            role="progressbar"
+            aria-valuenow="<?=round($statistics['totalVerifiedApplications'] / $statistics['totalApplications'] * 100);?>"
+            aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <p class="text-muted mb-0">Change</p>
+          <p class="text-muted mb-0">
+            <?=round($statistics['totalVerifiedApplications'] / $statistics['totalApplications'] * 100);?>%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h6><b>Total Rejected Applications</b></h6>
+            <p class="text-muted">Varification failed applicants</p>
+          </div>
+          <h4 class="text-danger fw-bold"><?=$statistics['totalRejectedApplications'];?></h4>
+        </div>
+        <div class="progress progress-sm">
+          <div class="progress-bar bg-danger"
+            style="width: <?=round($statistics['totalRejectedApplications'] / $statistics['totalApplications'] * 100);?>%"
+            role="progressbar"
+            aria-valuenow="<?=round($statistics['totalRejectedApplications'] / $statistics['totalApplications'] * 100);?>"
+            aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <p class="text-muted mb-0">Change</p>
+          <p class="text-muted mb-0">
+            <?=round($statistics['totalRejectedApplications'] / $statistics['totalApplications'] * 100);?>%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
   <div class="col-md-12">
     <div class="card">
@@ -132,7 +230,7 @@ $('#applicantList').DataTable({
         $action = '';
         if (row.eligible_status == 'P') {
           $action +=
-            `<button class="btn btn-primary btn-approve btn-sm" data-id="${row.applicant_id}">Approve</button> `;
+            `<button class="btn btn-success font-weight-bold btn-approve btn-sm" data-id="${row.applicant_id}"><i class="fas fa-check-circle"></i> Approve</button> `;
           $action +=
             `<button class="btn btn-danger btn-reject btn-sm" data-id="${row.applicant_id}">Reject</button> `;
         }
@@ -172,12 +270,57 @@ $('#applicantList').DataTable({
 });
 
 // Handle click event on View button
-$('#applicantList tbody').on('click', '.btn-view', function() {
+$('#applicantList tbody').on('click', '.btn-approve', function() {
   var applicantId = $(this).data('id'); // Get applicant_id from button
-  alert("Applicant ID: " + applicantId);
+  //alert("Applicant ID: " + applicantId);
 
-  // Example: Redirect to applicant details page
-  // window.location.href = "<?=base_url('applications/details/')?>" + applicantId;
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, Approve it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      // AJAX request
+      $.ajax({
+        url: '<?=base_url('applications/approve-applicant')?>',
+        type: 'POST',
+        data: {
+          applicantId: applicantId
+        },
+        dataType: 'json',
+        success: function(response) {
+
+          // Show notification
+          if (response.status == 'success') {
+            Swal.fire({
+              title: "Approved!",
+              text: response.message,
+              icon: "success"
+            });
+          } else {
+            Swal.fire({
+              title: "Error!",
+              text: response.message,
+              icon: "error"
+            });
+          }
+          // Reload DataTable
+          $('#applicantList').DataTable().ajax.reload();
+
+
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+        }
+      });
+    }
+  });
+
 });
 
 function getFilesInfo(applicationId) {

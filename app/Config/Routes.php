@@ -15,6 +15,8 @@ $routes->group('applications', static function ($routes) {
     $routes->get('/', 'Application::index');
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants');
     $routes->post('fetch-files', 'Application::getFilesInfo');
+    $routes->post('approve-applicant', 'Application::approveApplicant');
+    $routes->post('reject-applicant', 'Application::rejectApplicant');
 
 });
 

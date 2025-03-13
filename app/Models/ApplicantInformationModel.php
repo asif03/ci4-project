@@ -9,6 +9,32 @@ class ApplicantInformationModel extends Model
     protected $table      = 'applicant_information';
     protected $primaryKey = 'applicant_id';
 
+    public function getStatistics()
+    {
+        $builder = $this->db->table('applicant_information');
+        $builder->select('COUNT(applicant_id) as totalApplications');
+        $totalApplications = $builder->get()->getRowArray();
+
+        $builder->where('eligible_status', 'P');
+        $builder->select('COUNT(applicant_id) as totalPendingApplications');
+        $totalPendingApplications = $builder->get()->getRowArray();
+
+        $builder->where('eligible_status', 'Y');
+        $builder->select('COUNT(applicant_id) as totalVerifiedApplications');
+        $totalVerifiedApplications = $builder->get()->getRowArray();
+
+        $builder->where('eligible_status', 'N');
+        $builder->select('COUNT(applicant_id) as totalRejectedApplications');
+        $totalRejectedApplications = $builder->get()->getRowArray();
+
+        return [
+            'totalApplications'         => $totalApplications['totalApplications'],
+            'totalPendingApplications'  => $totalPendingApplications['totalPendingApplications'],
+            'totalVerifiedApplications' => $totalVerifiedApplications['totalVerifiedApplications'],
+            'totalRejectedApplications' => $totalRejectedApplications['totalRejectedApplications'],
+        ];
+    }
+
     public function getData($searchValue = '', $start = 0, $length = 10)
     {
         $builder = $this->db->table('applicant_information ap');
@@ -62,5 +88,16 @@ class ApplicantInformationModel extends Model
         $builder->where('applicant_id', $applicantId);
 
         return $builder->get()->getResultArray();
+    }
+
+    public function approveApplicant($applicantId)
+    {
+        $user = service('auth')->user();
+
+        $builder = $this->db->table('applicant_information');
+        $builder->where('applicant_id', $applicantId);
+        $builder->update(['eligible_status' => 'Y', 'eligible_by' => $user->username, 'eligiblity_date' => date('Y-m-d H:i:s')]);
+
+        return $this->db->affectedRows();
     }
 }

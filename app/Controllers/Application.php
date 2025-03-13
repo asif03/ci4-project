@@ -15,9 +15,12 @@ class Application extends BaseController
 
     public function index()
     {
+        $statisticsData = $this->applicationModel->getStatistics();
+
         $data = [
-            'title'     => 'Application',
-            'pageTitle' => 'Application Information',
+            'title'      => 'Application',
+            'pageTitle'  => 'Application Information',
+            'statistics' => $statisticsData,
         ];
 
         return view('Application/index', $data);
@@ -57,6 +60,21 @@ class Application extends BaseController
         $files = $this->applicationModel->getAttachements($applicationId);
 
         return view('Application/view-attachments', ['files' => $files]);
+    }
+
+    public function approveApplicant()
+    {
+        $request = service('request');
+
+        $applicantId = $request->getPost('applicantId');
+
+        $isApproved = $this->applicationModel->approveApplicant($applicantId);
+
+        if ($isApproved) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Applicant approved successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to approve applicant.']);
+        }
     }
 
 }
