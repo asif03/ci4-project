@@ -38,7 +38,7 @@ class ApplicantInformationModel extends Model
     public function getData($searchValue = '', $start = 0, $length = 10)
     {
         $builder = $this->db->table('applicant_information ap');
-        $builder->select('ap.applicant_id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, UPPER(ap.mother_name) as mother_name, ap.bmdc_reg_no, ap.eligible_status, bnk.bank_name');
+        $builder->select('ap.applicant_id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, UPPER(ap.mother_name) as mother_name, ap.bmdc_reg_no, ap.continuing_fcps_traning, ap.eligible_status, bnk.bank_name');
         $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
         //$builder->orderBy('ap.applicant_id', 'DESC');
 
@@ -97,6 +97,17 @@ class ApplicantInformationModel extends Model
         $builder = $this->db->table('applicant_information');
         $builder->where('applicant_id', $applicantId);
         $builder->update(['eligible_status' => 'Y', 'eligible_by' => $user->username, 'eligiblity_date' => date('Y-m-d H:i:s')]);
+
+        return $this->db->affectedRows();
+    }
+
+    public function rejectApplicant($applicantId, $rejectReason)
+    {
+        $user = service('auth')->user();
+
+        $builder = $this->db->table('applicant_information');
+        $builder->where('applicant_id', $applicantId);
+        $builder->update(['eligible_status' => 'N', 'reject_reason' => $rejectReason, 'rejected_by' => $user->username, 'reject_date' => date('Y-m-d H:i:s')]);
 
         return $this->db->affectedRows();
     }

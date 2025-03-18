@@ -139,6 +139,7 @@
               <th>Father/Spouse Name</th>
               <th>Mother Name</th>
               <th>BMDC Reg. No.</th>
+              <th>Continuing Training?</th>
               <th>Files</th>
               <th>Eligible Status</th>
               <th>Action</th>
@@ -151,6 +152,7 @@
               <th>Father/Spouse Name</th>
               <th>Mother Name</th>
               <th>BMDC Reg. No.</th>
+              <th>Continuing Training?</th>
               <th>Files</th>
               <th>Eligible Status</th>
               <th>Action</th>
@@ -204,6 +206,18 @@ $('#applicantList').DataTable({
       "data": "bmdc_reg_no"
     },
     {
+      "data": "continuing_fcps_traning",
+      "render": function(data, type, row) {
+        if (data == 0) {
+          return `<span class="badge rounded-pill badge-warning">No</span> <button class="btn btn-success rounded-pill btn-sm"><i class="fa fa fa-play-circle"></i></button>`;
+        } else if (data == 1) {
+          return `<span class="badge rounded-pill badge-success">Yes</span> <button class="btn btn-warning rounded-pill btn-sm"><i class="fa fa-pause"></i></button>`;
+        } else {
+          return `<span class="badge rounded-pill badge-danger">Unknown</span>`;
+        }
+      }
+    },
+    {
       "data": null,
       "render": function(data, type, row) {
         // return `<button class="btn btn-primary btn-view" data-id="${row.applicant_id}">View</button>`;
@@ -218,12 +232,13 @@ $('#applicantList').DataTable({
         } else if (data == 'Y') {
           return `<span class="badge rounded-pill badge-success">Eligible</span>`;
         } else if (data == 'N') {
-          return `<span class="badge rounded-pill badge-warning">Not Eligible</span>`;
+          return `<span class="badge rounded-pill badge-danger">Not Eligible</span>`;
         } else {
           return `<span class="badge rounded-pill badge-danger">Rejected</span>`;
         }
       }
     },
+
     {
       "data": null,
       "render": function(data, type, row) {
@@ -232,7 +247,7 @@ $('#applicantList').DataTable({
           $action +=
             `<button class="btn btn-success font-weight-bold btn-approve btn-sm" data-id="${row.applicant_id}"><i class="fas fa-check-circle"></i> Approve</button> `;
           $action +=
-            `<button class="btn btn-danger btn-reject btn-sm" data-id="${row.applicant_id}">Reject</button> `;
+            `<button class="btn btn-danger btn-reject btn-sm" data-id="${row.applicant_id}"><i class="fas fa-times-circle"></i> Reject</button> `;
         }
         $action +=
           `<button class="btn btn-outline-info btn-sm btn-view" data-id="${row.applicant_id}"><i class="fa fa-eye" aria-hidden="true"></i></button> `;
@@ -249,9 +264,8 @@ $('#applicantList').DataTable({
       "searchable": false
     },
     {
-      "target": 5,
-      "orderable": false,
-      "searchable": false
+      "target": 1,
+      "orderable": true,
     },
     {
       "target": 6,
@@ -260,11 +274,20 @@ $('#applicantList').DataTable({
     },
     {
       "target": 7,
+      "orderable": false,
+      "searchable": false
+    },
+    {
+      "target": 8,
       "orderable": false
     },
     {
       "targets": [4],
       "className": "dt-left"
+    },
+    {
+      "targets": [5],
+      "className": "dt-center"
     },
   ]
 });
@@ -275,13 +298,13 @@ $('#applicantList tbody').on('click', '.btn-approve', function() {
   //alert("Applicant ID: " + applicantId);
 
   Swal.fire({
-    title: "Are you sure?",
+    title: "Are you sure to make Eligible?",
     text: "You won't be able to revert this!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, Approve it!"
+    confirmButtonText: "Yes, Make Eligible!"
   }).then((result) => {
     if (result.isConfirmed) {
 
@@ -320,7 +343,70 @@ $('#applicantList tbody').on('click', '.btn-approve', function() {
       });
     }
   });
+});
 
+// Handle click event on View button
+$('#applicantList tbody').on('click', '.btn-reject', function() {
+  var applicantId = $(this).data('id');
+
+  Swal.fire({
+    title: "Are you sure to Reject?",
+    icon: "warning",
+    input: "textarea",
+    inputLabel: "Reject Reason",
+    inputPlaceholder: "Enter reason for rejection",
+    inputAttributes: {
+      autocapitalize: "off"
+    },
+    inputValidator: (value) => {
+      if (!value) {
+        return "You need to write something!";
+      }
+    },
+    showCancelButton: true,
+    confirmButtonText: "Reject it",
+    showLoaderOnConfirm: true,
+    allowOutsideClick: () => !Swal.isLoading()
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // AJAX request
+      $.ajax({
+        url: '<?=base_url('applications/reject-applicant')?>',
+        type: 'POST',
+        data: {
+          applicantId: applicantId,
+          rejectReason: result.value
+        },
+        dataType: 'json',
+        success: function(response) {
+          // Show notification
+          if (response.status == 'success') {
+            Swal.fire({
+              title: "Rejected!",
+              text: response.message,
+              icon: "success"
+            });
+          } else {
+            Swal.fire({
+              title: "Error!",
+              text: response.message,
+              icon: "error"
+            });
+          }
+          // Reload DataTable
+          $('#applicantList').DataTable().ajax.reload();
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+        }
+      });
+
+      Swal.fire({
+        title: `${result.value.login}'s avatar`,
+        imageUrl: result.value.avatar_url
+      });
+    }
+  });
 });
 
 function getFilesInfo(applicationId) {

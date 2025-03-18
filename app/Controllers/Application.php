@@ -77,4 +77,20 @@ class Application extends BaseController
         }
     }
 
+    public function rejectApplicant()
+    {
+        $request = service('request');
+
+        $applicantId  = $request->getPost('applicantId');
+        $rejectReason = $request->getPost('rejectReason');
+
+        $isRejected = $this->applicationModel->rejectApplicant($applicantId, $rejectReason);
+
+        if ($isRejected) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Applicant rejected successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to reject applicant.']);
+        }
+    }
+
 }
