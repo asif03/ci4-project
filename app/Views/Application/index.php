@@ -263,10 +263,7 @@ $('#applicantList').DataTable({
       "visible": false,
       "searchable": false
     },
-    {
-      "target": 1,
-      "orderable": true,
-    },
+
     {
       "target": 6,
       "orderable": false,
