@@ -32,4 +32,8 @@ $routes->get('/permissions/(:num)', 'Admin::permission/$1', ['as' => 'admin.perm
 });
 //$routes->get('/honorariums', 'Honorarium::getIndex', ['as' => 'honorariums']);
 
+$routes->group('users', static function ($routes) {
+    $routes->get('assign-user-role', 'UserController::assignRoleViewForm');
+});
+
 service('auth')->routes($routes);

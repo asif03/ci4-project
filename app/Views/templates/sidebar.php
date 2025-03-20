@@ -1,3 +1,11 @@
+<?php
+    $auth = service('auth');
+    $user = $auth->user();
+
+    echo '<pre>';
+    print_r($user);
+    echo '</pre>';
+?>
 <div class="sidebar sidebar-style-2" data-background-color="white">
   <div class="sidebar-logo">
     <!-- Logo Header -->
@@ -74,28 +82,35 @@
             </ul>
           </div>
         </li>
+        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>
           </span>
           <h4 class="text-section">Settings</h4>
         </li>
-        <li class="nav-item">
-          <a data-bs-toggle="collapse" href="#forms">
-            <i class="fas fa-pen-square"></i>
-            <p>Forms</p>
+        <li class="nav-item <?=set_active('users')?>">
+          <a data-bs-toggle="collapse" href="#userManagement">
+            <i class='fas fa-user-cog'></i>
+            <p>User Management</p>
             <span class="caret"></span>
           </a>
-          <div class="collapse" id="forms">
+          <div class="collapse <?=set_show('users')?>" id="userManagement">
             <ul class="nav nav-collapse">
               <li>
                 <a href="forms/forms.html">
-                  <span class="sub-item">Basic Form</span>
+                  <span class="sub-item">User Management</span>
+                </a>
+              </li>
+              <li class="<?=set_active('users/assign-user-role')?>">
+                <a href="<?=base_url('users/assign-user-role')?>">
+                  <span class="sub-item">Assign Role</span>
                 </a>
               </li>
             </ul>
           </div>
         </li>
+        <?php }?>
       </ul>
     </div>
   </div>

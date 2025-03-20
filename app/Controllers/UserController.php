@@ -19,4 +19,20 @@ class UserController extends BaseController
         return view('user/profile', ['user' => $user]);
     }
 
+    public function assignRoleViewForm(): string
+    {
+        $data = [
+            'title'     => 'User Management',
+            'pageTitle' => 'Assign User Role',
+        ];
+
+        return view('user/assign-role', $data);
+    }
+
+    public function assignRole()
+    {
+        $userId = $this->request->getPost('user_id');
+        $role   = $this->request->getPost('role');
+    }
+
 }
