@@ -18,6 +18,7 @@ class Honorarium extends BaseController
         $data = [
             'title'       => 'Honorarium',
             'pageTitle'   => 'Bills Information',
+            'slots'       => $this->honorariumModel->getSlots(),
             'honorariums' => $this->honorariumModel->getHonorariums(),
         ];
 
@@ -26,12 +27,60 @@ class Honorarium extends BaseController
 
     public function getSearchedHonorariums()
     {
-        //$_GET['search']['value'] = 'Asif';
-        //$_GET['columns'][0]      = 'department_name';
+        $request = service('request');
 
-        $result = $this->honorariumModel->getSearchHonorariums($_GET);
+        // Get DataTables parameters
+        $draw              = $request->getPost('draw');
+        $start             = $request->getPost('start');
+        $length            = $request->getPost('length');
+        $searchValue       = $request->getPost('search')['value'];
+        $honorariumYear    = $request->getPost('honorariumYear');
+        $honorariumSession = $request->getPost('honorariumSession');
 
-        echo json_encode($result);
+        // Fetch data from model
+        $data          = $this->honorariumModel->getHonorariums($searchValue, $start, $length, $honorariumYear, $honorariumSession);
+        $totalRecords  = $this->honorariumModel->countAllHonorariums();
+        $totalFiltered = $this->honorariumModel->countFilteredHonorariums($searchValue);
+
+        $response = [
+            "draw"            => intval($draw),
+            "recordsTotal"    => $totalRecords,
+            "recordsFiltered" => $totalFiltered,
+            "data"            => $data,
+        ];
+
+        return $this->response->setJSON($response);
+    }
+
+    public function approveApplicant()
+    {
+        $request = service('request');
+
+        $honorariumId = $request->getPost('honorariumId');
+
+        $isApproved = $this->honorariumModel->approveApplicant($honorariumId);
+
+        if ($isApproved) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Applicant approved successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to approve applicant.']);
+        }
+    }
+
+    public function rejectApplicant()
+    {
+        $request = service('request');
+
+        $applicantId  = $request->getPost('applicantId');
+        $rejectReason = $request->getPost('rejectReason');
+
+        $isRejected = $this->applicationModel->rejectApplicant($applicantId, $rejectReason);
+
+        if ($isRejected) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Applicant rejected successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to reject applicant.']);
+        }
     }
 
     public function create()

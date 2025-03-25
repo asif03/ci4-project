@@ -22,7 +22,9 @@ $routes->group('applications', static function ($routes) {
 
 $routes->group('bills', static function ($routes) {
     $routes->get('/', 'Honorarium::index');
-    $routes->get('fetch-honorariums', 'Honorarium::getSearchedHonorariums');
+    $routes->post('fetch-honorariums', 'Honorarium::getSearchedHonorariums');
+    $routes->post('approve-honorarium', 'Honorarium::approveHonorarium');
+    $routes->post('reject-honorarium', 'Application::rejectHonorarium');
     /*$routes->get('/users', 'Admin::users', ['as' => 'admin.users']);
 $routes->get('/users/(:num)', 'Admin::user/$1', ['as' => 'admin.user']);
 $routes->get('/roles', 'Admin::roles', ['as' => 'admin.roles']);

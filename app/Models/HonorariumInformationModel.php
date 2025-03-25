@@ -27,108 +27,82 @@ class HonorariumInformationModel extends Model
         helper('datatable');
     }
 
-    /**
-     * @param false|string $status
-     *
-     * @return array|null
-     */
-    public function getHonorariums($status = true)
+    public function getSlots()
     {
-        if ($status === true) {
-
-            $result = $this->findAll();
-            return $result;
-        }
-
-        return $this->where(['status' => $status])->first();
+        return $this->db->table('honorarium_slot')->where('status', true)->get()->getResultArray();
     }
 
     /**
-     * @param string $search
+     * @param false|string $searchValue
      *
      * @return array|null
      */
-    public function getSearchHonorariums($request)
+    public function getHonorariums($searchValue = '', $start = 0, $length = 10, $honorariumYear = 2024, $honorariumSession = 2)
     {
-        $primaryKey = 'id';
-        $table      = 'honorarium_information';
-        $bindings   = array();
+        $builder = $this->db->table('honorarium_information hi');
+        $builder->select('hi.id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, hi.bmdc_reg_no, hs.slot_name, hi.honorarium_year, hi.eligible_status');
+        $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
+        $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
+        $builder->where('hi.honorarium_year', $honorariumYear);
+        $builder->where('hi.honorarium_slot_id', $honorariumSession);
+        $builder->orderBy('hi.id', 'DESC');
 
-        // Allow for a JSON string to be passed in
-        if (isset($request['json'])) {
-            $request = json_decode($request['json'], true);
+        // Apply search filter
+        if (!empty($searchValue)) {
+            $builder->groupStart()
+                ->like('ap.name', $searchValue)
+                ->orLike('ap.father_spouse_name', $searchValue)
+                ->orLike('ap.mother_name', $searchValue)
+                ->orLike('hi.bmdc_reg_no', $searchValue)
+                ->groupEnd();
         }
 
-        $columns = array(
-            array('db' => 'name', 'dt' => 0, 'tbl' => 'applicant_information'),
-            array('db' => 'father_spouse_name', 'dt' => 1, 'tbl' => 'applicant_information'),
-            array('db' => 'bmdc_reg_no', 'dt' => 2, 'tbl' => 'honorarium_information'),
-            array('db' => 'slot_name', 'dt' => 3, 'tbl' => 'honorarium_slot'),
-            array('db' => 'honorarium_year', 'dt' => 2, 'tbl' => 'honorarium_information'),
+        // Limit and offset
+        $builder->limit($length, $start);
 
-        );
+        return $builder->get()->getResultArray();
+    }
 
-        $join = 'LEFT JOIN honorarium_slot ON honorarium_information.honorarium_slot_id = honorarium_slot.id';
-        $join .= ' LEFT JOIN applicant_information ON honorarium_information.applicant_id = applicant_information.applicant_id';
+    public function countAllHonorariums()
+    {
+        return $this->db->table('honorarium_information')->countAll();
+    }
 
-        // Build the SQL query string from the request
-        $limit = limit($request, $columns);
-        $order = order($request, $columns);
-        $where = filter($request, $columns, $bindings);
+    public function countFilteredHonorariums($searchValue = '')
+    {
+        $builder = $this->db->table('honorarium_information hi');
+        $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
 
-        $likeWhat = array();
-
-        for ($i = 0, $ien = count($request['columns']); $i < $ien; $i++) {
-            //$requestColumn = $request['columns'][$i];
-            //for ($i = 0, $ien = count($request['columns']); $i < $ien; $i++) {
-            //if ($requestColumn['searchable'] == 'true' && $requestColumn['search']['value'] != '') {
-            $likeWhat[$i] = "%" . $request['search']['value'] . "%";
-            //}
-
+        if (!empty($searchValue)) {
+            $builder->groupStart()
+                ->like('ap.name', $searchValue)
+                ->orLike('ap.father_spouse_name', $searchValue)
+                ->orLike('hi.bmdc_reg_no', $searchValue)
+                ->groupEnd();
         }
 
-        // Main query to actually get the data
-        //$sql = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table` $where $order $limit";
-        /*$data = $this->db->query($sql, [
-        '%' . $request['search']['value'] . '%',
-        ])->getResultArray();*/
+        return $builder->countAllResults();
+    }
 
-        $sql = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table` $join $where $order $limit";
-        //$sql = "SELECT `" . implode("`, `", array_column($columns, 'db')) . "` FROM `$table`  $where $order $limit";
+    public function approveHonorarium($honorariumId)
+    {
+        $user = service('auth')->user();
 
-        $data = $this->db->query($sql, $likeWhat)->getResultArray();
+        $builder = $this->db->table('honorarium_information');
+        $builder->where('id', $honorariumId);
+        $builder->update(['eligible_status' => 'Y', 'eligible_by' => $user->username, 'eligiblity_date' => date('Y-m-d H:i:s')]);
 
-        // Data set length after filtering
-        $sqlFilterLength      = "SELECT COUNT(honorarium_information.`{$primaryKey}`) AS CNT FROM `$table` $join $where";
-        $exeQueryFilterLength = $this->db->query($sqlFilterLength, $likeWhat);
-        $rowFilterLength      = $exeQueryFilterLength->getRow();
+        return $this->db->affectedRows();
+    }
 
-        if (isset($rowFilterLength)) {
-            $recordsFiltered = $rowFilterLength->CNT;
-        } else {
-            $recordsFiltered = 0;
-        }
+    public function rejectApplicant($applicantId, $rejectReason)
+    {
+        $user = service('auth')->user();
 
-        // Total data set length
-        $sqlTotalLength      = "SELECT COUNT(honorarium_information.`{$primaryKey}`) AS CNT FROM `$table` $join";
-        $exeQueryTotalLength = $this->db->query($sqlTotalLength);
-        $rowTotalLength      = $exeQueryTotalLength->getRow();
+        $builder = $this->db->table('applicant_information');
+        $builder->where('applicant_id', $applicantId);
+        $builder->update(['eligible_status' => 'N', 'reject_reason' => $rejectReason, 'rejected_by' => $user->username, 'reject_date' => date('Y-m-d H:i:s')]);
 
-        if (isset($rowTotalLength)) {
-            $recordsTotal = $rowTotalLength->CNT;
-        } else {
-            $recordsTotal = 0;
-        }
-
-        /*
-         * Output
-         */
-        return array(
-            "draw"            => isset($request['draw']) ? intval($request['draw']) : 0,
-            "recordsTotal"    => intval($recordsTotal),
-            "recordsFiltered" => intval($recordsFiltered),
-            "data"            => data_output($columns, $data),
-        );
-
+        return $this->db->affectedRows();
     }
 }
