@@ -25,6 +25,27 @@ class Honorarium extends BaseController
         return view('Honorarium/index', $data);
     }
 
+    public function getStatistics()
+    {
+        $request = service('request');
+
+        $honorariumYear    = $request->getPost('honorariumYear');
+        $honorariumSession = $request->getPost('honorariumSession');
+
+        //$honorariumYear    = 2025;
+        //$honorariumSession = 2;
+
+        $statistics = $this->honorariumModel->getStatistics($honorariumYear, $honorariumSession);
+
+        $data = [
+            'labels' => array_keys($statistics),
+            'values' => array_values($statistics),
+        ];
+
+        echo json_encode($data);
+        exit;
+    }
+
     public function getSearchedHonorariums()
     {
         $request = service('request');
@@ -52,32 +73,32 @@ class Honorarium extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function approveApplicant()
+    public function approveHonorarium()
     {
         $request = service('request');
 
         $honorariumId = $request->getPost('honorariumId');
 
-        $isApproved = $this->honorariumModel->approveApplicant($honorariumId);
+        $isApproved = $this->honorariumModel->approveHonorarium($honorariumId);
 
         if ($isApproved) {
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Applicant approved successfully.']);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Approved successfully.']);
         } else {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to approve applicant.']);
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to approve.']);
         }
     }
 
-    public function rejectApplicant()
+    public function rejectHonorarium()
     {
         $request = service('request');
 
-        $applicantId  = $request->getPost('applicantId');
+        $honorariumId = $request->getPost('honorariumId');
         $rejectReason = $request->getPost('rejectReason');
 
-        $isRejected = $this->applicationModel->rejectApplicant($applicantId, $rejectReason);
+        $isRejected = $this->honorariumModel->rejectHonorarium($honorariumId, $rejectReason);
 
         if ($isRejected) {
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Applicant rejected successfully.']);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Rejected successfully.']);
         } else {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to reject applicant.']);
         }

@@ -32,6 +32,16 @@ class HonorariumInformationModel extends Model
         return $this->db->table('honorarium_slot')->where('status', true)->get()->getResultArray();
     }
 
+    public function getStatistics($honorariumYear, $honorariumSession)
+    {
+        $builder = $this->db->table('honorarium_information');
+        $builder->select('SUM(CASE WHEN eligible_status = "P" THEN 1 ELSE 0 END) as Pending, SUM(CASE WHEN eligible_status = "Y" THEN 1 ELSE 0 END) as Eligible, SUM(CASE WHEN eligible_status = "N" THEN 1 ELSE 0 END) as Rejected');
+        $builder->where('honorarium_year', $honorariumYear);
+        $builder->where('honorarium_slot_id', $honorariumSession);
+
+        return $builder->get()->getRowArray();
+    }
+
     /**
      * @param false|string $searchValue
      *
@@ -95,12 +105,12 @@ class HonorariumInformationModel extends Model
         return $this->db->affectedRows();
     }
 
-    public function rejectApplicant($applicantId, $rejectReason)
+    public function rejectHonorarium($honorariumId, $rejectReason)
     {
         $user = service('auth')->user();
 
-        $builder = $this->db->table('applicant_information');
-        $builder->where('applicant_id', $applicantId);
+        $builder = $this->db->table('honorarium_information');
+        $builder->where('id', $honorariumId);
         $builder->update(['eligible_status' => 'N', 'reject_reason' => $rejectReason, 'rejected_by' => $user->username, 'reject_date' => date('Y-m-d H:i:s')]);
 
         return $this->db->affectedRows();

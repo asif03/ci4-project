@@ -93,8 +93,13 @@
   <!-- <script src="<?php //echo base_url(); ?>public/assets/libs/sweetalert2/js/sweetalert2.all.min.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <!-- Chart JS -->
+  <script src="<?php echo base_url(); ?>public/assets/plugin/chart.js/chart.min.js"></script>
+
   <!-- Kaiadmin JS -->
   <script src="<?php echo base_url(); ?>public/assets/js/kaiadmin.min.js"></script>
+
+
 
   <?php $this->renderSection('pageScripts')?>
 </body>
