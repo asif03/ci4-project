@@ -42,6 +42,19 @@ class HonorariumInformationModel extends Model
         return $builder->get()->getRowArray();
     }
 
+    public function getHonorarium($honorariumId)
+    {
+        $builder = $this->db->table('honorarium_information hi');
+        $builder->select('hi.id, hi.applicant_id, hi.bmdc_reg_no, ti.name AS training_institute_name, hi.department_name, hi.honorarium_year, hi.previous_training_inmonth, hi.honorarium_position, hi.eligible_status AS bill_eligible_status, hi.bill_sl_no, hi.eligiblity_date, ap.*, hs.slot_name, bnk.bank_name AS new_bank_name');
+        $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
+        $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
+        $builder->join('institute ti', 'hi.training_institute_id = ti.institute_id', 'left');
+        $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
+        $builder->where('hi.id', $honorariumId);
+
+        return $builder->get()->getRowArray();
+    }
+
     /**
      * @param false|string $searchValue
      *
@@ -50,7 +63,7 @@ class HonorariumInformationModel extends Model
     public function getHonorariums($searchValue = '', $start = 0, $length = 10, $honorariumYear = 2024, $honorariumSession = 2)
     {
         $builder = $this->db->table('honorarium_information hi');
-        $builder->select('hi.id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, hi.bmdc_reg_no, hs.slot_name, hi.honorarium_year, hi.eligible_status');
+        $builder->select('hi.id, hi.applicant_id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, hi.bmdc_reg_no, hs.slot_name, hi.honorarium_year, hi.eligible_status');
         $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
         $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
         $builder->where('hi.honorarium_year', $honorariumYear);
@@ -114,5 +127,17 @@ class HonorariumInformationModel extends Model
         $builder->update(['eligible_status' => 'N', 'reject_reason' => $rejectReason, 'rejected_by' => $user->username, 'reject_date' => date('Y-m-d H:i:s')]);
 
         return $this->db->affectedRows();
+    }
+
+    public function exportBillInformation($honorariumYear, $honorariumSession)
+    {
+        $builder = $this->db->table('honorarium_information hi');
+        $builder->select('hi.*, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, hs.slot_name, hi.honorarium_year');
+        $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
+        $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
+        $builder->where('hi.honorarium_year', $honorariumYear);
+        $builder->where('hi.honorarium_slot_id', $honorariumSession);
+
+        return $builder->get()->getResultArray();
     }
 }

@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\HonorariumInformationModel;
+use Dompdf\Dompdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Honorarium extends BaseController
 {
@@ -27,13 +30,12 @@ class Honorarium extends BaseController
 
     public function getStatistics()
     {
-        $request = service('request');
+        $request    = service('request');
+        $jsonParams = $request->getJSON();
 
-        $honorariumYear    = $request->getPost('honorariumYear');
-        $honorariumSession = $request->getPost('honorariumSession');
-
-        //$honorariumYear    = 2025;
-        //$honorariumSession = 2;
+        // Access data
+        $honorariumYear    = $jsonParams->honorariumYear ?? null;
+        $honorariumSession = $jsonParams->honorariumSession ?? null;
 
         $statistics = $this->honorariumModel->getStatistics($honorariumYear, $honorariumSession);
 
@@ -102,6 +104,129 @@ class Honorarium extends BaseController
         } else {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to reject applicant.']);
         }
+    }
+
+    public function getHonorarium($id)
+    {
+        $honorarium = $this->honorariumModel->getHonorarium($id);
+
+        $data = [
+            'title'      => 'Bill Details',
+            'honorarium' => $honorarium,
+        ];
+
+        if ($honorarium) {
+            return view('Honorarium/view_details', $data);
+        } else {
+            echo 'Honorarium not found.';
+        }
+    }
+
+    public function downloadHonorariumForm()
+    {
+        $request = service('request');
+
+        $honorariumId = $request->getPost('honorariumId');
+
+        $honorariumId = 1;
+
+        $honorarium = $this->honorariumModel->getHonorarium($honorariumId);
+
+        if ($honorarium) {
+            // Generate PDF or any other file format here
+            // For example, using a library like TCPDF or Dompdf
+            // Return the file for download
+            $dompdf = new Dompdf();
+            $html   = view('Honorarium/pdf_form', ['honorarium' => $honorarium]);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            $dompdf->stream('honorarium_' . $honorariumId . '.pdf', ['Attachment' => true]);
+
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Honorarium not found.']);
+        }
+    }
+
+    public function exportExcel()
+    {
+        $file_name       = 'data.xlsx';
+        $spreadsheet     = new Spreadsheet();
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $activeWorksheet->setCellValue('A1', 'Hello World !');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($file_name);
+
+        header("Content-Type: application/vnd.ms-excel");
+
+        header('Content-Disposition: attachment; filename="' . basename($file_name) . '"');
+
+        header('Expires: 0');
+
+        header('Cache-Control: must-revalidate');
+
+        header('Pragma: public');
+
+        header('Content-Length:' . filesize($file_name));
+
+        flush();
+
+        readfile($file_name);
+
+        exit;
+
+        /*$honorariums = $this->honorariumModel->exportBillInformation();
+
+    $file_name = 'data.xlsx';
+
+    $spreadsheet = new Spreadsheet();
+
+    $sheet = $spreadsheet->getActiveSheet();
+
+    $sheet->setCellValue('A1', 'Employee Name');
+
+    $sheet->setCellValue('B1', 'Email Address');
+
+    $sheet->setCellValue('C1', 'Mobile No.');
+
+    $sheet->setCellValue('D1', 'Department');
+
+    $count = 2;
+
+    foreach ($honorariums as $row) {
+    $sheet->setCellValue('A' . $count, $row['employee_name']);
+
+    $sheet->setCellValue('B' . $count, $row['employee_email']);
+
+    $sheet->setCellValue('C' . $count, $row['employee_mobile']);
+
+    $sheet->setCellValue('D' . $count, $row['employee_department']);
+
+    $count++;
+    }
+
+    $writer = new Xlsx($spreadsheet);
+
+    $writer->save($file_name);
+
+    header("Content-Type: application/vnd.ms-excel");
+
+    header('Content-Disposition: attachment; filename="' . basename($file_name) . '"');
+
+    header('Expires: 0');
+
+    header('Cache-Control: must-revalidate');
+
+    header('Pragma: public');
+
+    header('Content-Length:' . filesize($file_name));
+
+    flush();
+
+    readfile($file_name);
+
+    exit;*/
     }
 
     public function create()

@@ -26,6 +26,12 @@ $routes->group('bills', static function ($routes) {
     $routes->post('fetch-honorariums', 'Honorarium::getSearchedHonorariums');
     $routes->post('approve-honorarium', 'Honorarium::approveHonorarium');
     $routes->post('reject-honorarium', 'Honorarium::rejectHonorarium');
+
+    $routes->get('fetch-honorarium/(:num)', 'Honorarium::getHonorarium/$1');
+
+    $routes->get('download-honorarium-form', 'Honorarium::downloadHonorariumForm');
+    $routes->get('export-excel', 'Honorarium::exportExcel');
+
     /*$routes->get('/users', 'Admin::users', ['as' => 'admin.users']);
 $routes->get('/users/(:num)', 'Admin::user/$1', ['as' => 'admin.user']);
 $routes->get('/roles', 'Admin::roles', ['as' => 'admin.roles']);
