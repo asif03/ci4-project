@@ -28,6 +28,7 @@ $routes->group('bills', static function ($routes) {
     $routes->post('reject-honorarium', 'Honorarium::rejectHonorarium');
 
     $routes->get('fetch-honorarium/(:num)', 'Honorarium::getHonorarium/$1');
+    $routes->get('fetch-honorarium/edit/(:num)', 'Honorarium::getBillInfo/$1');
 
     $routes->get('download-honorarium-form', 'Honorarium::downloadHonorariumForm');
     $routes->get('export-excel', 'Honorarium::exportExcel');

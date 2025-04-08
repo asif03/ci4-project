@@ -86,15 +86,23 @@ class HonorariumInformationModel extends Model
         return $builder->get()->getResultArray();
     }
 
-    public function countAllHonorariums()
+    public function countAllHonorariums($honorariumYear, $honorariumSession)
     {
-        return $this->db->table('honorarium_information')->countAll();
+        $builder = $this->db->table('honorarium_information');
+        $builder->where('honorarium_year', $honorariumYear);
+        $builder->where('honorarium_slot_id', $honorariumSession);
+
+        return $builder->countAllResults();
+
+        //return $this->db->table('honorarium_information')->countAll();
     }
 
-    public function countFilteredHonorariums($searchValue = '')
+    public function countFilteredHonorariums($searchValue = '', $honorariumYear = new date("Y"), $honorariumSession = 1)
     {
         $builder = $this->db->table('honorarium_information hi');
         $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
+        $builder->where('hi.honorarium_year', $honorariumYear);
+        $builder->where('hi.honorarium_slot_id', $honorariumSession);
 
         if (!empty($searchValue)) {
             $builder->groupStart()

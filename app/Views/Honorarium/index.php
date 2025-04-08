@@ -134,10 +134,27 @@ table.dataTable thead tr>th {
     </div>
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="viewHonorariumEditModal" tabindex="-1" aria-labelledby="viewHonorariumEditLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewHonorariumEditLabel">Edit Applicant's Bill Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="viewHonorariumEditContents"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <?php $this->endSection()?>
 
 <?php $this->section('pageScripts')?>
 <script>
+loadChartData(); // Call function to load data
 function loadChartData() {
 
   var honorariumYear = $('#honorariumYear').val();
@@ -184,8 +201,6 @@ function loadChartData() {
     })
     .catch(error => console.error('Error fetching data:', error));
 }
-
-loadChartData(); // Call function to load data
 
 function displayStatistics() {
   loadChartData();
@@ -256,7 +271,7 @@ $('#billList').DataTable({
         $action +=
           `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumModal" onclick="loadHonorariumView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button> `;
         $action +=
-          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumModal" onclick="loadEditView(${row.id})"><i class="fas fa-edit"></i></button>`;
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumEditModal" onclick="loadEditView(${row.id})"><i class="fas fa-edit"></i></button>`;
         $action +=
           `<a class="btn btn-outline-info btn-sm" href="<?=base_url('bills/download-honorarium-form')?>"><i class="fas fa-download"></i></a>`;
         return $action;
@@ -290,7 +305,6 @@ $('#billList').DataTable({
       "target": 8,
       "orderable": false
     },
-
   ]
 });
 
@@ -424,12 +438,24 @@ function getFilesInfo(applicationId) {
 }
 
 function loadHonorariumView(honorariumId) {
-
   $.ajax({
     type: 'GET',
     url: '<?php echo base_url(); ?>bills/fetch-honorarium/' + honorariumId,
     success: function(response) {
       $('#viewHonorariumContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
+function loadEditView(honorariumId) {
+  $.ajax({
+    type: 'GET',
+    url: '<?php echo base_url(); ?>bills/fetch-honorarium/edit/' + honorariumId,
+    success: function(response) {
+      $('#viewHonorariumEditContents').html(response);
     },
     error: function(xhr, status, error) {
       console.error('Error:', error);

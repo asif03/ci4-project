@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\HonorariumInformationModel;
+use App\Models\HonorariumSlotModel;
+use App\Models\InstituteModel;
+use App\Models\SpecialityModel;
 use Dompdf\Dompdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -10,10 +13,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class Honorarium extends BaseController
 {
     protected $honorariumModel;
+    protected $specialityModel;
+    protected $HonorariumSlotModel;
+    protected $instituteModel;
 
     public function __construct()
     {
-        $this->honorariumModel = new HonorariumInformationModel();
+        $this->honorariumModel     = new HonorariumInformationModel();
+        $this->specialityModel     = new SpecialityModel();
+        $this->HonorariumSlotModel = new HonorariumSlotModel();
+        $this->instituteModel      = new InstituteModel();
     }
 
     public function index()
@@ -62,8 +71,8 @@ class Honorarium extends BaseController
 
         // Fetch data from model
         $data          = $this->honorariumModel->getHonorariums($searchValue, $start, $length, $honorariumYear, $honorariumSession);
-        $totalRecords  = $this->honorariumModel->countAllHonorariums();
-        $totalFiltered = $this->honorariumModel->countFilteredHonorariums($searchValue);
+        $totalRecords  = $this->honorariumModel->countAllHonorariums($honorariumYear, $honorariumSession);
+        $totalFiltered = $this->honorariumModel->countFilteredHonorariums($searchValue, $honorariumYear, $honorariumSession);
 
         $response = [
             "draw"            => intval($draw),
@@ -117,6 +126,25 @@ class Honorarium extends BaseController
 
         if ($honorarium) {
             return view('Honorarium/view_details', $data);
+        } else {
+            echo 'Honorarium not found.';
+        }
+    }
+
+    public function getBillInfo($id)
+    {
+        $honorarium = $this->honorariumModel->getHonorarium($id);
+
+        $data = [
+            'title'      => 'Bill Details',
+            'speciality' => $this->specialityModel->findAll(),
+            'slots'      => $this->HonorariumSlotModel->findAll(),
+            'institute'  => $this->instituteModel->findAll(),
+            'honorarium' => $honorarium,
+        ];
+
+        if ($honorarium) {
+            return view('Honorarium/edit', $data);
         } else {
             echo 'Honorarium not found.';
         }
