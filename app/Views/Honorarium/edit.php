@@ -1,7 +1,7 @@
 <?php
-    echo '<pre>';
-    print_r($honorarium);
-    echo '</pre>';
+    //echo '<pre>';
+    //print_r($honorarium);
+    //echo '</pre>';
     //die;
 ?>
 <form action="<?php echo base_url('staff/update_honorarium'); ?>" method="POST" enctype="multipart/form-data">
@@ -21,7 +21,7 @@
     </div>
   </div>
   <fieldset style="border:1px solid #000;  border-radius:5px; padding:10px">
-    <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">General
+    <legend style="padding:5px; font-weight:bold; border-radius:5px; font-size:20px">General
       Information</legend>
     <div class="row">
       <p class="col-sm-4">1) Name of the Trainee (In capital letters as per NID card):</p>
@@ -38,11 +38,11 @@
         <select name="fcpsSpeciallity" class="form-control" required>
           <option value="">Select Please</option>
           <?php foreach ($speciality as $value) {?>
-          <option value="<?php echo $value->name; ?>"<?php if ($honorarium['fcps_speciallity'] == $value->name) {
+          <option value="<?php echo $value['name']; ?>"<?php if ($honorarium['fcps_speciallity'] == $value['name']) {
         echo 'selected';
 }
     ?>>
-            <?php echo $value->name; ?></option>
+            <?php echo $value['name']; ?></option>
           <?php }?>
         </select>
       </div>
@@ -142,11 +142,11 @@
         <select name="trainingInstitute" class="form-control" required>
           <option value="">Select Please</option>
           <?php foreach ($institute as $value) {?>
-          <option value="<?php echo $value->institute_id; ?>"<?php if ($bill->training_institute_id == $value->institute_id) {
+          <option value="<?php echo $value['institute_id']; ?>"<?php if ($honorarium['training_institute_id'] == $value['institute_id']) {
         echo 'selected';
 }
     ?>>
-            <?php echo $value->name; ?></option>
+            <?php echo $value['name']; ?></option>
           <?php }?>
         </select>
       </div>
@@ -164,9 +164,9 @@
         <select name="honorariumPeriod" id="honorariumPeriod" class="form-control" required>
           <option value="">Select Please</option>
           <?php foreach ($slots as $slot) {?>
-          <option value="<?php echo $slot->id; ?>"
-            <?php if ($slot->id == $honorarium['honorarium_slot_id']) {echo 'selected';}?>>
-            <?php echo $slot->slot_name; ?></option>
+          <option value="<?php echo $slot['id']; ?>"
+            <?php if ($slot['id'] == $honorarium['honorarium_slot_id']) {echo 'selected';}?>>
+            <?php echo $slot['slot_name']; ?></option>
           <?php }?>
         </select>
       </div>
@@ -224,10 +224,10 @@
         <select name="bankName" class="form-control" required>
           <option value="">Select Please</option>
           <?php foreach ($banks as $bank) {?>
-          <option value="<?php echo $bank->id; ?>"<?php if ($bank->id == $honorarium['bank_id']) {
+          <option value="<?php echo $bank['id']; ?>"<?php if ($bank['id'] == $honorarium['bank_id']) {
     echo 'selected';
 }?>>
-            <?php echo $bank->bank_name; ?>
+            <?php echo $bank['bank_name']; ?>
           </option>
           <?php }?>
         </select>

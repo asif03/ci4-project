@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BankModel;
 use App\Models\HonorariumInformationModel;
 use App\Models\HonorariumSlotModel;
 use App\Models\InstituteModel;
@@ -16,6 +17,7 @@ class Honorarium extends BaseController
     protected $specialityModel;
     protected $HonorariumSlotModel;
     protected $instituteModel;
+    protected $bankModel;
 
     public function __construct()
     {
@@ -23,6 +25,7 @@ class Honorarium extends BaseController
         $this->specialityModel     = new SpecialityModel();
         $this->HonorariumSlotModel = new HonorariumSlotModel();
         $this->instituteModel      = new InstituteModel();
+        $this->bankModel           = new BankModel();
     }
 
     public function index()
@@ -140,6 +143,7 @@ class Honorarium extends BaseController
             'speciality' => $this->specialityModel->findAll(),
             'slots'      => $this->HonorariumSlotModel->findAll(),
             'institute'  => $this->instituteModel->findAll(),
+            'banks'      => $this->bankModel->findAll(),
             'honorarium' => $honorarium,
         ];
 

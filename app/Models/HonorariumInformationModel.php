@@ -45,7 +45,7 @@ class HonorariumInformationModel extends Model
     public function getHonorarium($honorariumId)
     {
         $builder = $this->db->table('honorarium_information hi');
-        $builder->select('hi.id, hi.applicant_id, hi.bmdc_reg_no, ti.name AS training_institute_name, hi.department_name, hi.honorarium_year, hi.previous_training_inmonth, hi.honorarium_position, hi.eligible_status AS bill_eligible_status, hi.bill_sl_no, hi.eligiblity_date, ap.*, hs.slot_name, bnk.bank_name AS new_bank_name');
+        $builder->select('hi.id, hi.applicant_id, hi.bmdc_reg_no, hi.training_institute_id, ti.name AS training_institute_name, hi.department_name, hi.honorarium_year, hi.previous_training_inmonth, hi.honorarium_position, hi.eligible_status AS bill_eligible_status, hi.bill_sl_no, hi.eligiblity_date, hi.honorarium_slot_id, ap.*, hs.slot_name, bnk.bank_name AS new_bank_name');
         $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
         $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
         $builder->join('institute ti', 'hi.training_institute_id = ti.institute_id', 'left');
