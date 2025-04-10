@@ -7,7 +7,7 @@
   <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <meta name="description" content="">
   <meta name="author" content="Md. Asif Iqbal, Programmer, Bangladesh College of Physicians & Surgeons (BCPS)">
-  <title>BCPS :: <?php $this->renderSection('title')?></title>
+  <title>BCPS ::                 <?php $this->renderSection('title')?></title>
 
   <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url(); ?>public/favicon.ico">
 
@@ -28,6 +28,10 @@
   <link href="<?php echo base_url(); ?>public/assets/libs/datatables/css/datatables.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/2.2.1/css/dataTables.bootstrap5.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/responsive/3.0.4/css/responsive.bootstrap5.css" rel="stylesheet">
+
+  <!-- DatePicker -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+    rel="stylesheet">
 
   <style>
   .poppins-regular {
@@ -88,6 +92,8 @@
   <script src="<?php echo base_url(); ?>public/assets/libs/datatables/js/datatables.min.js"></script>
   <script src="https://cdn.datatables.net/responsive/3.0.4/js/dataTables.responsive.js"></script>
   <script src="https://cdn.datatables.net/responsive/3.0.4/js/responsive.bootstrap5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
+  </script>
 
   <!-- Sweet Alert -->
   <!-- <script src="<?php //echo base_url(); ?>public/assets/libs/sweetalert2/js/sweetalert2.all.min.js"></script> -->

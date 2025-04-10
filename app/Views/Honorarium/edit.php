@@ -1,23 +1,27 @@
-<?php
-    //echo '<pre>';
-    //print_r($honorarium);
-    //echo '</pre>';
-    //die;
-?>
 <form action="<?php echo base_url('staff/update_honorarium'); ?>" method="POST" enctype="multipart/form-data">
-  <h2 style="text-align:center"><?php echo $title; ?></h2>
+  <!-- <h2 style="text-align:center"><?php echo $title; ?></h2>
   <p style="text-align:center; font-size: 20px;">Bill of Non-Governmental Trainees Allowances (Honorarium)</p>
-  <hr />
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="bmdcRegNo">BMDC Reg. No.</label>
-      <input type="number" class="form-control" name="bmdc_reg_no" value="<?php echo $honorarium['bmdc_reg_no']; ?>"
-        id="bmdcRegNo" placeholder="BMDC Reg. No." required />
+  <hr /> -->
+  <div class="row mb-3">
+    <div class="col">
+      <label for="bmdcRegNo" class="form-label">BMDC Reg. No.</label>
+      <input type="number" class="form-control" name="bmdc_reg_no" id="bmdcRegNo"
+        value="<?php echo $honorarium['bmdc_reg_no']; ?>" placeholder="BMDC Reg. No." required />
     </div>
-    <div class="form-group col-md-6">
-      <label for="bmdcRegValidity">BMDC Reg. Validity:</label>
-      <input type="text" class="form-control" name="bmdcRegValidity" value="<?php echo $honorarium['bmdc_validity']; ?>"
-        id="bmdcRegValidity" placeholder="YYYY-MM-DD" required />
+    <div class="col">
+      <label for="bmdcRegValidity" class="form-label">BMDC Reg. Validity:</label>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" name="bmdcRegValidity" id="bmdcRegValidity"
+          aria-label="BMDC Reg. Validity" aria-describedby="calendar-addon2"
+          value="<?php echo $honorarium['bmdc_validity']; ?>" placeholder="YYYY-MM-DD" required />
+        <span class="input-group-text" id="calendar-addon2"><i class="fa fa-calendar"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+      <input type="email" class="form-control" id="inputEmail3">
     </div>
   </div>
   <fieldset style="border:1px solid #000;  border-radius:5px; padding:10px">
@@ -133,12 +137,11 @@
       </div>
     </div>
   </fieldset>
-  <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px; padding:10px">
-    <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
-      Applicant's Training Information:</legend>
+  <div class="row g-1 border border-primary">
+    <h2>Applicant's Training Information:</h2>
     <div class="row">
-      <p class="col-sm-5">10) Institute Name:</p>
-      <div class="col-sm-4">
+      <p class="col-sm-6">10) Institute Name:</p>
+      <div class="col-sm-6">
         <select name="trainingInstitute" class="form-control" required>
           <option value="">Select Please</option>
           <?php foreach ($institute as $value) {?>
@@ -151,11 +154,13 @@
         </select>
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">11) Department: </p>
-      <div class="col-sm-4">
-        <input type="text" name="department" class="form-control" value="<?php echo $honorarium['department_name']; ?>"
-          placeholder="Department Name" required />
+    <div class="row g-3 align-items-center">
+      <div class="col-5">
+        <label for="department" class="col-form-label">11) Department:</label>
+      </div>
+      <div class="col-7">
+        <input type="text" name="department" id="department" class="form-control"
+          value="<?php echo $honorarium['department_name']; ?>" placeholder="Department Name" required />
       </div>
     </div>
     <div class="row" style="margin-top: 10px">
@@ -207,94 +212,109 @@
           ?>
         </select>
       </div>
-  </fieldset>
-  <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px; padding:10px">
-    <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
-      Applicant's Personal Bank Information:</legend>
-    <div class="row">
-      <p class="col-sm-4">15) Name in block letters (Online & Personal):</p>
-      <div class="col-sm-4">
-        <input type="text" name="accountName" class="form-control" placeholder="Name in block letters"
-          style="text-transform:uppercase" value="<?php echo $honorarium['account_name']; ?>" required />
-      </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">16) Name of the Bank: </p>
-      <div class="col-sm-4">
-        <select name="bankName" class="form-control" required>
-          <option value="">Select Please</option>
-          <?php foreach ($banks as $bank) {?>
-          <option value="<?php echo $bank['id']; ?>"<?php if ($bank['id'] == $honorarium['bank_id']) {
+    <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px; padding:10px">
+      <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
+        Applicant's Personal Bank Information:</legend>
+      <div class="row">
+        <p class="col-sm-4">15) Name in block letters (Online & Personal):</p>
+        <div class="col-sm-4">
+          <input type="text" name="accountName" class="form-control" placeholder="Name in block letters"
+            style="text-transform:uppercase" value="<?php echo $honorarium['account_name']; ?>" required />
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">16) Name of the Bank: </p>
+        <div class="col-sm-4">
+          <select name="bankName" class="form-control" required>
+            <option value="">Select Please</option>
+            <?php foreach ($banks as $bank) {?>
+            <option value="<?php echo $bank['id']; ?>"<?php if ($bank['id'] == $honorarium['bank_id']) {
     echo 'selected';
 }?>>
-            <?php echo $bank['bank_name']; ?>
-          </option>
-          <?php }?>
-        </select>
+              <?php echo $bank['bank_name']; ?>
+            </option>
+            <?php }?>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">17) Name of the Branch: </p>
-      <div class="col-sm-4">
-        <input type="text" name="branchName" value="<?php echo $honorarium['branch_name']; ?>" class="form-control" />
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">17) Name of the Branch: </p>
+        <div class="col-sm-4">
+          <input type="text" name="branchName" value="<?php echo $honorarium['branch_name']; ?>" class="form-control" />
+        </div>
       </div>
-    </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">18) Account Number (Online & Personal): </p>
-      <div class="col-sm-4">
-        <input type="text" name="accountNo" value="<?php echo $honorarium['account_no']; ?>" class="form-control"
-          placeholder="Account Number (13 digits or above)" />
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">18) Account Number (Online & Personal): </p>
+        <div class="col-sm-4">
+          <input type="text" name="accountNo" value="<?php echo $honorarium['account_no']; ?>" class="form-control"
+            placeholder="Account Number (13 digits or above)" />
+        </div>
       </div>
-    </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">19) Routing Number: </p>
-      <div class="col-sm-4">
-        <input type="text" name="routingNumber" value="<?php echo $honorarium['routing_number']; ?>"
-          class="form-control" placeholder="Routing Number" />
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">19) Routing Number: </p>
+        <div class="col-sm-4">
+          <input type="text" name="routingNumber" value="<?php echo $honorarium['routing_number']; ?>"
+            class="form-control" placeholder="Routing Number" />
+        </div>
       </div>
-    </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">20) A page of the Bank Cheque book of the applicant: </p>
-      <div class="col-sm-4">
-        <input type="file" name="cheque" class="form-control" />
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">20) A page of the Bank Cheque book of the applicant: </p>
+        <div class="col-sm-4">
+          <input type="file" name="cheque" class="form-control" />
+        </div>
       </div>
-    </div>
-  </fieldset>
-  <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px;  padding:10px">
-    <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
-      Enclosures: (The applicants have to scan and upload the following documents)</legend>
-    <div class="row">
-      <p class="col-sm-4">1) Recent Passport size color Photograph: </p>
-      <div class="col-sm-4">
-        <input type="file" name="photograph" class="form-control" /> <strong color="#FF0000"> &nbsp; <font
-            color="#FF0000">
-            (Resolution: 300x300 pixels, Size: below 300 kb, picture)</font></strong>
+    </fieldset>
+    <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px;  padding:10px">
+      <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
+        Enclosures: (The applicants have to scan and upload the following documents)</legend>
+      <div class="row">
+        <p class="col-sm-4">1) Recent Passport size color Photograph: </p>
+        <div class="col-sm-4">
+          <input type="file" name="photograph" class="form-control" /> <strong color="#FF0000"> &nbsp; <font
+              color="#FF0000">
+              (Resolution: 300x300 pixels, Size: below 300 kb, picture)</font></strong>
+        </div>
       </div>
-    </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">2) Applicant’s Signature: </p>
-      <div class="col-sm-4">
-        <input type="file" name="signature" class="form-control" /> <strong> &nbsp; <font color="#FF0000">
-            (Resolution: 300x80
-            pixels, Size: below
-            300 kb, signature)</font></strong>
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">2) Applicant’s Signature: </p>
+        <div class="col-sm-4">
+          <input type="file" name="signature" class="form-control" /> <strong> &nbsp; <font color="#FF0000">
+              (Resolution: 300x80
+              pixels, Size: below
+              300 kb, signature)</font></strong>
+        </div>
       </div>
-    </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">3) Provisional training certificate Signature and seal of Supervisor and Director (Hospital)/
-        Superintendent (Hospital)/ Principal for Basic Subject: </p>
-      <div class="col-sm-4">
-        <input type="file" name="certificate" class="form-control" />
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">3) Provisional training certificate Signature and seal of Supervisor and Director
+          (Hospital)/
+          Superintendent (Hospital)/ Principal for Basic Subject: </p>
+        <div class="col-sm-4">
+          <input type="file" name="certificate" class="form-control" />
+        </div>
       </div>
-    </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">4) National Identity Card (NID/Smart Card): </p>
-      <div class="col-sm-4">
-        <input type="file" name="nid_card" class="form-control" />
+      <div class="row" style="margin-top: 10px">
+        <p class="col-sm-4">4) National Identity Card (NID/Smart Card): </p>
+        <div class="col-sm-4">
+          <input type="file" name="nid_card" class="form-control" />
+        </div>
       </div>
+    </fieldset>
+    <div class="btn-block" style="padding-top: 10px;">
+      <button type="submit" class="btn btn-success">Update</button>
     </div>
-  </fieldset>
-  <div class="btn-block" style="padding-top: 10px;">
-    <button type="submit" class="btn btn-success">Update</button>
-  </div>
 </form>
+<script>
+$(function() {
+  $('#bmdcRegValidity').datepicker({
+    uiLibrary: 'bootstrap5',
+    format: 'yyyy-mm-dd',
+    iconsLibrary: 'fontawesome',
+    icons: {
+      rightIcon: '<i class="fa fa-calendar"></i>'
+    },
+    todayHighlight: true,
+    autoclose: true,
+  });
+});
+</script>
