@@ -142,7 +142,7 @@ class Honorarium extends BaseController
             'title'      => 'Bill Details',
             'speciality' => $this->specialityModel->findAll(),
             'slots'      => $this->HonorariumSlotModel->findAll(),
-            'institute'  => $this->instituteModel->findAll(),
+            'institute'  => $this->instituteModel->where('status', true)->where('honorarium_status', true)->findAll(),
             'banks'      => $this->bankModel->findAll(),
             'honorarium' => $honorarium,
         ];
@@ -164,12 +164,12 @@ class Honorarium extends BaseController
 
         $honorarium = $this->honorariumModel->getHonorarium($honorariumId);
 
+        return view('Honorarium/pdf_form', ['honorarium' => $honorarium]);
+
         if ($honorarium) {
-            // Generate PDF or any other file format here
-            // For example, using a library like TCPDF or Dompdf
-            // Return the file for download
             $dompdf = new Dompdf();
             $html   = view('Honorarium/pdf_form', ['honorarium' => $honorarium]);
+            $dompdf->setOptions(new \Dompdf\Options(['isRemoteEnabled' => true]));
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();

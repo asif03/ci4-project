@@ -1,8 +1,5 @@
 <form action="<?php echo base_url('staff/update_honorarium'); ?>" method="POST" enctype="multipart/form-data">
-  <!-- <h2 style="text-align:center"><?php echo $title; ?></h2>
-  <p style="text-align:center; font-size: 20px;">Bill of Non-Governmental Trainees Allowances (Honorarium)</p>
-  <hr /> -->
-  <div class="row mb-3">
+  <div class="row">
     <div class="col">
       <label for="bmdcRegNo" class="form-label">BMDC Reg. No.</label>
       <input type="number" class="form-control" name="bmdc_reg_no" id="bmdcRegNo"
@@ -18,28 +15,22 @@
       </div>
     </div>
   </div>
-  <div class="row mb-3">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3">
-    </div>
-  </div>
-  <fieldset style="border:1px solid #000;  border-radius:5px; padding:10px">
-    <legend style="padding:5px; font-weight:bold; border-radius:5px; font-size:20px">General
-      Information</legend>
-    <div class="row">
-      <p class="col-sm-4">1) Name of the Trainee (In capital letters as per NID card):</p>
-      <span class="col-sm-4">
+  <div class="row mb-3 p-2">
+    <div class="border border-secondary text-center fs-4 rounded-pill mb-3">General Information</div>
+    <div class="mb-3 row">
+      <label for="name" class="col-sm-6 col-form-label">1) Name of the Trainee (In capital letters as per NID
+        card):</label>
+      <div class="col-sm-6">
         <input type="hidden" name="applicantId" value="<?php echo $honorarium['applicant_id']; ?>" />
         <input type="hidden" name="honorariumId" value="<?php echo $honorarium['id']; ?>" />
-        <input type="text" class="form-control" name="name" placeholder="Name"
-          value="<?php echo $honorarium['name']; ?>" style="text-transform:uppercase" required />
-      </span>
+        <input type="text" class="form-control text-uppercase" name="name" id="name" placeholder="Name"
+          value="<?php echo $honorarium['name']; ?>" required />
+      </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">2) Specialty:</p>
-      <div class="col-sm-4">
-        <select name="fcpsSpeciallity" class="form-control" required>
+    <div class="mb-3 row">
+      <label for="fcpsSpeciallity" class="col-sm-6 col-form-label">2) Specialty:</label>
+      <div class="col-sm-6">
+        <select name="fcpsSpeciallity" id="fcpsSpeciallity" class="form-select" required>
           <option value="">Select Please</option>
           <?php foreach ($speciality as $value) {?>
           <option value="<?php echo $value['name']; ?>"<?php if ($honorarium['fcps_speciallity'] == $value['name']) {
@@ -51,10 +42,10 @@
         </select>
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-4">3) FCPS Part-I Passed Session/Year:</p>
-      <div class="col-sm-2">
-        <select name="fcpsSession" class="form-control" required>
+    <div class="row mb-3">
+      <label for="fcpsSession" class="col-sm-6 col-form-label">3) FCPS Part-I Passed Session/Year:</label>
+      <div class="col-sm-3">
+        <select name="fcpsSession" id="fcpsSession" class="form-select" required>
           <option value="">Select</option>
           <option value="January"                                  <?php if ($honorarium['fcps_month'] == 'January') {
                                           echo 'selected';
@@ -66,8 +57,8 @@
                                ?>>July</option>
         </select>
       </div>
-      <div class="col-sm-2">
-        <select name="fcpsYear" class="form-control" required>
+      <div class="col-sm-3">
+        <select name="fcpsYear" class="form-select" required>
           <option value="">Select Please</option>
           <?php
               $current_year = date('Y');
@@ -84,28 +75,35 @@
         </select>
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">4) BCPS Reg. No. (10 Digit after passing FCPS Part-I): </p>
-      <div class="col-sm-4">
-        <input type="text" name="fcpsRegNo" value="<?php echo $honorarium['fcps_reg_no']; ?>"
+    <div class="row mb-3">
+      <label for="fcpsRegNo" class="col-sm-6 col-form-label">4) BCPS Reg. No. (10 Digit after passing FCPS Part-I):
+      </label>
+      <div class="col-sm-6">
+        <input type="text" name="fcpsRegNo" id="fcpsRegNo" value="<?php echo $honorarium['fcps_reg_no']; ?>"
           placeholder="10 Digit affer passing FCPS Part-I" class="form-control" required />
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">5) National Identity Card No.: </p>
-      <div class="col-sm-4">
-        <input type="text" name="nidNo" placeholder="NID-17 Digits / Smart Card 10 Digits"
+    <div class="row mb-3">
+      <label for="nidNo" class="col-sm-6 col-form-label">5) National Identity Card No.: </label>
+      <div class="col-sm-6">
+        <input type="text" name="nidNo" id="nidNo" placeholder="NID-17 Digits / Smart Card 10 Digits"
           value="<?php echo $honorarium['nid']; ?>" class="form-control" />
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">6) Date of Birth:</p>
-      <div class="col-sm-2">
-        <input type="text" name="dob" id="dob" placeholder="YYYY-MM-DD"
-          value="<?php echo $honorarium['date_of_birth']; ?>" class="form-control" />
+    <div class="row mb-3">
+      <label for="dob" class="col-sm-6 col-form-label">6) Date of Birth:</label>
+      <div class="col-sm-6">
+        <div class="input-group">
+          <input type="text" class="form-control" name="dob" id="dob" aria-label="Date of Birth"
+            aria-describedby="calendar-addon1" value="<?php echo $honorarium['date_of_birth']; ?>"
+            placeholder="YYYY-MM-DD" required />
+          <span class="input-group-text" id="calendar-addon1"><i class="fa fa-calendar"></i></span>
+        </div>
       </div>
-      <p class="col-sm-1">7) Gender:</p>
-      <div class="col-sm-2 btn-group">
+    </div>
+    <div class="row mb-3">
+      <label for="gender" class="col-sm-6 col-form-label">7) Gender:</label>
+      <div class="col-sm-6">
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="gender" id="male" value="Male"
             <?php if ($honorarium['gander'] == "Male") {echo 'checked';}?> />
@@ -122,27 +120,28 @@
         </div>
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">8) Mobile Number (Personal): </p>
-      <div class="col-sm-4">
+    <div class="row mb-3">
+      <label for="gender" class="col-sm-6 col-form-label">8) Mobile Number (Personal): </label>
+      <div class="col-sm-6">
         <input type="text" name="mobile" placeholder="11 Digit Mobile No." value="<?php echo $honorarium['mobile']; ?>"
           class="form-control" required />
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">9) Email: </p>
-      <div class="col-sm-4">
+    <div class="row">
+      <label for="email" class="col-sm-6 col-form-label">9) Email: </label>
+      <div class="col-sm-5">
         <input type="text" name="email" placeholder="example@domainname.com" value="<?php echo $honorarium['email']; ?>"
           class="form-control" required />
       </div>
     </div>
-  </fieldset>
-  <div class="row g-1 border border-primary">
-    <h2>Applicant's Training Information:</h2>
-    <div class="row">
-      <p class="col-sm-6">10) Institute Name:</p>
+  </div>
+
+  <div class="row mb-3 p-2">
+    <div class="border border-secondary text-center fs-4 rounded-pill mb-3">Applicant's Training Information</div>
+    <div class="row mb-3">
+      <label for="trainingInstitute" class="col-sm-6 col-form-label">10) Institute Name:</label>
       <div class="col-sm-6">
-        <select name="trainingInstitute" class="form-control" required>
+        <select name="trainingInstitute" class="form-select" required>
           <option value="">Select Please</option>
           <?php foreach ($institute as $value) {?>
           <option value="<?php echo $value['institute_id']; ?>"<?php if ($honorarium['training_institute_id'] == $value['institute_id']) {
@@ -154,7 +153,7 @@
         </select>
       </div>
     </div>
-    <div class="row g-3 align-items-center">
+    <div class="row mb-3">
       <div class="col-5">
         <label for="department" class="col-form-label">11) Department:</label>
       </div>
@@ -307,6 +306,17 @@
 <script>
 $(function() {
   $('#bmdcRegValidity').datepicker({
+    uiLibrary: 'bootstrap5',
+    format: 'yyyy-mm-dd',
+    iconsLibrary: 'fontawesome',
+    icons: {
+      rightIcon: '<i class="fa fa-calendar"></i>'
+    },
+    todayHighlight: true,
+    autoclose: true,
+  });
+
+  $('#dob').datepicker({
     uiLibrary: 'bootstrap5',
     format: 'yyyy-mm-dd',
     iconsLibrary: 'fontawesome',

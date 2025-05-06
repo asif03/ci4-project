@@ -1,7 +1,7 @@
 <?php
-    /*echo '<pre>';
-    print_r($applicant);
-    echo '</pre>';*/
+    echo '<pre>';
+    print_r($honorarium);
+    echo '</pre>';
     //die;
 ?>
 <!DOCTYPE html>
@@ -30,8 +30,8 @@
   header {
     position: fixed;
     top: -100px;
-    left: -25px;
-    right: -25px;
+    left: 0;
+    right: 0;
     height: 125px;
   }
 
@@ -54,7 +54,8 @@
 
 <body>
   <header style="width: 100%;">
-
+    <!--<img src="<?php //echo base_url(); ?>public/assets/images/banner.png" alt="Banner"
+      style="width:100%; background-color: #009641;" />-->
   </header>
   <footer>
     <table width="100%" border="0">
@@ -78,10 +79,10 @@
             Allowances (Honorarium)
           </h4>
         </td>
-        <td style="width: 20%; font-size: 12px; border: 1px solid #000000;">SL: </td>
+        <td style="width: 20%; font-size: 12px; border: 1px solid #000000;">SL: <?php echo $honorarium['bill_sl_no']; ?>
+        </td>
       </tr>
     </table>
-
     <table width="100%" border="0" style="margin-top: 0px; padding: 5px; font-size: 12px; border-collapse: collapse;">
       <tr>
         <td width="40%"></td>
