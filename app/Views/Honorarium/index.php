@@ -212,7 +212,7 @@ $('#billList').DataTable({
   "serverSide": true,
   "responsive": true,
   "ajax": {
-    "url": "<?=base_url('bills/fetch-honorariums')?>",
+    "url": "<?=base_url('bills/api/fetch-honorariums')?>",
     "type": "POST",
     "data": function(data) {
       data.honorariumYear = $('#honorariumYear').val();

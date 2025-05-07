@@ -164,7 +164,7 @@ class Honorarium extends BaseController
 
         $honorarium = $this->honorariumModel->getHonorarium($honorariumId);
 
-        return view('Honorarium/pdf_form', ['honorarium' => $honorarium]);
+        //return view('Honorarium/pdf_form', ['honorarium' => $honorarium]);
 
         if ($honorarium) {
             $dompdf = new Dompdf();
@@ -173,7 +173,7 @@ class Honorarium extends BaseController
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
-            $dompdf->stream('honorarium_' . $honorariumId . '.pdf', ['Attachment' => true]);
+            $dompdf->stream('honorarium_' . $honorarium['bmdc_reg_no'] . $honorariumId . '.pdf', ['Attachment' => true]);
 
         } else {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Honorarium not found.']);
@@ -294,6 +294,9 @@ class Honorarium extends BaseController
 
     public function update($id)
     {
+
+        echo $id;
+        die;
         $this->honorariumModel->save([
             'id'                => $id,
             'honorarium_name'   => $this->request->getPost('honorarium_name'),

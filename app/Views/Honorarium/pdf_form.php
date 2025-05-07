@@ -1,7 +1,7 @@
 <?php
-    echo '<pre>';
+    /*echo '<pre>';
     print_r($honorarium);
-    echo '</pre>';
+    echo '</pre>';*/
     //die;
 ?>
 <!DOCTYPE html>
@@ -54,8 +54,8 @@
 
 <body>
   <header style="width: 100%;">
-    <!--<img src="<?php //echo base_url(); ?>public/assets/images/banner.png" alt="Banner"
-      style="width:100%; background-color: #009641;" />-->
+    <img src="<?php echo base_url(); ?>public/assets/images/banner.png" alt="Banner"
+      style="width:100%; background-color: #009641;" />
   </header>
   <footer>
     <table width="100%" border="0">
@@ -79,7 +79,94 @@
             Allowances (Honorarium)
           </h4>
         </td>
-        <td style="width: 20%; font-size: 12px; border: 1px solid #000000;">SL: <?php echo $honorarium['bill_sl_no']; ?>
+        <td style="width: 20%; font-size: 12px; border: 1px solid #000000;">SL:                                                                                <?php echo $honorarium['bill_sl_no']; ?>
+        </td>
+      </tr>
+    </table>
+    <table width="100%" border="0" style="margin-top: 0px; padding: 5px; font-size: 12px;">
+      <tr>
+        <td colspan="2">Name of the Trainee (In capital letters as per NID card):                                                                                  <?php echo $honorarium['name']; ?>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">BCPS Registration No. (10 Digit after passing FCPS Part-I):
+          <?php echo $honorarium['fcps_reg_no']; ?>
+        </td>
+      </tr>
+      <tr>
+        <td>BMDC Registration No:                                  <?php echo $honorarium['bmdc_reg_no']; ?></td>
+        <td>Date of Birth:                           <?php echo $honorarium['date_of_birth']; ?></td>
+      </tr>
+      <tr>
+        <td colspan="2">National Identity Card No. (NID-17 Digits / Smart Card 10 Digits):
+          <?php echo $honorarium['nid']; ?></td>
+      </tr>
+      <tr>
+        <td>Mobile Number (Personal):                                      <?php echo $honorarium['mobile']; ?>
+        </td>
+        <td>Gender:                    <?php echo $honorarium['gander']; ?></td>
+      </tr>
+      <tr>
+        <td colspan="2">Institute Name:                                        <?php echo $honorarium['training_institute_name']; ?></td>
+      </tr>
+      <tr>
+        <td colspan="2">Department:                                    <?php echo $honorarium['department_name']; ?></td>
+      </tr>
+      <tr>
+        <td>Current Training Period:<?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>
+        </td>
+        <td>Applying for Honorarium:                                     <?php if ($honorarium['honorarium_position'] == 1) {
+                                             echo $honorarium['honorarium_position'] . 'st';
+                                         } elseif ($honorarium['honorarium_position'] == 2) {
+                                             echo $honorarium['honorarium_position'] . 'nd';
+                                         } elseif ($honorarium['honorarium_position'] == 3) {
+                                             echo $honorarium['honorarium_position'] . 'rd';
+                                         } else {
+                                         echo $honorarium['honorarium_position'] . 'th';
+                                     }?> Time</td>
+      </tr>
+      <tr>
+        <td>Name of the Bank:                              <?php echo $honorarium['new_bank_name']; ?></td>
+        <td>Branch Name:                         <?php echo $honorarium['branch_name']; ?></td>
+      </tr>
+      <tr>
+        <td>Bank Account Number (Online & Personal):                                                     <?php echo $honorarium['account_no']; ?></td>
+        <td>Routing Number:                            <?php echo $honorarium['routing_number']; ?></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="background-color: #000000; color: #FFFFFF; padding: 5px; text-align: center;">NB:
+          Provisional training
+          certificate, Photocopy of any page of the Personal bank cheque book and photocopy of NID/ Smart Card of
+          trainee must be
+          attached herewith.</td>
+      </tr>
+      <tr>
+        <td colspan="2">I have received 30,000x6=1,80,000/- (In words: two lakh and ten thousand) as training
+          allowance (Honorarium) for last 6 month period
+          <?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>.
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <p style="text-align: justify;">
+            <span
+              style="width: 100%; text-decoration: underline; font-weight: bold; text-align: center; padding-left: 320px;">Declaration</span>
+            <br />
+            I am Dr. <span style="text-decoration: underline;"><?php echo $honorarium['name']; ?></span> declaring that
+            all the information given by me are true. I have completed my last Six(6) months training in the
+            <?php echo $honorarium['department_name']; ?>
+            Department of<?php echo $honorarium['training_institute_name']; ?>. Apart from this training, I was not
+            involved in any
+            other job/duty/practice and also
+            have not received salary/allowances from any other source.
+            <br />
+            If the above information is proved false (even in partly), BCPS can take any legal action and I will be
+            liable to refund the money.
+          </p>
+          <!-- <p style="text-align: justify;">
+            If the above information is proved false (even in partly), BCPS can take any legal action and I will be
+            liable to refund the money.
+          </p> -->
         </td>
       </tr>
     </table>
@@ -146,15 +233,18 @@
         <td colspan="12" style="font-size: 12px; text-align: justify; padding: 5px;">
           Bills submitted for the remuneration of FCPS final non-government trainees are payable under the Government
           Allowances Assistance Sector (Code No. 3631102). Accordingly, based on the report from the training institute
-          and RTMD of BCPS, a total of six (6) months of allowances, amounting to Tk. 25,000 per month, totaling Tk.
-          1,50,000/- (in words: One Lakh Fifty Thousand), has been sanctioned and disbursed for the period from July to
-          December 2024.
+          and RTMD of BCPS, a total of six (6) months of allowances, amounting to Tk. 30,000 per month, totaling Tk.
+          1,80,000/- (in words: One Lakh Fifty Thousand), has been sanctioned and disbursed for the period from                                                                                                                <?php if ($honorarium['honorarium_slot_id'] == 1) {
+                                                                                                                        echo 'January to June ' . date('Y');
+                                                                                                                    } elseif ($honorarium['honorarium_slot_id'] == 2) {
+                                                                                                                    echo 'July to December ' . date('Y');
+                                                                                                                }?>.
         </td>
       </tr>
       <tr>
         <td colspan="3" style="font-size: 12px; padding: 5px; font-weight: bold;">
           ________________ <br>
-          Account Officer
+          Accountant
         </td>
         <td colspan="3" style="font-size: 12px; text-align: center; padding: 5px; font-weight: bold;">
           _______________________ <br>

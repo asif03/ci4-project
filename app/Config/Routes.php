@@ -23,12 +23,13 @@ $routes->group('applications', static function ($routes) {
 $routes->group('bills', static function ($routes) {
     $routes->get('/', 'Honorarium::index');
     $routes->post('get-statistics', 'Honorarium::getStatistics');
-    $routes->post('fetch-honorariums', 'Honorarium::getSearchedHonorariums');
+    $routes->post('api/fetch-honorariums', 'Honorarium::getSearchedHonorariums');
     $routes->post('approve-honorarium', 'Honorarium::approveHonorarium');
     $routes->post('reject-honorarium', 'Honorarium::rejectHonorarium');
 
     $routes->get('fetch-honorarium/(:num)', 'Honorarium::getHonorarium/$1');
     $routes->get('fetch-honorarium/edit/(:num)', 'Honorarium::getBillInfo/$1');
+    $routes->put('update-honorarium/(:num)', 'Honorarium::update/$1');
 
     $routes->get('download-honorarium-form', 'Honorarium::downloadHonorariumForm');
     $routes->get('export-excel', 'Honorarium::exportExcel');

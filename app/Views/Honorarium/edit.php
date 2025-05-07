@@ -1,4 +1,4 @@
-<form action="<?php echo base_url('staff/update_honorarium'); ?>" method="POST" enctype="multipart/form-data">
+<form action="<?php echo base_url('update-honorarium'); ?>" method="POST" enctype="multipart/form-data">
   <div class="row">
     <div class="col">
       <label for="bmdcRegNo" class="form-label">BMDC Reg. No.</label>
@@ -135,7 +135,6 @@
       </div>
     </div>
   </div>
-
   <div class="row mb-3 p-2">
     <div class="border border-secondary text-center fs-4 rounded-pill mb-3">Applicant's Training Information</div>
     <div class="row mb-3">
@@ -154,18 +153,24 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-5">
-        <label for="department" class="col-form-label">11) Department:</label>
-      </div>
-      <div class="col-7">
-        <input type="text" name="department" id="department" class="form-control"
-          value="<?php echo $honorarium['department_name']; ?>" placeholder="Department Name" required />
+      <label for="department" class="col-sm-6 col-form-label">11) Department:</label>
+      <div class="col-sm-6">
+        <select name="department" id="department" class="form-select" required>
+          <option value="">Select Please</option>
+          <?php foreach ($speciality as $value) {?>
+          <option value="<?php echo $value['name']; ?>"<?php if ($honorarium['department_name'] == $value['name']) {
+        echo 'selected';
+}
+    ?>>
+            <?php echo $value['name']; ?></option>
+          <?php }?>
+        </select>
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">12) Period of Training: </p>
-      <div class="col-sm-2">
-        <select name="honorariumPeriod" id="honorariumPeriod" class="form-control" required>
+    <div class="row mb-3">
+      <label for="honorariumPeriod" class="col-sm-6 col-form-label">12) Period of Training: </label>
+      <div class="col-sm-3">
+        <select name="honorariumPeriod" id="honorariumPeriod" class="form-select" required>
           <option value="">Select Please</option>
           <?php foreach ($slots as $slot) {?>
           <option value="<?php echo $slot['id']; ?>"
@@ -174,25 +179,25 @@
           <?php }?>
         </select>
       </div>
-      <div class="col-sm-2">
-
-        <select name="honorariumYear" id="honorariumYear" class="form-control" required>
+      <div class="col-sm-3">
+        <select name="honorariumYear" id="honorariumYear" class="form-select" required>
           <option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
         </select>
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">13) Total Previous Training with Course (In Month): </p>
-      <div class="col-sm-4">
+    <div class="row mb-3">
+      <label for="coursePeriod" class="col-sm-6 col-form-label">13) Total Previous Training with Course (In Month):
+      </label>
+      <div class="col-sm-3">
         <input type="text" class="form-control" name="coursePeriod"
           value="<?php echo $honorarium['previous_training_inmonth']; ?>" placeholder="Total number of months"
           required />
       </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-      <p class="col-sm-5">14) Applying for honorarium: </p>
-      <div class="col-sm-4">
-        <select name="honorariumPosition" id="honorariumPosition" class="form-control" required>
+    <div class="row mb-3">
+      <label for="honorariumPosition" class="col-sm-6 col-form-label">14) Applying for honorarium: </label>
+      <div class="col-sm-6">
+        <select name="honorariumPosition" id="honorariumPosition" class="form-select" required>
           <option value="">Select Please</option>
           <?php for ($cnt = 1; $cnt <= 10; $cnt++) {?>
           <option value="<?php echo $cnt; ?>"
@@ -212,96 +217,99 @@
         </select>
       </div>
     </div>
-    <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px; padding:10px">
-      <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
-        Applicant's Personal Bank Information:</legend>
-      <div class="row">
-        <p class="col-sm-4">15) Name in block letters (Online & Personal):</p>
-        <div class="col-sm-4">
-          <input type="text" name="accountName" class="form-control" placeholder="Name in block letters"
-            style="text-transform:uppercase" value="<?php echo $honorarium['account_name']; ?>" required />
-        </div>
+  </div>
+  <div class="row mb-3 p-2">
+    <div class="border border-secondary text-center fs-4 rounded-pill mb-3">Applicant's Personal Bank Information
+    </div>
+    <div class="row mb-3">
+      <label for="accountName" class="col-sm-6 col-form-label">15) Name in block letters (Online &
+        Personal):</label>
+      <div class="col-sm-6">
+        <input type="text" name="accountName" class="form-control" placeholder="Name in block letters"
+          style="text-transform:uppercase" value="<?php echo $honorarium['name']; ?>" required />
       </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">16) Name of the Bank: </p>
-        <div class="col-sm-4">
-          <select name="bankName" class="form-control" required>
-            <option value="">Select Please</option>
-            <?php foreach ($banks as $bank) {?>
-            <option value="<?php echo $bank['id']; ?>"<?php if ($bank['id'] == $honorarium['bank_id']) {
+    </div>
+    <div class="row mb-3">
+      <label for="bankName" class="col-sm-6 col-form-label">16) Name of the Bank: </label>
+      <div class="col-sm-6">
+        <select name="bankName" class="form-select" required>
+          <option value="">Select Please</option>
+          <?php foreach ($banks as $bank) {?>
+          <option value="<?php echo $bank['id']; ?>"<?php if ($bank['id'] == $honorarium['bank_id']) {
     echo 'selected';
 }?>>
-              <?php echo $bank['bank_name']; ?>
-            </option>
-            <?php }?>
-          </select>
-        </div>
+            <?php echo $bank['bank_name']; ?>
+          </option>
+          <?php }?>
+        </select>
       </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">17) Name of the Branch: </p>
-        <div class="col-sm-4">
-          <input type="text" name="branchName" value="<?php echo $honorarium['branch_name']; ?>" class="form-control" />
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">18) Account Number (Online & Personal): </p>
-        <div class="col-sm-4">
-          <input type="text" name="accountNo" value="<?php echo $honorarium['account_no']; ?>" class="form-control"
-            placeholder="Account Number (13 digits or above)" />
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">19) Routing Number: </p>
-        <div class="col-sm-4">
-          <input type="text" name="routingNumber" value="<?php echo $honorarium['routing_number']; ?>"
-            class="form-control" placeholder="Routing Number" />
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">20) A page of the Bank Cheque book of the applicant: </p>
-        <div class="col-sm-4">
-          <input type="file" name="cheque" class="form-control" />
-        </div>
-      </div>
-    </fieldset>
-    <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px;  padding:10px">
-      <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
-        Enclosures: (The applicants have to scan and upload the following documents)</legend>
-      <div class="row">
-        <p class="col-sm-4">1) Recent Passport size color Photograph: </p>
-        <div class="col-sm-4">
-          <input type="file" name="photograph" class="form-control" /> <strong color="#FF0000"> &nbsp; <font
-              color="#FF0000">
-              (Resolution: 300x300 pixels, Size: below 300 kb, picture)</font></strong>
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">2) Applicant’s Signature: </p>
-        <div class="col-sm-4">
-          <input type="file" name="signature" class="form-control" /> <strong> &nbsp; <font color="#FF0000">
-              (Resolution: 300x80
-              pixels, Size: below
-              300 kb, signature)</font></strong>
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">3) Provisional training certificate Signature and seal of Supervisor and Director
-          (Hospital)/
-          Superintendent (Hospital)/ Principal for Basic Subject: </p>
-        <div class="col-sm-4">
-          <input type="file" name="certificate" class="form-control" />
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px">
-        <p class="col-sm-4">4) National Identity Card (NID/Smart Card): </p>
-        <div class="col-sm-4">
-          <input type="file" name="nid_card" class="form-control" />
-        </div>
-      </div>
-    </fieldset>
-    <div class="btn-block" style="padding-top: 10px;">
-      <button type="submit" class="btn btn-success">Update</button>
     </div>
+    <div class="row mb-3">
+      <label for="branchName" class="col-sm-6 col-form-label">17) Name of the Branch: </label>
+      <div class="col-sm-6">
+        <input type="text" name="branchName" value="<?php echo $honorarium['branch_name']; ?>" class="form-control" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="accountNo" class="col-sm-6 col-form-label">18) Account Number (Online & Personal): </label>
+      <div class="col-sm-6">
+        <input type="text" name="accountNo" value="<?php echo $honorarium['account_no']; ?>" class="form-control"
+          placeholder="Account Number (13 digits or above)" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="accountName" class="col-sm-6 col-form-label">19) Routing Number: </label>
+      <div class="col-sm-6">
+        <input type="text" name="routingNumber" value="<?php echo $honorarium['routing_number']; ?>"
+          class="form-control" placeholder="Routing Number" />
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+      <label for="accountName" class="col-sm-6 col-form-label">20) A page of the Bank Cheque book of the applicant:
+      </label>
+      <div class="col-sm-4">
+        <input type="file" name="cheque" class="form-control" />
+      </div>
+    </div>
+  </div>
+  <fieldset style="border:1px solid #000;  border-radius:5px; margin-top:10px;  padding:10px">
+    <legend style="border:1px solid #000; padding:5px; font-weight:bold; border-radius:5px; font-size:20px">
+      Enclosures: (The applicants have to scan and upload the following documents)</legend>
+    <div class="row">
+      <p class="col-sm-4">1) Recent Passport size color Photograph: </p>
+      <div class="col-sm-4">
+        <input type="file" name="photograph" class="form-control" /> <strong color="#FF0000"> &nbsp; <font
+            color="#FF0000">
+            (Resolution: 300x300 pixels, Size: below 300 kb, picture)</font></strong>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+      <p class="col-sm-4">2) Applicant’s Signature: </p>
+      <div class="col-sm-4">
+        <input type="file" name="signature" class="form-control" /> <strong> &nbsp; <font color="#FF0000">
+            (Resolution: 300x80
+            pixels, Size: below
+            300 kb, signature)</font></strong>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+      <p class="col-sm-4">3) Provisional training certificate Signature and seal of Supervisor and Director
+        (Hospital)/
+        Superintendent (Hospital)/ Principal for Basic Subject: </p>
+      <div class="col-sm-4">
+        <input type="file" name="certificate" class="form-control" />
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+      <p class="col-sm-4">4) National Identity Card (NID/Smart Card): </p>
+      <div class="col-sm-4">
+        <input type="file" name="nid_card" class="form-control" />
+      </div>
+    </div>
+  </fieldset>
+  <div class="btn-block" style="padding-top: 10px;">
+    <button type="submit" class="btn btn-success">Update</button>
+  </div>
 </form>
 <script>
 $(function() {
