@@ -212,12 +212,12 @@ $('#billList').DataTable({
   "serverSide": true,
   "responsive": true,
   "ajax": {
-    "url": "<?=base_url('bills/api/fetch-honorariums')?>",
+    "url": "<?=base_url('bills/fetch-honorariums')?>",
     "type": "POST",
     "data": function(data) {
       data.honorariumYear = $('#honorariumYear').val();
       data.honorariumSession = $('#honorariumSession').val();
-    }
+    },
   },
   "columns": [{
       "data": "id"

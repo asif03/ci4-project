@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <meta name="description" content="">
+  <meta name="csrf_token" content="<?=csrf_hash()?>">
   <meta name="author" content="Md. Asif Iqbal, Programmer, Bangladesh College of Physicians & Surgeons (BCPS)">
   <title>BCPS ::                 <?php $this->renderSection('title')?></title>
 

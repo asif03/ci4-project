@@ -1,4 +1,7 @@
-<form action="<?php echo base_url('update-honorarium'); ?>" method="POST" enctype="multipart/form-data">
+<form action="<?=base_url('bills/update-honorarium/' . $honorarium['id'])?>" method="post" enctype="multipart/form-data">
+  <?=csrf_field()?>
+  <input type="hidden" name="_method" value="PUT"> <!-- simulate PUT -->
+  <!-- <form action="<?php echo base_url('update-honorarium'); ?>" method="POST" enctype="multipart/form-data"> -->
   <div class="row">
     <div class="col">
       <label for="bmdcRegNo" class="form-label">BMDC Reg. No.</label>
