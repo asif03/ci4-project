@@ -178,6 +178,19 @@
     </div>
   </div>
 </div>
+
+<!-- Modal For Edit Applicant -->
+<div class="modal fade" id="editApplicationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Applicant Info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="viewApplicantEditContents"></div>
+    </div>
+  </div>
+</div>
 <?php $this->endSection()?>
 
 <?php $this->section('pageScripts')?>
@@ -188,6 +201,7 @@ $('#applicantList').DataTable({
   "responsive": true,
   "ajax": {
     "url": "<?=base_url('applications/fetch-applicants')?>",
+    "dataType": "json",
     "type": "POST"
   },
   "columns": [{
@@ -252,7 +266,7 @@ $('#applicantList').DataTable({
         $action +=
           `<button class="btn btn-outline-info btn-sm btn-view" data-id="${row.applicant_id}"><i class="fa fa-eye" aria-hidden="true"></i></button> `;
         $action +=
-          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#applicationModal" onclick="getFilesInfo(${row.applicant_id})"><i class="fas fa-edit"></i></button>`;
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#editApplicationModal" onclick="loadEditView(${row.applicant_id})"><i class="fas fa-edit"></i></button>`;
 
         return $action;
       }
@@ -417,6 +431,20 @@ function getFilesInfo(applicationId) {
     dataType: 'html',
     success: function(response) {
       $('#modalContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
+function loadEditView(applicantId) {
+  alert(applicantId);
+  $.ajax({
+    type: 'GET',
+    url: '<?php echo base_url(); ?>applications/fetch-applicant/' + applicantId,
+    success: function(response) {
+      $('#viewApplicantEditContents').html(response);
     },
     error: function(xhr, status, error) {
       console.error('Error:', error);

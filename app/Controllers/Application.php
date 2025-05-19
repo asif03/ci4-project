@@ -51,6 +51,12 @@ class Application extends BaseController
         return $this->response->setJSON($response);
     }
 
+    public function getApplicant($id)
+    {
+        $applicant = $this->applicationModel->find($id);
+        return view('Application/edit', ['applicant' => $applicant]);
+    }
+
     public function getFilesInfo()
     {
         $request = service('request');
@@ -91,6 +97,21 @@ class Application extends BaseController
         } else {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to reject applicant.']);
         }
+    }
+
+    public function edit($id)
+    {
+        $data = [
+            'title'     => 'Edit Application',
+            'applicant' => $this->applicationModel->find($id),
+        ];
+
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        die;
+
+        return view('Honorarium/edit', $data);
     }
 
 }

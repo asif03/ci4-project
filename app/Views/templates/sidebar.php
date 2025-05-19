@@ -57,11 +57,11 @@
                   <span class="sub-item">Applicant List</span>
                 </a>
               </li>
-              <li>
+              <!-- <li>
                 <a href="icon-menu.html">
                   <span class="sub-item">Icon Menu</span>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </li>
