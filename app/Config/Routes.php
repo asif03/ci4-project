@@ -19,6 +19,8 @@ $routes->group('applications', static function ($routes) {
     $routes->get('/', 'Application::index');
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants');
     $routes->get('fetch-applicant/(:num)', 'Application::getApplicant/$1');
+    $routes->get('edit/(:num)', 'Application::edit/$1');
+    $routes->put('update-basic', 'Application::updateBasicInfo');
 
     $routes->post('fetch-files', 'Application::getFilesInfo');
     $routes->post('approve-applicant', 'Application::approveApplicant');

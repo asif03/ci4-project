@@ -102,16 +102,40 @@ class Application extends BaseController
     public function edit($id)
     {
         $data = [
-            'title'     => 'Edit Application',
+            'title'     => 'Application',
+            'pageTitle' => 'Edit Application Information',
             'applicant' => $this->applicationModel->find($id),
         ];
 
-        echo '<pre>';
+        /*echo '<pre>';
         print_r($data);
         echo '</pre>';
-        die;
+        die;*/
 
-        return view('Honorarium/edit', $data);
+        return view('Application/edit', $data);
+    }
+
+    public function updateBasicInfo()
+    {
+        $request = service('request');
+
+        $applicantId = $request->getPost('applicantId');
+        $name        = $request->getPost('name');
+        $fatherName  = $request->getPost('fatherName');
+        $motherName  = $request->getPost('motherName');
+
+        // Update applicant information
+        $data = [
+            'name'               => $name,
+            'father_spouse_name' => $fatherName,
+            'mother_name'        => $motherName,
+        ];
+
+        if ($this->applicationModel->update($applicantId, $data)) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'Applicant information updated successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to update applicant information.');
+        }
     }
 
 }

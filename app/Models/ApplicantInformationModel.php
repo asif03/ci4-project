@@ -9,6 +9,8 @@ class ApplicantInformationModel extends Model
     protected $table      = 'applicant_information';
     protected $primaryKey = 'applicant_id';
 
+    protected $allowedFields = ['name', 'father_spouse_name', 'mother_name'];
+
     public function getStatistics()
     {
         $builder = $this->db->table('applicant_information');

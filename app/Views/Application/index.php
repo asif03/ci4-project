@@ -180,14 +180,15 @@
 </div>
 
 <!-- Modal For Edit Applicant -->
-<div class="modal fade" id="editApplicationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewApplicationModal" tabindex="-1" aria-labelledby="applicationModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Applicant Info</h5>
+        <h5 class="modal-title" id="applicationModalLabel">Applicant Info</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" id="viewApplicantEditContents"></div>
+      <div class="modal-body" id="viewApplicantContents"></div>
     </div>
   </div>
 </div>
@@ -264,9 +265,9 @@ $('#applicantList').DataTable({
             `<button class="btn btn-danger btn-reject btn-sm" data-id="${row.applicant_id}"><i class="fas fa-times-circle"></i> Reject</button> `;
         }
         $action +=
-          `<button class="btn btn-outline-info btn-sm btn-view" data-id="${row.applicant_id}"><i class="fa fa-eye" aria-hidden="true"></i></button> `;
+          `<a href="<?=base_url('applications/edit/')?>${row.applicant_id}" class="btn btn-outline-info btn-sm btn-view" data-id="${row.applicant_id}"><i class="fas fa-edit"></i></a> `;
         $action +=
-          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#editApplicationModal" onclick="loadEditView(${row.applicant_id})"><i class="fas fa-edit"></i></button>`;
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewApplicationModal" onclick="loadApplicationView(${row.applicant_id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
 
         return $action;
       }
@@ -438,13 +439,12 @@ function getFilesInfo(applicationId) {
   });
 }
 
-function loadEditView(applicantId) {
-  alert(applicantId);
+function loadApplicationView(applicantId) {
   $.ajax({
     type: 'GET',
     url: '<?php echo base_url(); ?>applications/fetch-applicant/' + applicantId,
     success: function(response) {
-      $('#viewApplicantEditContents').html(response);
+      $('#viewApplicantContents').html(response);
     },
     error: function(xhr, status, error) {
       console.error('Error:', error);
