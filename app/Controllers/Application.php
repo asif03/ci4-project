@@ -120,16 +120,33 @@ class Application extends BaseController
         $request = service('request');
 
         $applicantId = $request->getPost('applicantId');
-        $name        = $request->getPost('name');
-        $fatherName  = $request->getPost('fatherName');
-        $motherName  = $request->getPost('motherName');
+
+        if (!$applicantId) {
+            return redirect()->back()->with('error', 'Invalid applicant ID.');
+        }
 
         // Update applicant information
         $data = [
-            'name'               => $name,
-            'father_spouse_name' => $fatherName,
-            'mother_name'        => $motherName,
+            'name'               => $request->getPost('name'),
+            'father_spouse_name' => $request->getPost('fatherName'),
+            'mother_name'        => $request->getPost('motherName'),
+            'date_of_birth'      => $request->getPost('dateOfBirth'),
+            'nataionality'       => $request->getPost('nationality'),
+            'religion'           => $request->getPost('religion'),
+            'nid'                => $request->getPost('nid'),
+            'address'            => $request->getPost('addressOfCommunication'),
+            'telephone'          => $request->getPost('telephone'),
+            'mobile'             => $request->getPost('mobile'),
+            'email'              => $request->getPost('email'),
+            'permanent_address'  => $request->getPost('permanentAddress'),
+            'updated_at'         => date('Y-m-d H:i:s'),
+            'updated_by'         => service('auth')->user()->id,
         ];
+
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        die;
 
         if ($this->applicationModel->update($applicantId, $data)) {
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'Applicant information updated successfully.');
