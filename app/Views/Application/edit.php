@@ -40,28 +40,30 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   <?php }?>
+  <?=view('_errors_list', ['errors' => session()->getFlashdata('errors')])?>
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#basic-info" type="button"
+      <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic-info" type="button"
         role="tab" aria-controls="home" aria-selected="true">Basic Info</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab"
+      <button class="nav-link" id="fcps-tab" data-bs-toggle="tab" data-bs-target="#fcps-info" type="button" role="tab"
         aria-controls="profile" aria-selected="false">FCPS PART-I Info</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
-        aria-controls="contact" aria-selected="false">MBBS/BDS</button>
+      <button class="nav-link" id="mbbs-tab" data-bs-toggle="tab" data-bs-target="#mbbs-info" type="button" role="tab"
+        aria-controls="contact" aria-selected="false">MBBS/BDS Info</button>
     </li>
   </ul>
 
   <div class="tab-content mt-3" id="myTabContent">
-    <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="home-tab border">
+    <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-tab border">
       <h6 class="text-left mb-3 fw-bold">General Information</h6>
+
       <form action="<?=base_url('applications/update-basic')?>" method="post">
         <?=csrf_field()?>
         <input type="hidden" name="_method" value="PUT" />
-        <input type="hidden" name="applicantId" value="<?php echo $applicant['applicant_id']; ?>" />
+        <input type="hidden" name="applicantId" value="<?=esc($applicant['applicant_id'])?>" />
         <div class="mb-3 row">
           <label for="name" class="col-sm-6 col-form-label">Applicant’s Name (Block Letters):</label>
           <div class="col-sm-6">
@@ -73,14 +75,14 @@
           <label for="fatherName" class="col-sm-6 col-form-label">Father’s/Spouse Name (Block Letters):</label>
           <div class="col-sm-6">
             <input type="text" class="form-control text-uppercase" name="fatherName" id="fatherName"
-              placeholder="Father's Name" value="<?php echo $applicant['father_spouse_name']; ?>" required />
+              placeholder="Father's Name" value="<?=esc($applicant['father_spouse_name'])?>" required />
           </div>
         </div>
         <div class="mb-3 row">
           <label for="motherName" class="col-sm-6 col-form-label">Mother’s Name (Block Letters):</label>
           <div class="col-sm-6">
             <input type="text" class="form-control text-uppercase" name="motherName" id="motherName" placeholder="Name"
-              value="<?php echo $applicant['mother_name']; ?>" required />
+              value="<?=esc($applicant['mother_name'])?>" required />
           </div>
         </div>
         <div class="mb-3 row">
@@ -88,7 +90,7 @@
           <div class="col-sm-2">
             <div class="input-group">
               <input type="text" class="form-control" name="dob" id="dob" placeholder="Select date" aria-label="Date"
-                aria-describedby="calendar-addon" value="<?php echo $applicant['date_of_birth']; ?>" required />
+                aria-describedby="calendar-addon" value="<?=esc($applicant['date_of_birth'])?>" required />
               <span class="input-group-text" id="calendar-addon">
                 <i class="fa fa-calendar"></i>
               </span>
@@ -99,70 +101,151 @@
           <label for="nationality" class="col-sm-6 col-form-label">Nationality:</label>
           <div class="col-sm-6">
             <input type="text" class="form-control" name="nationality" id="nationality" placeholder="Nationality"
-              value="<?php echo $applicant['nataionality']; ?>" required />
+              value="<?=esc($applicant['nataionality'])?>" required />
           </div>
         </div>
         <div class="mb-3 row">
           <label for="religion" class="col-sm-6 col-form-label">Religion:</label>
           <div class="col-sm-6">
             <input type="text" class="form-control" name="religion" id="religion" placeholder="Religion"
-              value="<?php echo $applicant['religion']; ?>" required />
+              value="<?=esc($applicant['religion'])?>" required />
           </div>
         </div>
         <div class="mb-3 row">
           <label for="nid" class="col-sm-6 col-form-label">National ID No:</label>
           <div class="col-sm-6">
             <input type="text" class="form-control" name="nid" id="nid" placeholder="12345678901234"
-              value="<?php echo $applicant['nid']; ?>" required />
+              value="<?=esc($applicant['nid'])?>" />
           </div>
         </div>
         <div class="mb-3 row">
           <label for="addressOfCommunication" class="col-sm-6 col-form-label">Address of communication:</label>
           <div class="col-sm-6">
             <textarea name="addressOfCommunication" id="addressOfCommunication" class="form-control" rows="2"
-              required><?=$applicant['address']?></textarea>
+              required><?=esc($applicant['address'])?></textarea>
           </div>
         </div>
         <div class="mb-3 row">
           <label for="mobile" class="col-sm-6 col-form-label">Mobile:</label>
           <div class="col-sm-6">
             <input type="text" class="form-control" name="mobile" id="mobile" placeholder="01234567890"
-              value="<?=$applicant['mobile']?>" />
+              value="<?=esc($applicant['mobile'])?>" />
           </div>
         </div>
         <div class="mb-3 row">
           <label for="telephone" class="col-sm-6 col-form-label">Tel (Res):</label>
           <div class="col-sm-6">
             <input type="text" class="form-control" name="telephone" id="telephone" placeholder="01234567890"
-              value="<?=$applicant['telephone']?>" />
+              value="<?=esc($applicant['telephone'])?>" />
           </div>
         </div>
         <div class="mb-3 row">
           <label for="email" class="col-sm-6 col-form-label">E-mail:</label>
           <div class="col-sm-6">
             <input type="email" class="form-control" name="email" id="email" placeholder="01234567890"
-              value="<?=$applicant['email']?>" />
+              value="<?=esc($applicant['email'])?>" />
           </div>
         </div>
         <div class="mb-3 row">
           <label for="permanentAddress" class="col-sm-6 col-form-label">Permanent Address:</label>
           <div class="col-sm-6">
             <textarea name="permanentAddress" id="permanentAddress" class="form-control" rows="2"
-              required><?=$applicant['permanent_address']?></textarea>
+              required><?=esc($applicant['permanent_address'])?></textarea>
           </div>
         </div>
         <button type="submit" class="btn btn-primary text-light">Update</button>
       </form>
     </div>
 
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-      <h2 class="mb-3">Profile</h2>
-      <p class="lead">This is the profile tab content.</p>
+    <div class="tab-pane fade" id="fcps-info" role="tabpanel" aria-labelledby="fcps-tab">
+      <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-tab border">
+        <h6 class="text-left mb-3 fw-bold">FCPS Part-I Information</h6>
+        <form action="<?=base_url('applications/update-fcps')?>" method="post">
+          <?=csrf_field()?>
+          <input type="hidden" name="_method" value="PUT" />
+          <input type="hidden" name="applicantId" value="<?=esc($applicant['applicant_id'])?>" />
+          <div class="mb-3 row">
+            <label for="fcpsYear" class="col-sm-6 col-form-label">Year of Passing:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="fcpsYear" id="fcpsYear">
+                <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
+                <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
+                  <?=$iLoop?></option>
+                <?php }?>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="fcpsSession" class="col-sm-6 col-form-label">Session:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="fcpsSession" id="fcpsSession">
+                <option value="January"                                        <?php if ('January' == $applicant['fcps_month']) {echo 'selected';}?>>
+                  January</option>
+                <option value="July"                                     <?php if ('July' == $applicant['fcps_month']) {echo 'selected';}?>>
+                  July</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="bcpsRegNo" class="col-sm-6 col-form-label">Online Reg. No./Reg. No. (after passing FCPS
+              Part-I):</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="bcpsRegNo" id="bcpsRegNo" placeholder="10 digit reg. no."
+                value="<?=esc($applicant['fcps_reg_no'])?>" required />
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="specialty" class="col-sm-6 col-form-label">Specialty:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="specialty" id="specialty">
+                <?php foreach ($specialities as $speciality) {?>
+                <option value="<?=$speciality['name']?>"
+                  <?php if ($speciality['name'] == $applicant['fcps_speciallity']) {echo 'selected';}?>>
+                  <?=$speciality['name']?></option>
+                <?php }?>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="fcpcRollNo" class="col-sm-6 col-form-label">Online Reg. No./Reg. No. (after passing FCPS
+              Part-I):</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="fcpcRollNo" id="fcpcRollNo" placeholder="12345678"
+                value="<?=esc($applicant['fcps_roll'])?>" required />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary text-light">Update</button>
+        </form>
+      </div>
     </div>
 
-    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-      <h2 class="mb-3">Contact</h2>
-      <p class="lead">This is the contact tab content.</p>
+    <div class="tab-pane fade" id="mbbs-info" role="tabpanel" aria-labelledby="mbbs-tab">
+      <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-tab border">
+        <h6 class="text-left mb-3 fw-bold">MBBS/BDS Info Update</h6>
+        <div class="mb-3 row">
+          <label for="mbbsBdsYear" class="col-sm-6 col-form-label">Year of Qualification:</label>
+          <div class="col-sm-6">
+            <select class="form-select" aria-label="Default select example" name="mbbsBdsYear" id="mbbsBdsYear">
+              <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
+              <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
+                <?=$iLoop?></option>
+              <?php }?>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="specialty" class="col-sm-6 col-form-label">Specialty:</label>
+          <div class="col-sm-6">
+            <select class="form-select" aria-label="Default select example" name="specialty" id="specialty">
+              <?php foreach ($mbbsInstitutes as $institute) {?>
+              <option value="<?=$institute['name']?>"
+                <?php if ($institute['name'] == $applicant['fcps_speciallity']) {echo 'selected';}?>>
+                <?=$institute['name']?></option>
+              <?php }?>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -3,14 +3,20 @@
 namespace App\Controllers;
 
 use App\Models\ApplicantInformationModel;
+use App\Models\MbbsInstituteModel;
+use App\Models\SpecialityModel;
 
 class Application extends BaseController
 {
     protected $applicationModel;
+    protected $specialityModel;
+    protected $mbbsInstituteModel;
 
     public function __construct()
     {
-        $this->applicationModel = new ApplicantInformationModel();
+        $this->applicationModel   = new ApplicantInformationModel();
+        $this->specialityModel    = new SpecialityModel();
+        $this->mbbsInstituteModel = new MbbsInstituteModel();
     }
 
     public function index()
@@ -101,10 +107,13 @@ class Application extends BaseController
 
     public function edit($id)
     {
+
         $data = [
-            'title'     => 'Application',
-            'pageTitle' => 'Edit Application Information',
-            'applicant' => $this->applicationModel->find($id),
+            'title'          => 'Application',
+            'pageTitle'      => 'Edit Application Information',
+            'applicant'      => $this->applicationModel->find($id),
+            'specialities'   => $this->specialityModel->where('status', true)->findAll(),
+            'mbbsInstitutes' => $this->mbbsInstituteModel->where('status', true)->findAll(),
         ];
 
         /*echo '<pre>';
@@ -130,7 +139,7 @@ class Application extends BaseController
             'name'               => $request->getPost('name'),
             'father_spouse_name' => $request->getPost('fatherName'),
             'mother_name'        => $request->getPost('motherName'),
-            'date_of_birth'      => $request->getPost('dateOfBirth'),
+            'date_of_birth'      => $request->getPost('dob'),
             'nataionality'       => $request->getPost('nationality'),
             'religion'           => $request->getPost('religion'),
             'nid'                => $request->getPost('nid'),
@@ -143,15 +152,42 @@ class Application extends BaseController
             'updated_by'         => service('auth')->user()->id,
         ];
 
-        echo '<pre>';
+        if (!$this->validateData($data, [
+            'name' => 'required',
+            'nid'  => [
+                'label'  => 'NID',
+                'rules'  => 'required|min_length[10]',
+                'errors' => [
+                    'required'   => 'NID is required.',
+                    'min_length' => 'NID at least 10 character in length.',
+                ],
+            ],
+        ])) {
+            // The validation failed.
+            /*return view('login', [
+            'errors' => $this->validator->getErrors(),
+            ]);*/
+
+            /*echo '<pre>';
+            print_r($this->validator->getErrors());
+            echo '</pre>';
+            die;*/
+
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('errors', $this->validator->getErrors());
+
+        }
+
+        //$validData = $this->validator->getValidated();
+
+        /*echo '<pre>';
         print_r($data);
         echo '</pre>';
-        die;
+        die;*/
 
         if ($this->applicationModel->update($applicantId, $data)) {
-            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'Applicant information updated successfully.');
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'Basic Information updated successfully.');
         } else {
-            return redirect()->back()->with('error', 'Failed to update applicant information.');
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Failed to update applicant information.');
         }
     }
 
