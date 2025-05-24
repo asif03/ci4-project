@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\ApplicantInformationModel;
+use App\Models\ApplicationAttachmentModel;
+use App\Models\BankModel;
 use App\Models\MbbsInstituteModel;
 use App\Models\SpecialityModel;
 
@@ -11,12 +13,16 @@ class Application extends BaseController
     protected $applicationModel;
     protected $specialityModel;
     protected $mbbsInstituteModel;
+    protected $bankModel;
+    protected $applicationAttachmentModel;
 
     public function __construct()
     {
-        $this->applicationModel   = new ApplicantInformationModel();
-        $this->specialityModel    = new SpecialityModel();
-        $this->mbbsInstituteModel = new MbbsInstituteModel();
+        $this->applicationModel           = new ApplicantInformationModel();
+        $this->specialityModel            = new SpecialityModel();
+        $this->mbbsInstituteModel         = new MbbsInstituteModel();
+        $this->bankModel                  = new BankModel();
+        $this->applicationAttachmentModel = new ApplicationAttachmentModel;
     }
 
     public function index()
@@ -57,10 +63,27 @@ class Application extends BaseController
         return $this->response->setJSON($response);
     }
 
-    public function getApplicant($id)
+    public function getApplication($id)
     {
-        $applicant = $this->applicationModel->find($id);
-        return view('Application/edit', ['applicant' => $applicant]);
+        $photographTypes = ['photograph', 'signature'];
+
+        $applicantInfo = [
+            'title'                  => 'Application',
+            'applicationInfo'        => 'View Application Information',
+            'trainingInfo'           => 'Training Information',
+            'applicationAttachments' => $this->applicationAttachmentModel
+                ->where('applicant_id', $id)
+                ->whereIn('type', $photographTypes)
+                ->findAll(),
+
+        ];
+
+        echo '<pre>';
+        print_r($applicantInfo);
+        echo '</pre>';
+        //die;
+
+        return view('Application/view', ['data' => $applicantInfo]);
     }
 
     public function getFilesInfo()
@@ -114,12 +137,8 @@ class Application extends BaseController
             'applicant'      => $this->applicationModel->find($id),
             'specialities'   => $this->specialityModel->where('status', true)->findAll(),
             'mbbsInstitutes' => $this->mbbsInstituteModel->where('status', true)->findAll(),
+            'banks'          => $this->bankModel->where('status', true)->findAll(),
         ];
-
-        /*echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-        die;*/
 
         return view('Application/edit', $data);
     }
@@ -188,6 +207,115 @@ class Application extends BaseController
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'Basic Information updated successfully.');
         } else {
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Failed to update applicant information.');
+        }
+    }
+
+    public function updateFcpsInfo()
+    {
+        $request = service('request');
+
+        $applicantId = $request->getPost('applicantId');
+
+        if (!$applicantId) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Invalid applicant ID.');
+        }
+
+        // Update FCPS information
+        $data = [
+            'fcps_reg_no' => $request->getPost('bcpsRegNo'),
+            'fcps_roll'   => $request->getPost('fcpcRollNo'),
+            'updated_at'  => date('Y-m-d H:i:s'),
+            'updated_by'  => service('auth')->user()->id,
+        ];
+
+        if (!$this->validateData($data, [
+            'fcps_reg_no' => [
+                'label'  => 'NID',
+                'rules'  => 'required|exact_length[10]',
+                'errors' => [
+                    'required'     => 'Online Registration No. is required.',
+                    'exact_length' => 'Online Registration No. must be 10 digits in length.',
+                ],
+            ],
+        ])) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('errors', $this->validator->getErrors());
+        }
+
+        $isValidRegNo = $this->applicationModel->checkBcpsRegNo($request->getPost('bcpsRegNo'));
+
+        if (!$isValidRegNo) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Online Registration No. is not valid.');
+        }
+
+        $checkAlreadyExists = $this->applicationModel->checkBcpsRegiAlreadyUsed($request->getPost('bcpsRegNo'));
+        if ($checkAlreadyExists) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Online Registration No. is already used by another applicant.');
+        }
+
+        if ($this->applicationModel->update($applicantId, $data)) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'FCPS Information updated successfully.');
+        } else {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Failed to update FCPS information.');
+        }
+    }
+
+    public function updateBankInfo()
+    {
+        $request = service('request');
+
+        $applicantId = $request->getPost('applicantId');
+
+        if (!$applicantId) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Invalid applicant ID.');
+        }
+
+        // Update Bank information
+        $data = [
+            'bank_id'        => $request->getPost('bankName'),
+            'branch_name'    => $request->getPost('branchName'),
+            'account_no'     => $request->getPost('acno'),
+            'routing_number' => $request->getPost('routingNumber'),
+            'updated_at'     => date('Y-m-d H:i:s'),
+            'updated_by'     => service('auth')->user()->id,
+        ];
+
+        if (!$this->validateData($data, [
+            'bank_id'        => [
+                'label'  => 'Bank Name',
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'Bank Name is required.',
+                ],
+            ],
+            'branch_name'    => [
+                'label'  => 'Branch Name',
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'Branch Name is required.',
+                ],
+            ],
+            'account_no'     => [
+                'label'  => 'Account No.',
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'Account No. is required.',
+                ],
+            ],
+            'routing_number' => [
+                'label'  => 'Routing Number',
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'Routing Number is required.',
+                ],
+            ],
+        ])) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('errors', $this->validator->getErrors());
+        }
+
+        if ($this->applicationModel->update($applicantId, $data)) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'Bank Information updated successfully.');
+        } else {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Failed to update Bank information.');
         }
     }
 

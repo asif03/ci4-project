@@ -18,9 +18,12 @@ $routes->group('api', static function ($routes) {
 $routes->group('applications', static function ($routes) {
     $routes->get('/', 'Application::index');
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants');
-    $routes->get('fetch-applicant/(:num)', 'Application::getApplicant/$1');
+    $routes->get('fetch-application/(:num)', 'Application::getApplication/$1');
     $routes->get('edit/(:num)', 'Application::edit/$1');
     $routes->put('update-basic', 'Application::updateBasicInfo');
+    $routes->put('update-fcps', 'Application::updateFcpsInfo');
+    $routes->put('update-mbbs', 'Application::updateMbbsInfo');
+    $routes->put('update-bank', 'Application::updateBankInfo');
 
     $routes->post('fetch-files', 'Application::getFilesInfo');
     $routes->post('approve-applicant', 'Application::approveApplicant');

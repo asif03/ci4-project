@@ -27,7 +27,7 @@
 
 <?php $this->section('main')?>
 <div>
-  <h5 class="mb-3 fw-bold"><span>Name:</span> <?=$applicant['name']?>(BMDC: <?=$applicant['bmdc_reg_no']?>/BCPS Reg.
+  <h5 class="mb-3 fw-bold text-primary"><?=$applicant['name']?>(BMDC: <?=$applicant['bmdc_reg_no']?>/BCPS Reg.
     NO.# <?=$applicant['fcps_reg_no']?>)</h5>
   <?php if (session()->getFlashdata('error')) {?>
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -53,6 +53,10 @@
     <li class="nav-item" role="presentation">
       <button class="nav-link" id="mbbs-tab" data-bs-toggle="tab" data-bs-target="#mbbs-info" type="button" role="tab"
         aria-controls="contact" aria-selected="false">MBBS/BDS Info</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank-info" type="button" role="tab"
+        aria-controls="contact" aria-selected="false">Bank Info</button>
     </li>
   </ul>
 
@@ -167,7 +171,7 @@
           <div class="mb-3 row">
             <label for="fcpsYear" class="col-sm-6 col-form-label">Year of Passing:</label>
             <div class="col-sm-6">
-              <select class="form-select" aria-label="Default select example" name="fcpsYear" id="fcpsYear">
+              <select class="form-select" aria-label="Default select example" name="fcpsYear" id="fcpsYear" disabled>
                 <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
                 <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
                   <?=$iLoop?></option>
@@ -178,7 +182,8 @@
           <div class="mb-3 row">
             <label for="fcpsSession" class="col-sm-6 col-form-label">Session:</label>
             <div class="col-sm-6">
-              <select class="form-select" aria-label="Default select example" name="fcpsSession" id="fcpsSession">
+              <select class="form-select" aria-label="Default select example" name="fcpsSession" id="fcpsSession"
+                disabled>
                 <option value="January"                                        <?php if ('January' == $applicant['fcps_month']) {echo 'selected';}?>>
                   January</option>
                 <option value="July"                                     <?php if ('July' == $applicant['fcps_month']) {echo 'selected';}?>>
@@ -187,17 +192,9 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="bcpsRegNo" class="col-sm-6 col-form-label">Online Reg. No./Reg. No. (after passing FCPS
-              Part-I):</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" name="bcpsRegNo" id="bcpsRegNo" placeholder="10 digit reg. no."
-                value="<?=esc($applicant['fcps_reg_no'])?>" required />
-            </div>
-          </div>
-          <div class="mb-3 row">
             <label for="specialty" class="col-sm-6 col-form-label">Specialty:</label>
             <div class="col-sm-6">
-              <select class="form-select" aria-label="Default select example" name="specialty" id="specialty">
+              <select class="form-select" aria-label="Default select example" name="specialty" id="specialty" disabled>
                 <?php foreach ($specialities as $speciality) {?>
                 <option value="<?=$speciality['name']?>"
                   <?php if ($speciality['name'] == $applicant['fcps_speciallity']) {echo 'selected';}?>>
@@ -207,11 +204,18 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="fcpcRollNo" class="col-sm-6 col-form-label">Online Reg. No./Reg. No. (after passing FCPS
-              Part-I):</label>
+            <label for="fcpcRollNo" class="col-sm-6 col-form-label">Roll No.:</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" name="fcpcRollNo" id="fcpcRollNo" placeholder="12345678"
                 value="<?=esc($applicant['fcps_roll'])?>" required />
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="bcpsRegNo" class="col-sm-6 col-form-label">Online Reg. No./Reg. No. (after passing FCPS
+              Part-I):</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="bcpsRegNo" id="bcpsRegNo" placeholder="10 digit reg. no."
+                value="<?=esc($applicant['fcps_reg_no'])?>" />
             </div>
           </div>
           <button type="submit" class="btn btn-primary text-light">Update</button>
@@ -222,6 +226,7 @@
     <div class="tab-pane fade" id="mbbs-info" role="tabpanel" aria-labelledby="mbbs-tab">
       <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-tab border">
         <h6 class="text-left mb-3 fw-bold">MBBS/BDS Info Update</h6>
+
         <div class="mb-3 row">
           <label for="mbbsBdsYear" class="col-sm-6 col-form-label">Year of Qualification:</label>
           <div class="col-sm-6">
@@ -245,6 +250,51 @@
             </select>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="bank-info" role="tabpanel" aria-labelledby="bank-tab">
+      <div class="tab-pane fade show active" id="bank-info" role="tabpanel" aria-labelledby="basic-tab border">
+        <h6 class="text-left mb-3 fw-bold">Bank Info Update</h6>
+        <form action="<?=base_url('applications/update-bank')?>" method="post">
+          <?=csrf_field()?>
+          <input type="hidden" name="_method" value="PUT" />
+          <input type="hidden" name="applicantId" value="<?=esc($applicant['applicant_id'])?>" />
+          <div class="mb-3 row">
+            <label for="bankName" class="col-sm-6 col-form-label">Name of the Bank:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="bankName" id="bankName" required>
+                <option value="">Select Bank</option>
+                <?php foreach ($banks as $bank) {?>
+                <option value="<?=$bank['id']?>"<?php if ($bank['id'] == $applicant['bank_id']) {echo 'selected';}?>>
+                  <?=$bank['bank_name']?></option>
+                <?php }?>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="branchName" class="col-sm-6 col-form-label">Name of the Branch:</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control text-uppercase" name="branchName" id="branchName"
+                placeholder="Branch Name" value="<?=esc($applicant['branch_name'])?>" required />
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="acno" class="col-sm-6 col-form-label">Account Number (13 digits or above):</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="acno" id="acno" placeholder="1234563258952"
+                value="<?=esc($applicant['account_no'])?>" required />
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="routingNumber" class="col-sm-6 col-form-label">Name of the Branch:</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="routingNumber" id="routingNumber" placeholder="012345678912"
+                value="<?=esc($applicant['routing_number'])?>" required />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary text-light">Update</button>
+        </form>
       </div>
     </div>
   </div>

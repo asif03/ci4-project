@@ -442,7 +442,7 @@ function getFilesInfo(applicationId) {
 function loadApplicationView(applicantId) {
   $.ajax({
     type: 'GET',
-    url: '<?php echo base_url(); ?>applications/fetch-applicant/' + applicantId,
+    url: '<?php echo base_url(); ?>applications/fetch-application/' + applicantId,
     success: function(response) {
       $('#viewApplicantContents').html(response);
     },

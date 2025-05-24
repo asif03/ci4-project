@@ -10,7 +10,8 @@ class ApplicantInformationModel extends Model
     protected $primaryKey = 'applicant_id';
 
     protected $allowedFields = ['name', 'father_spouse_name', 'mother_name', 'date_of_birth', 'nataionality', 'religion', 'nid',
-        'address', 'mobile', 'telephone', 'email', 'permanent_address', 'updated_at', 'updated_by'];
+        'address', 'mobile', 'telephone', 'email', 'permanent_address', 'fcps_reg_no', 'fcps_roll', 'bank_id', 'branch_name', 'account_no',
+        'routing_number', 'updated_at', 'updated_by'];
 
     public function getStatistics()
     {
@@ -64,6 +65,22 @@ class ApplicantInformationModel extends Model
     public function countAllData()
     {
         return $this->db->table('applicant_information')->countAll();
+    }
+
+    public function checkBcpsRegNo($bcpsRegNo)
+    {
+        $builder = $this->db->table('fcps_one_pass_applicants');
+        $builder->where('reg_no', $bcpsRegNo);
+
+        return $builder->countAllResults() > 0;
+    }
+
+    public function checkBcpsRegiAlreadyUsed($bcpsRegNo)
+    {
+        $builder = $this->db->table('applicant_information');
+        $builder->where('fcps_reg_no', $bcpsRegNo);
+
+        return $builder->countAllResults() > 0;
     }
 
     public function countFilteredData($searchValue = '')
