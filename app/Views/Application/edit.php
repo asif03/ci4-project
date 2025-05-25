@@ -226,30 +226,44 @@
     <div class="tab-pane fade" id="mbbs-info" role="tabpanel" aria-labelledby="mbbs-tab">
       <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-tab border">
         <h6 class="text-left mb-3 fw-bold">MBBS/BDS Info Update</h6>
+        <form action="<?=base_url('applications/update-mbbs')?>" method="post">
+          <?=csrf_field()?>
+          <input type="hidden" name="_method" value="PUT" />
+          <input type="hidden" name="applicantId" value="<?=esc($applicant['applicant_id'])?>" />
+          <div class="mb-3 row">
+            <label for="mbbsBdsYear" class="col-sm-6 col-form-label">Year of Qualification:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="mbbsBdsYear" id="mbbsBdsYear">
+                <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
+                <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['mbbs_bds_year']) {echo 'selected';}?>>
+                  <?=$iLoop?></option>
+                <?php }?>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="specialty" class="col-sm-6 col-form-label">Institute:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="mbbsInstitute" id="mbbsInstitute"
+                onchange="">
+                <?php foreach ($mbbsInstitutes as $institute) {?>
+                <option value="<?=$institute['institute_id']?>"
+                  <?php if ($institute['institute_id'] == $applicant['mbbs_institute_id']) {echo 'selected';}?>>
+                  <?=$institute['name']?></option>
+                <?php }?>
+              </select>
 
-        <div class="mb-3 row">
-          <label for="mbbsBdsYear" class="col-sm-6 col-form-label">Year of Qualification:</label>
-          <div class="col-sm-6">
-            <select class="form-select" aria-label="Default select example" name="mbbsBdsYear" id="mbbsBdsYear">
-              <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
-              <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
-                <?=$iLoop?></option>
-              <?php }?>
-            </select>
+            </div>
           </div>
-        </div>
-        <div class="mb-3 row">
-          <label for="specialty" class="col-sm-6 col-form-label">Specialty:</label>
-          <div class="col-sm-6">
-            <select class="form-select" aria-label="Default select example" name="specialty" id="specialty">
-              <?php foreach ($mbbsInstitutes as $institute) {?>
-              <option value="<?=$institute['name']?>"
-                <?php if ($institute['name'] == $applicant['fcps_speciallity']) {echo 'selected';}?>>
-                <?=$institute['name']?></option>
-              <?php }?>
-            </select>
+          <div class="mb-3 row">
+            <label for="bmdcRegNo" class="col-sm-6 col-form-label">BMDC Reg. No:</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="bmdcRegNo" id="bmdcRegNo" placeholder="01234567890"
+                value="<?=esc($applicant['bmdc_reg_no'])?>" disabled />
+            </div>
           </div>
-        </div>
+          <button type="submit" class="btn btn-primary text-light">Update</button>
+        </form>
       </div>
     </div>
 

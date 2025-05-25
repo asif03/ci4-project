@@ -9,7 +9,7 @@ class HonorariumInformationModel extends Model
 
     protected $table              = 'honorarium_information';
     protected $primaryKey         = 'id';
-    protected $allowedFields      = ['honorarium_id', 'honorarium_name', 'honorarium_amount', 'honorarium_date', 'honorarium_status'];
+    protected $allowedFields      = ['training_institute_id', 'department_name', 'previous_training_inmonth', 'eligible_status', 'eligiblity_date', 'eligible_by'];
     protected $useTimestamps      = true;
     protected $createdField       = 'created_at';
     protected $updatedField       = 'updated_at';
@@ -121,7 +121,7 @@ class HonorariumInformationModel extends Model
 
         $builder = $this->db->table('honorarium_information');
         $builder->where('id', $honorariumId);
-        $builder->update(['eligible_status' => 'Y', 'eligible_by' => $user->username, 'eligiblity_date' => date('Y-m-d H:i:s')]);
+        $builder->update(['eligible_status' => 'Y', 'eligible_by' => $user->id, 'eligiblity_date' => date('Y-m-d H:i:s')]);
 
         return $this->db->affectedRows();
     }

@@ -10,7 +10,8 @@ class ApplicantInformationModel extends Model
     protected $primaryKey = 'applicant_id';
 
     protected $allowedFields = ['name', 'father_spouse_name', 'mother_name', 'date_of_birth', 'nataionality', 'religion', 'nid',
-        'address', 'mobile', 'telephone', 'email', 'permanent_address', 'fcps_reg_no', 'fcps_roll', 'bank_id', 'branch_name', 'account_no',
+        'address', 'mobile', 'telephone', 'email', 'permanent_address', 'fcps_reg_no', 'fcps_roll', 'mbbs_bds_year', 'mbbs_institute_id', 'mbbs_bds_institute',
+        'bank_id', 'branch_name', 'account_no',
         'routing_number', 'updated_at', 'updated_by'];
 
     public function getStatistics()
@@ -65,6 +66,16 @@ class ApplicantInformationModel extends Model
     public function countAllData()
     {
         return $this->db->table('applicant_information')->countAll();
+    }
+
+    public function getApplicantById($applicantId)
+    {
+        $builder = $this->db->table('applicant_information ap');
+        $builder->select('ap.*, bnk.bank_name');
+        $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
+        $builder->where('ap.applicant_id', $applicantId);
+
+        return $builder->get()->getRowArray();
     }
 
     public function checkBcpsRegNo($bcpsRegNo)

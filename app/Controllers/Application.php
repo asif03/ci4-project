@@ -69,7 +69,7 @@ class Application extends BaseController
 
         $applicantInfo = [
             'title'                  => 'Application',
-            'applicationInfo'        => 'View Application Information',
+            'applicationInfo'        => $this->applicationModel->getApplicantById($id),
             'trainingInfo'           => 'Training Information',
             'applicationAttachments' => $this->applicationAttachmentModel
                 ->where('applicant_id', $id)
@@ -78,9 +78,9 @@ class Application extends BaseController
 
         ];
 
-        echo '<pre>';
+        /*echo '<pre>';
         print_r($applicantInfo);
-        echo '</pre>';
+        echo '</pre>';*/
         //die;
 
         return view('Application/view', ['data' => $applicantInfo]);
@@ -256,6 +256,31 @@ class Application extends BaseController
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'FCPS Information updated successfully.');
         } else {
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Failed to update FCPS information.');
+        }
+    }
+
+    public function updateMbbsInfo()
+    {
+        $request = service('request');
+
+        $applicantId = $request->getPost('applicantId');
+
+        if (!$applicantId) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Invalid applicant ID.');
+        }
+
+        // Update MBBS information
+        $data = [
+            'mbbs_institute_id' => $request->getPost('mbbsInstitute'),
+            'mbbs_bds_year'     => $request->getPost('mbbsBdsYear'),
+            'updated_at'        => date('Y-m-d H:i:s'),
+            'updated_by'        => service('auth')->user()->id,
+        ];
+
+        if ($this->applicationModel->update($applicantId, $data)) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'MBBS Information updated successfully.');
+        } else {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Failed to update MBBS information.');
         }
     }
 

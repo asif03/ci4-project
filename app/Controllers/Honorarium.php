@@ -292,20 +292,29 @@ class Honorarium extends BaseController
         return view('Honorarium/edit', $data);
     }
 
-    public function update($id)
+    public function update($honorariumId)
     {
+        $request   = service('request');
+        $updatedId = $request->getPost('honorariumId');
 
-        echo $id;
-        die;
-        $this->honorariumModel->save([
-            'id'                => $id,
-            'honorarium_name'   => $this->request->getPost('honorarium_name'),
-            'honorarium_amount' => $this->request->getPost('honorarium_amount'),
-            'honorarium_date'   => $this->request->getPost('honorarium_date'),
-            'honorarium_status' => $this->request->getPost('honorarium_status'),
-        ]);
+        if (!$updatedId) {
+            return redirect()->back()->with('error', 'Invalid applicant ID.');
+        }
 
-        return redirect()->to('/honorariums');
+        // Update applicant information
+        $data = [
+            'training_institute_id'     => $request->getPost('trainingInstitute'),
+            'department_name'           => $request->getPost('department'),
+            'previous_training_inmonth' => $request->getPost('previousTrainingPeriod'),
+            'updated_at'                => date('Y-m-d H:i:s'),
+            'updated_by'                => service('auth')->user()->id,
+        ];
+
+        if ($this->honorariumModel->update($updatedId, $data)) {
+            return redirect()->to('/bills')->with('success', 'Basic Information updated successfully.');
+        } else {
+            return redirect()->back()->with('errors', 'Failed to update honorarium information.');
+        }
     }
 
     public function delete($id)
@@ -315,5 +324,3 @@ class Honorarium extends BaseController
         return redirect()->to('/honorariums');
     }
 }
-
-//431354
