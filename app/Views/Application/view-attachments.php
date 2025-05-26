@@ -30,7 +30,7 @@
     <tr>
       <td scope="row"><?=$sl++;?></td>
       <td><?=$attachments[$key]['attachement_title']?></td>
-      <td><a href="<?=base_url('uploads/' . $file['file_name'])?>" target="_blank">View</a></td>
+      <td><a href="https://application1.bcps.edu.bd/uploads/<?=$file['file_name']?>" target="_blank">View</a></td>
     </tr>
     <?php }?>
   </tbody>

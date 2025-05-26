@@ -30,6 +30,7 @@ class Honorarium extends BaseController
 
     public function index()
     {
+
         $data = [
             'title'       => 'Honorarium',
             'pageTitle'   => 'Bills Information',
@@ -154,14 +155,10 @@ class Honorarium extends BaseController
         }
     }
 
-    public function downloadHonorariumForm()
+    public function downloadHonorariumForm($honorariumId)
     {
-        $request = service('request');
-
-        $honorariumId = $request->getPost('honorariumId');
-
-        $honorariumId = 1;
-
+        //$request      = service('request');
+        //$honorariumId = $request->getPost('honorariumId');
         $honorarium = $this->honorariumModel->getHonorarium($honorariumId);
 
         //return view('Honorarium/pdf_form', ['honorarium' => $honorarium]);

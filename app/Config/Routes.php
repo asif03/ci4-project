@@ -41,9 +41,7 @@ $routes->group('bills', static function ($routes) {
     $routes->get('fetch-honorarium/(:num)', 'Honorarium::getHonorarium/$1');
     $routes->get('fetch-honorarium/edit/(:num)', 'Honorarium::getBillInfo/$1');
     $routes->put('update-honorarium/(:num)', 'Honorarium::update/$1');
-
-    $routes->get('download-honorarium-form', 'Honorarium::downloadHonorariumForm');
-    $routes->get('export-excel', 'Honorarium::exportExcel');
+    $routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
 
     /*$routes->get('/users', 'Admin::users', ['as' => 'admin.users']);
 $routes->get('/users/(:num)', 'Admin::user/$1', ['as' => 'admin.user']);
@@ -53,6 +51,13 @@ $routes->get('/permissions', 'Admin::permissions', ['as' => 'admin.permissions']
 $routes->get('/permissions/(:num)', 'Admin::permission/$1', ['as' => 'admin.permission']);*/
 });
 //$routes->get('/honorariums', 'Honorarium::getIndex', ['as' => 'honorariums']);
+
+$routes->group('reports', static function ($routes) {
+    $routes->get('applications', 'Report::applications');
+    $routes->get('bills', 'Report::bills');
+
+    $routes->post('export-bill-to-excel', 'Report::exportBillToExcel');
+});
 
 $routes->group('users', static function ($routes) {
     $routes->get('assign-user-role', 'UserController::assignRoleViewForm');

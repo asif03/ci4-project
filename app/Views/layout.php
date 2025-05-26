@@ -106,8 +106,6 @@
   <!-- Kaiadmin JS -->
   <script src="<?php echo base_url(); ?>public/assets/js/kaiadmin.min.js"></script>
 
-
-
   <?php $this->renderSection('pageScripts')?>
 </body>
 

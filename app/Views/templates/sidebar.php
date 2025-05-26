@@ -82,6 +82,32 @@
             </ul>
           </div>
         </li>
+        <li class="nav-item <?=set_active('reports')?> submenu">
+          <a data-bs-toggle="collapse" href="#sidebarReports">
+            <i class="fas fa-file-alt"></i>
+            <p>Reports</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse <?=set_show('reports')?>" id="sidebarReports">
+            <ul class="nav nav-collapse">
+              <li class="<?=set_active('reports/applications')?>">
+                <a href="<?=base_url('reports/applications')?>">
+                  <span class="sub-item">Application Report</span>
+                </a>
+              </li>
+              <li class="<?=set_active('reports/bills')?>">
+                <a href="<?=base_url('reports/bills')?>">
+                  <span class="sub-item">Bill Report</span>
+                </a>
+              </li>
+              <!-- <li>
+                <a href="icon-menu.html">
+                  <span class="sub-item">Icon Menu</span>
+                </a>
+              </li> -->
+            </ul>
+          </div>
+        </li>
         <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">

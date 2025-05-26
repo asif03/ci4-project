@@ -9,7 +9,7 @@ class HonorariumInformationModel extends Model
 
     protected $table              = 'honorarium_information';
     protected $primaryKey         = 'id';
-    protected $allowedFields      = ['training_institute_id', 'department_name', 'previous_training_inmonth', 'eligible_status', 'eligiblity_date', 'eligible_by'];
+    protected $allowedFields      = ['training_institute_id', 'department_name', 'previous_training_inmonth', 'eligible_status', 'eligiblity_date', 'eligible_by', 'reject_reason', 'rejected_by', 'reject_date', 'remarks'];
     protected $useTimestamps      = true;
     protected $createdField       = 'created_at';
     protected $updatedField       = 'updated_at';
@@ -63,12 +63,13 @@ class HonorariumInformationModel extends Model
     public function getHonorariums($searchValue = '', $start = 0, $length = 10, $honorariumYear = 2024, $honorariumSession = 2)
     {
         $builder = $this->db->table('honorarium_information hi');
-        $builder->select('hi.id, hi.applicant_id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, hi.bmdc_reg_no, hs.slot_name, hi.honorarium_year, hi.eligible_status');
+        $builder->select('hi.id, hi.applicant_id, UPPER(ap.name) as name, UPPER(ap.father_spouse_name) as father_spouse_name, ap.fcps_reg_no, hi.bmdc_reg_no, hs.slot_name, hi.honorarium_year, hi.eligible_status, hi.bill_sl_no');
         $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
         $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
         $builder->where('hi.honorarium_year', $honorariumYear);
         $builder->where('hi.honorarium_slot_id', $honorariumSession);
-        $builder->orderBy('hi.id', 'DESC');
+        $builder->orderBy('hi.eligible_status', 'ASC');
+        $builder->orderBy('hi.bill_sl_no', 'ASC');
 
         // Apply search filter
         if (!empty($searchValue)) {
@@ -115,6 +116,25 @@ class HonorariumInformationModel extends Model
         return $builder->countAllResults();
     }
 
+    public function getBillInfos($where = [])
+    {
+        $builder = $this->db->table('honorarium_information hi');
+        $builder->select('hi.id, hi.applicant_id, hi.bill_sl_no, ap.name, ap.mobile, hi.bmdc_reg_no, ap.fcps_reg_no, ap.date_of_birth, ap.nid, ap.fcps_speciallity,
+            ap.fcps_year, ap.fcps_month, ap.gander, hi.training_institute_id, ti.name AS training_institute_name, hi.department_name, hi.previous_training_inmonth,
+            hi.honorarium_position, bnk.bank_name AS new_bank_name, ap.branch_name, ap.account_no, ap.routing_number, hi.honorarium_year,  hi.honorarium_slot_id, hs.slot_name');
+        $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
+        $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
+        $builder->join('institute ti', 'hi.training_institute_id = ti.institute_id', 'left');
+        $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
+        $builder->orderBy('hi.bill_sl_no', 'ASC');
+
+        if (!empty($where)) {
+            $builder->where($where);
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
     public function approveHonorarium($honorariumId)
     {
         $user = service('auth')->user();
@@ -132,7 +152,7 @@ class HonorariumInformationModel extends Model
 
         $builder = $this->db->table('honorarium_information');
         $builder->where('id', $honorariumId);
-        $builder->update(['eligible_status' => 'N', 'reject_reason' => $rejectReason, 'rejected_by' => $user->username, 'reject_date' => date('Y-m-d H:i:s')]);
+        $builder->update(['eligible_status' => 'N', 'reject_reason' => $rejectReason, 'rejected_by' => $user->id, 'reject_date' => date('Y-m-d H:i:s')]);
 
         return $this->db->affectedRows();
     }

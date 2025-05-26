@@ -4,8 +4,8 @@
 
 <?php $this->section('pageStyles')?>
 <style>
-table.dataTable thead tr {
-  background-color: green;
+/*table.dataTable thead tr {
+  background-color: #343a40;
   color: white;
 }
 
@@ -13,7 +13,7 @@ table.dataTable thead tr>th {
   font-size: 12px;
   font-weight: 600;
   padding: 2px;
-}
+}*/
 </style>
 <?php $this->endSection()?>
 
@@ -78,8 +78,10 @@ table.dataTable thead tr>th {
                 <th>Name</th>
                 <th>Father/Spouse Name</th>
                 <th>BMDC Reg. No.</th>
-                <th>Application Session</th>
-                <th>Application Year</th>
+                <th>Online Reg. No.</th>
+                <th>Bill Sl. No.</th>
+                <th>Session</th>
+                <th>Year</th>
                 <th>Files</th>
                 <th>Eligible Status</th>
                 <th>Action</th>
@@ -91,8 +93,10 @@ table.dataTable thead tr>th {
                 <th>Name</th>
                 <th>Father/Spouse Name</th>
                 <th>BMDC Reg. No.</th>
-                <th>Application Session</th>
-                <th>Application Year</th>
+                <th>Online Reg. No.</th>
+                <th>Bill Sl. No.</th>
+                <th>Session</th>
+                <th>Year</th>
                 <th>Files</th>
                 <th>Eligible Status</th>
                 <th>Action</th>
@@ -223,6 +227,12 @@ $('#billList').DataTable({
       "data": "bmdc_reg_no"
     },
     {
+      "data": "fcps_reg_no"
+    },
+    {
+      "data": "bill_sl_no"
+    },
+    {
       "data": "slot_name"
     },
     {
@@ -264,7 +274,7 @@ $('#billList').DataTable({
         $action +=
           `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumEditModal" onclick="loadEditView(${row.id})"><i class="fas fa-edit"></i></button>`;
         $action +=
-          `<a class="btn btn-outline-info btn-sm" href="<?=base_url('bills/download-honorarium-form')?>"><i class="fas fa-download"></i></a>`;
+          `<a class="btn btn-outline-info btn-sm" href="<?=base_url('bills/download-honorarium-form')?>/${row.id}" target="_blank"><i class="fas fa-download"></i></a>`;
         return $action;
       }
     }
@@ -279,7 +289,7 @@ $('#billList').DataTable({
       "className": "dt-left"
     },
     {
-      "targets": [3, 5],
+      "targets": [3, 5, 9],
       "className": "dt-center"
     },
     {

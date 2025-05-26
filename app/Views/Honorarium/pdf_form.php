@@ -126,7 +126,7 @@
                                      }?> Time</td>
       </tr>
       <tr>
-        <td>Name of the Bank:                              <?php echo $honorarium['new_bank_name']; ?></td>
+        <td style="font-weight: bold;">Name of the Bank:                                                         <?php echo $honorarium['new_bank_name']; ?></td>
         <td>Branch Name:                         <?php echo $honorarium['branch_name']; ?></td>
       </tr>
       <tr>
@@ -141,7 +141,7 @@
           attached herewith.</td>
       </tr>
       <tr>
-        <td colspan="2">I have received 30,000x6=1,80,000/- (In words: two lakh and ten thousand) as training
+        <td colspan="2">I have received 30,000x6=1,80,000/- (In words: One Lakh and Eighty Thousand) as training
           allowance (Honorarium) for last 6 month period
           <?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>.
         </td>
@@ -231,20 +231,21 @@
       </tr>
       <tr>
         <td colspan="12" style="font-size: 12px; text-align: justify; padding: 5px;">
-          Bills submitted for the remuneration of FCPS final non-government trainees are payable under the Government
+          Bills submitted for the remuneration of FCPS non-government trainees are payable under the Government
           Allowances Assistance Sector (Code No. 3631102). Accordingly, based on the report from the training institute
-          and RTMD of BCPS, a total of six (6) months of allowances, amounting to Tk. 30,000 per month, totaling Tk.
-          1,80,000/- (in words: One Lakh Fifty Thousand), has been sanctioned and disbursed for the period from                                                                                                                <?php if ($honorarium['honorarium_slot_id'] == 1) {
-                                                                                                                        echo 'January to June ' . date('Y');
-                                                                                                                    } elseif ($honorarium['honorarium_slot_id'] == 2) {
-                                                                                                                    echo 'July to December ' . date('Y');
-                                                                                                                }?>.
+          and RTMD of BCPS, a total of six (6) months of allowances, amounting to Tk. 30,000 per month, total Tk.
+          1,80,000/- (In words: One Lakh and Eighty Thousand), has been sanctioned and disbursed for the period from
+          <?php if ($honorarium['honorarium_slot_id'] == 1) {
+                  echo 'January to June ' . date('Y');
+              } elseif ($honorarium['honorarium_slot_id'] == 2) {
+              echo 'July to December ' . date('Y');
+          }?>.
         </td>
       </tr>
       <tr>
         <td colspan="3" style="font-size: 12px; padding: 5px; font-weight: bold;">
           ________________ <br>
-          Accountant
+          Accounts Officer
         </td>
         <td colspan="3" style="font-size: 12px; text-align: center; padding: 5px; font-weight: bold;">
           _______________________ <br>
