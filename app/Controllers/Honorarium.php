@@ -8,8 +8,6 @@ use App\Models\HonorariumSlotModel;
 use App\Models\InstituteModel;
 use App\Models\SpecialityModel;
 use Dompdf\Dompdf;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Honorarium extends BaseController
 {
@@ -175,87 +173,6 @@ class Honorarium extends BaseController
         } else {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Honorarium not found.']);
         }
-    }
-
-    public function exportExcel()
-    {
-        $file_name       = 'data.xlsx';
-        $spreadsheet     = new Spreadsheet();
-        $activeWorksheet = $spreadsheet->getActiveSheet();
-        $activeWorksheet->setCellValue('A1', 'Hello World !');
-
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($file_name);
-
-        header("Content-Type: application/vnd.ms-excel");
-
-        header('Content-Disposition: attachment; filename="' . basename($file_name) . '"');
-
-        header('Expires: 0');
-
-        header('Cache-Control: must-revalidate');
-
-        header('Pragma: public');
-
-        header('Content-Length:' . filesize($file_name));
-
-        flush();
-
-        readfile($file_name);
-
-        exit;
-
-        /*$honorariums = $this->honorariumModel->exportBillInformation();
-
-    $file_name = 'data.xlsx';
-
-    $spreadsheet = new Spreadsheet();
-
-    $sheet = $spreadsheet->getActiveSheet();
-
-    $sheet->setCellValue('A1', 'Employee Name');
-
-    $sheet->setCellValue('B1', 'Email Address');
-
-    $sheet->setCellValue('C1', 'Mobile No.');
-
-    $sheet->setCellValue('D1', 'Department');
-
-    $count = 2;
-
-    foreach ($honorariums as $row) {
-    $sheet->setCellValue('A' . $count, $row['employee_name']);
-
-    $sheet->setCellValue('B' . $count, $row['employee_email']);
-
-    $sheet->setCellValue('C' . $count, $row['employee_mobile']);
-
-    $sheet->setCellValue('D' . $count, $row['employee_department']);
-
-    $count++;
-    }
-
-    $writer = new Xlsx($spreadsheet);
-
-    $writer->save($file_name);
-
-    header("Content-Type: application/vnd.ms-excel");
-
-    header('Content-Disposition: attachment; filename="' . basename($file_name) . '"');
-
-    header('Expires: 0');
-
-    header('Cache-Control: must-revalidate');
-
-    header('Pragma: public');
-
-    header('Content-Length:' . filesize($file_name));
-
-    flush();
-
-    readfile($file_name);
-
-    exit;*/
     }
 
     public function create()

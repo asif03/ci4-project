@@ -53,14 +53,34 @@
               </select>
               <label for="honorariumSession">Honorarium Slot</label>
             </div>
+            <div class="form-floating col-3">
+              <select class="form-select" id="trainingInstitute" name="trainingInstitute"
+                aria-label="Floating label select example">
+                <option value="">Select a institute</option>
+                <?php foreach ($institutes as $institute): ?>
+                <option value="<?=$institute['institute_id']?>"><?=$institute['name']?></option>
+                <?php endforeach?>
+              </select>
+              <label for="trainingInstitute">Training Institute Name</label>
+            </div>
+            <div class="form-floating col-3">
+              <select class="form-select" id="eligibleStatus" name="eligibleStatus"
+                aria-label="Floating label select example">
+                <option value="">Select a value</option>
+                <option value="P">Pending</option>
+                <option value="Y">Eligible</option>
+                <option value="N">Rejected</option>
+              </select>
+              <label for="eligibleStatus">Status</label>
+            </div>
           </div>
           <div class="row mt-2">
             <div class="col-md d-flex justify-content-center align-items-center gap-3">
-              <button class="btn btn-primary" id="generateReport" onclick="generateReport()">
-                <i class="fas fa-file-alt"></i> View Report
-              </button>
-              <button class="btn btn-primary" id="generateReport" onclick="generateReport()">
-                <i class="fas fa-file-alt"></i> Generate Report
+              <!-- <button class="btn btn-primary" id="generateReport" onclick="generateReport()">
+                <i class="fas fa-file-pdf"></i> View pdf Report
+              </button> -->
+              <button type="button" class="btn btn-primary" id="generateReport" onclick="getReportData()">
+                <i class="fa fa-list" aria-hidden="true"></i> View Report Data
               </button>
               <button class="btn btn-success" type="submit"">
                 <i class=" fas fa-file-excel"></i> Export to Excel
@@ -69,16 +89,133 @@
           </div>
         </form>
       </div>
+      <div class="card-body">
+        <table id="billList" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>BMDC Reg. No.</th>
+              <th>Online Reg. No.</th>
+              <th>Institute Name</th>
+              <th>Department Name</th>
+              <th>Honorarium Position</th>
+              <th>Bill Sl. No.</th>
+              <th>Bill Session</th>
+              <th>Bill Year</th>
+              <th>Eligible Status</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>BMDC Reg. No.</th>
+              <th>Online Reg. No.</th>
+              <th>Institute Name</th>
+              <th>Department Name</th>
+              <th>Honorarium Position</th>
+              <th>Bill Sl. No.</th>
+              <th>Bill Session</th>
+              <th>Bill Year</th>
+              <th>Eligible Status</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 <?php $this->endSection()?>
 <?php $this->section('pageScripts')?>
 <script>
-function exportExcel() {
-  var honorariumYear = $('#honorariumYear').val();
-  var honorariumSession = $('#honorariumSession').val();
+getReportData();
 
+function getReportData() {
+
+  if ($.fn.DataTable.isDataTable('#billList')) {
+    $('#billList').DataTable().clear().destroy();
+  }
+
+  $('#billList').DataTable({
+    "ajax": {
+      "url": "<?=base_url('reports/get-bills')?>",
+      "type": "POST",
+      "data": function(data) {
+        data.honorariumYear = $('#honorariumYear').val();
+        data.honorariumSession = $('#honorariumSession').val();
+        data.trainingInstitute = $('#trainingInstitute').val();
+        data.eligibleStatus = $('#eligibleStatus').val();
+      },
+    },
+    "columns": [{
+        "data": "id"
+      },
+      {
+        "data": "name"
+      },
+      {
+        "data": "bmdc_reg_no"
+      },
+      {
+        "data": "fcps_reg_no"
+      },
+      {
+        "data": "training_institute_name"
+      },
+      {
+        "data": "department_name"
+      },
+      {
+        "data": "honorarium_position"
+      },
+      {
+        "data": "bill_sl_no"
+      },
+      {
+        "data": "slot_name"
+      },
+      {
+        "data": "honorarium_year"
+      },
+      {
+        "data": "eligible_status",
+        "render": function(data, type, row) {
+          if (data == 'P') {
+            return `<span class="badge rounded-pill badge-warning">Pending</span>`;
+          } else if (data == 'Y') {
+            return `<span class="badge rounded-pill badge-success">Eligible</span>`;
+          } else if (data == 'N') {
+            return `<span class="badge rounded-pill badge-danger">Not Eligible</span>`;
+          }
+        }
+      },
+    ],
+    "columnDefs": [{
+        "target": 0,
+        "visible": false,
+        "searchable": false
+      },
+      {
+        "targets": [1, 4, 5],
+        "className": "dt-left"
+      },
+      {
+        "targets": [2, 3, 6, 7, 9, 10],
+        "className": "dt-center"
+      },
+      {
+        "target": 6,
+        "orderable": false,
+        "searchable": false
+      },
+      {
+        "target": 10,
+        "orderable": false,
+        "searchable": false
+      }
+    ]
+  });
 
 }
 </script>

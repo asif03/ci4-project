@@ -42,18 +42,57 @@ class Report extends BaseController
     public function bills()
     {
         $data = [
-            'title'     => 'Bill Report',
-            'pageTitle' => 'Bill Report',
-            'slots'     => $this->honorariumModel->getSlots(),
+            'title'      => 'Bill Report',
+            'pageTitle'  => 'Bill Report',
+            'institutes' => $this->instituteModel->where('status', true)->where('honorarium_status', true)->findAll(),
+            'slots'      => $this->honorariumModel->getSlots(),
         ];
 
         return view('Reports/bill', $data);
     }
 
+    public function getBillInfo()
+    {
+        $where = [];
+
+        $trainingInstitute = $this->request->getPost('trainingInstitute');
+        $eligibleStatus    = $this->request->getPost('eligibleStatus');
+
+        $where['hi.honorarium_year']    = $this->request->getPost('honorariumYear');
+        $where['hi.honorarium_slot_id'] = $this->request->getPost('honorariumSession');
+
+        if ($trainingInstitute) {
+            $where['hi.training_institute_id'] = $trainingInstitute;
+        }
+        if ($eligibleStatus) {
+            $where['hi.eligible_status'] = $eligibleStatus;
+        }
+
+        // Fetching additional data for each user
+        $data = $this->honorariumModel->getBillInfos($where);
+
+        return $this->response->setJSON([
+            'data' => $data,
+        ]);
+    }
+
     public function exportBillToExcel()
     {
-        $honorariumYear = $this->request->getPost('honorariumYear');
-        $honorariumSlot = $this->request->getPost('honorariumSession');
+        $where = [];
+
+        $honorariumYear    = $this->request->getPost('honorariumYear');
+        $honorariumSlot    = $this->request->getPost('honorariumSession');
+        $trainingInstitute = $this->request->getPost('trainingInstitute');
+        $eligibleStatus    = $this->request->getPost('eligibleStatus');
+
+        $where['hi.honorarium_year']    = $this->request->getPost('honorariumYear');
+        $where['hi.honorarium_slot_id'] = $this->request->getPost('honorariumSession');
+        if ($trainingInstitute) {
+            $where['hi.training_institute_id'] = $trainingInstitute;
+        }
+        if ($eligibleStatus) {
+            $where['hi.eligible_status'] = $eligibleStatus;
+        }
 
         $spreadsheet = new Spreadsheet();
         $sheet       = $spreadsheet->getActiveSheet();
@@ -80,13 +119,11 @@ class Report extends BaseController
         $sheet->setCellValue('S1', 'Routing No');
         $sheet->setCellValue('T1', 'Honorarium Year');
         $sheet->setCellValue('U1', 'Honorarium Session');
+        $sheet->setCellValue('V1', 'Eligible Status');
         //$sheet->setCellValue('T1', 'Remarks');
 
         // Fetching additional data for each user
-        $data = $this->honorariumModel->getBillInfos([
-            'hi.honorarium_year'    => $honorariumYear,
-            'hi.honorarium_slot_id' => $honorariumSlot,
-        ]);
+        $data = $this->honorariumModel->getBillInfos($where);
 
         $row = 2;
         foreach ($data as $item) {
@@ -112,6 +149,17 @@ class Report extends BaseController
             $sheet->setCellValue('T' . $row, $item['honorarium_year']);
             $sheet->setCellValue('U' . $row, $item['slot_name']);
 
+            // Set eligible status
+            if ($item['eligible_status'] == 'Y') {
+                $item['eligible_status'] = 'Eligible';
+            } elseif ($item['eligible_status'] === 'N') {
+                $item['eligible_status'] = 'Rejected';
+            } else {
+                $item['eligible_status'] = 'Pending';
+            }
+
+            $sheet->setCellValue('V' . $row, $item['eligible_status']);
+
             $row++;
         }
 
@@ -125,6 +173,7 @@ class Report extends BaseController
 
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
+
         exit;
     }
 

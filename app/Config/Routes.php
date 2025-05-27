@@ -50,12 +50,11 @@ $routes->get('/roles/(:num)', 'Admin::role/$1', ['as' => 'admin.role']);
 $routes->get('/permissions', 'Admin::permissions', ['as' => 'admin.permissions']);
 $routes->get('/permissions/(:num)', 'Admin::permission/$1', ['as' => 'admin.permission']);*/
 });
-//$routes->get('/honorariums', 'Honorarium::getIndex', ['as' => 'honorariums']);
 
 $routes->group('reports', static function ($routes) {
     $routes->get('applications', 'Report::applications');
     $routes->get('bills', 'Report::bills');
-
+    $routes->post('get-bills', 'Report::getBillInfo');
     $routes->post('export-bill-to-excel', 'Report::exportBillToExcel');
 });
 
