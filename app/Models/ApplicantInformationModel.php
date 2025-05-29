@@ -142,4 +142,22 @@ class ApplicantInformationModel extends Model
 
         return $this->db->affectedRows();
     }
+
+    public function getApplicationInfos($where = [])
+    {
+        $builder = $this->db->table('applicant_information ap');
+        $builder->select('ap.applicant_id, UPPER(ap.name) as name, ap.father_spouse_name, ap.mother_name, ap.date_of_birth, ap.bmdc_reg_no, ap.address, ap.gander,
+            ap.bmdc_validity, ap.fcps_reg_no, ap.fcps_speciallity, ap.fcps_year, ap.fcps_month, ap.nid, ap.mobile, ap.email, ap.created, bnk.bank_name, ap.branch_name,
+            ap.account_no, ap.routing_number, ap.eligible_status');
+        $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
+
+        if (!empty($where)) {
+            foreach ($where as $key => $value) {
+                $builder->where($key, $value);
+            }
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
 }

@@ -55,7 +55,9 @@ $routes->group('reports', static function ($routes) {
     $routes->get('applications', 'Report::applications');
     $routes->get('bills', 'Report::bills');
     $routes->post('get-bills', 'Report::getBillInfo');
+    $routes->post('get-applications', 'Report::getApplicationInfo');
     $routes->post('export-bill-to-excel', 'Report::exportBillToExcel');
+    $routes->post('export-application-to-excel', 'Report::exportApplicationToExcel');
 });
 
 $routes->group('users', static function ($routes) {
