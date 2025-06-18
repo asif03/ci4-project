@@ -6,7 +6,7 @@ if (!function_exists('set_active')) {
         $request      = service('request'); // Get the request instance
         $currentRoute = $request->getUri()->getPath(); // Get the current URI path
 
-        $route        = 'honorarium-admin/' . $route;
+        $route        = 'trainee-database/' . $route;
         $currentRoute = ltrim($currentRoute, '/');
         //return $currentRoute . '---' . $route;
 
@@ -24,7 +24,7 @@ if (!function_exists('set_show')) {
         $request      = service('request'); // Get the request instance
         $currentRoute = $request->getUri()->getPath(); // Get the current URI path
 
-        $route        = 'honorarium-admin/' . $route;
+        $route        = 'trainee-database/' . $route;
         $currentRoute = ltrim($currentRoute, '/');
 
         if ($exactMatch) {

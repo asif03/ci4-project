@@ -12,6 +12,7 @@ use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
+use CodeIgniter\Shield\Filters\GroupFilter;
 
 class Filters extends BaseFilters
 {
@@ -34,6 +35,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'groups'        => GroupFilter::class, // For role-based access
     ];
 
     /**
@@ -73,7 +75,7 @@ class Filters extends BaseFilters
             'csrf'    => ['except' => ['bills/fetch-honorariums', 'bills/approve-honorarium', 'bills/get-statistics', 'bills/reject-honorarium', 'applications/fetch-applicants',
                 'applications/fetch-files', 'reports/get-bills', 'reports/get-applications', 'reports/export-bill-to-excel', 'reports/export-application-to-excel']],
             // 'invalidchars',
-            'session' => ['except' => ['login*', 'register', 'logout']],
+            'session' => ['except' => ['/', 'login*', 'register', 'logout']],
         ],
         'after'  => [
             // 'honeypot',

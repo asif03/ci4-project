@@ -41,9 +41,10 @@
               <?=csrf_field()?>
               <!-- Email -->
               <div class="mb-3">
-                <label for="floatingEmailInput" class="form-label"><?=lang('Auth.email')?></label>
-                <input type="email" class="form-control" id="floatingEmailInput" name="email" inputmode="email"
-                  autocomplete="email" placeholder="<?=lang('Auth.email')?>" value="<?=old('email')?>" required>
+                <label for="floatingUserNameInput" class="form-label"><?=lang('Auth.username')?></label>
+                <input type="text" class="form-control" id="floatingUserNameInput" name="username" inputmode="username"
+                  autocomplete="username" placeholder="<?=lang('Auth.username')?>" value="<?=old('username')?>"
+                  required>
               </div>
               <!-- Password -->
               <div class="mb-4">
