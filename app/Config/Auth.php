@@ -46,7 +46,7 @@ class Auth extends ShieldAuth
     public array $views = [
         //'login'                       => '\CodeIgniter\Shield\Views\login',
         'login'                       => '\App\Views\Auth\login',
-        //'register'                    => '\CodeIgniter\Shield\Views\register',
+        'register'                    => '\CodeIgniter\Shield\Views\register',
         //'layout'                      => '\CodeIgniter\Shield\Views\layout',
         'layout'                      => '\App\Views\Auth\layout',
         'action_email_2fa'            => '\CodeIgniter\Shield\Views\email_2fa_show',
@@ -279,8 +279,8 @@ class Auth extends ShieldAuth
      * Fields that are available to be used as credentials for login.
      */
     public array $validFields = [
-        'email',
-        // 'username',
+        //'email',
+        'username',
     ];
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 /**
  * This file is part of CodeIgniter Shield.
@@ -45,21 +45,13 @@ class AuthGroups extends ShieldAuthGroups
             'title'       => 'Super Admin',
             'description' => 'Complete control of the site.',
         ],
-        'admin' => [
+        'admin'      => [
             'title'       => 'Admin',
             'description' => 'Day to day administrators of the site.',
         ],
-        'developer' => [
-            'title'       => 'Developer',
-            'description' => 'Site programmers.',
-        ],
-        'user' => [
+        'user'       => [
             'title'       => 'User',
             'description' => 'General users of the site. Often customers.',
-        ],
-        'beta' => [
-            'title'       => 'Beta User',
-            'description' => 'Has access to beta-level features.',
         ],
     ];
 
@@ -78,7 +70,13 @@ class AuthGroups extends ShieldAuthGroups
         'users.create'        => 'Can create new non-admin users',
         'users.edit'          => 'Can edit existing non-admin users',
         'users.delete'        => 'Can delete existing non-admin users',
-        'beta.access'         => 'Can access beta-level features',
+
+        //Training permissions
+        'training.basic.get'  => 'Can access the basic info of trainee',
+        'training.basic.edit' => 'Can edit basic information',
+        'training.create'     => 'Can create training data',
+        'training.edit'       => 'Can edit training data',
+        'training.delete'     => 'Can delete training data',
     ];
 
     /**
@@ -93,25 +91,14 @@ class AuthGroups extends ShieldAuthGroups
         'superadmin' => [
             'admin.*',
             'users.*',
-            'beta.*',
+            'training.*',
         ],
-        'admin' => [
+        'admin'      => [
             'admin.access',
             'users.create',
             'users.edit',
             'users.delete',
-            'beta.access',
         ],
-        'developer' => [
-            'admin.access',
-            'admin.settings',
-            'users.create',
-            'users.edit',
-            'beta.access',
-        ],
-        'user' => [],
-        'beta' => [
-            'beta.access',
-        ],
+        'user'       => [],
     ];
 }

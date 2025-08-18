@@ -2,9 +2,10 @@
     $auth = service('auth');
     $user = $auth->user();
 
-    echo '<pre>';
+    /*echo '<pre>';
     print_r($user);
     echo '</pre>';
+    die;*/
 ?>
 <div class="sidebar sidebar-style-2" data-background-color="white">
   <div class="sidebar-logo">
@@ -42,7 +43,25 @@
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>
           </span>
-          <h4 class="text-section">Admin</h4>
+          <h4 class="text-section">Training Database</h4>
+        </li>
+        <li class="nav-item <?=set_active('trainings')?>">
+          <a href="<?=base_url('/')?>">
+            <i class="fas fa-file"></i>
+            <p>Basic Information</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../../documentation/index.html">
+            <i class="fas fa-file"></i>
+            <p>Training Information</p>
+          </a>
+        </li>
+        <li class="nav-section">
+          <span class="sidebar-mini-icon">
+            <i class="fa fa-ellipsis-h"></i>
+          </span>
+          <h4 class="text-section">Honorarium Info</h4>
         </li>
         <li class="nav-item <?=set_active('applications')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarApplications">

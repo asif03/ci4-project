@@ -15,6 +15,10 @@ $routes->group('api', static function ($routes) {
 
 });
 
+$routes->group('trainings', static function ($routes) {
+    $routes->get('basic-info', 'TrainingController::basicInfo');
+});
+
 $routes->group('applications', static function ($routes) {
     $routes->get('/', 'Application::index');
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants');
