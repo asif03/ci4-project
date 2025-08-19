@@ -15,8 +15,17 @@ $routes->group('api', static function ($routes) {
 
 });
 
+$routes->group('fcps-part-one', static function ($routes) {
+    $routes->get('passed-candidates', 'PartOneController::index');
+    $routes->post('fetch-candidates', 'PartOneController::getSearchedCandidates');
+});
+
 $routes->group('trainings', static function ($routes) {
-    $routes->get('basic-info', 'TrainingController::basicInfo');
+    $routes->get('basic-info', 'TrainingController::traineeBasicInfo');
+    $routes->get('progress-reports', 'TrainingController::progressReports');
+
+    //For Admin
+    $routes->get('trainees', 'TrainingController::trainees');
 });
 
 $routes->group('applications', static function ($routes) {

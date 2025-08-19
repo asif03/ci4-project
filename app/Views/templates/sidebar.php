@@ -39,37 +39,53 @@
             <p>Dashboard</p>
           </a>
         </li>
+
+        <?php if ($user && $user->inGroup('superadmin', 'admin', 'user')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
-            <i class="fa fa-ellipsis-h"></i>
+            <i class="fa fa-user" aria-hidden="true"></i>
           </span>
           <h4 class="text-section">Training Database</h4>
         </li>
-        <li class="nav-item <?=set_active('trainings')?>">
-          <a href="<?=base_url('/')?>">
-            <i class="fas fa-file"></i>
+        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
+        <li class="nav-item <?=set_active('fcps-part-one/passed-candidates')?>">
+          <a href="<?=base_url('fcps-part-one/passed-candidates')?>">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <p>Part-I Passed Candidates</p>
+          </a>
+        </li>
+        <li class="nav-item <?=set_active('trainings/trainees')?>">
+          <a href="<?=base_url('trainings/trainee-list')?>">
+            <i class="fa fa-book" aria-hidden="true"></i>
+            <p>Trainee List</p>
+          </a>
+        </li>
+        <?php }?>
+
+        <?php if ($user && $user->inGroup('superadmin', 'user')) {?>
+        <li class="nav-item <?=set_active('trainings/basic-info')?>">
+          <a href="<?=base_url('trainings/basic-info')?>">
+            <i class="fa fa-user-md" aria-hidden="true"></i>
             <p>Basic Information</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="../../documentation/index.html">
-            <i class="fas fa-file"></i>
+        <li class="nav-item <?=set_active('trainings/progress-reports')?>">
+          <a href="<?=base_url('trainings/progress-reports')?>">
+            <i class="fa fa-clipboard" aria-hidden="true"></i>
             <p>Training Information</p>
           </a>
         </li>
-        <li class="nav-section">
-          <span class="sidebar-mini-icon">
-            <i class="fa fa-ellipsis-h"></i>
-          </span>
-          <h4 class="text-section">Honorarium Info</h4>
-        </li>
-        <li class="nav-section">
-          <span class="sidebar-mini-icon">
-            <i class="fa fa-ellipsis-h"></i>
-          </span>
-          <h4 class="text-section">Honorarium Info</h4>
-        </li>
+        <?php }}
+        ?>
+
+
         <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
+        <li class="nav-section">
+          <span class="sidebar-mini-icon">
+            <i class="fa fa-ellipsis-h"></i>
+          </span>
+          <h4 class="text-section">Honorarium Info</h4>
+        </li>
         <li class="nav-item <?=set_active('applications')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarApplications">
             <i class="fas fa-th-list"></i>
