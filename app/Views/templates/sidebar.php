@@ -63,6 +63,13 @@
           </span>
           <h4 class="text-section">Honorarium Info</h4>
         </li>
+        <li class="nav-section">
+          <span class="sidebar-mini-icon">
+            <i class="fa fa-ellipsis-h"></i>
+          </span>
+          <h4 class="text-section">Honorarium Info</h4>
+        </li>
+        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
         <li class="nav-item <?=set_active('applications')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarApplications">
             <i class="fas fa-th-list"></i>
@@ -93,14 +100,14 @@
           <div class="collapse <?=set_show('bills')?>" id="sidebarBills">
             <ul class="nav nav-collapse">
               <li class="<?=set_active('bills')?>">
-                <a href="<?=base_url('bills')?>">
+                <a href="<?=url_to('bills.index')?>">
                   <span class="sub-item">Honorarium List</span>
                 </a>
               </li>
-
             </ul>
           </div>
         </li>
+        <?php if ($user && $user->inGroup('superadmin')) {?>
         <li class="nav-item <?=set_active('reports')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarReports">
             <i class="fas fa-file-alt"></i>
@@ -127,7 +134,10 @@
             </ul>
           </div>
         </li>
-        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
+        <?php
+            }}
+        ?>
+<?php if ($user && $user->inGroup('superadmin')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>

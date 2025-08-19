@@ -46,6 +46,10 @@
                   autocomplete="email" placeholder="<?=lang('Auth.username')?>" value="<?=old('email')?>"> -->
                 <input type="text" class="form-control" id="floatingEmailInput" name="username" inputmode="username"
                   autocomplete="username" placeholder="<?=lang('Auth.username')?>" value="<?=old('username')?>">
+                <label for="floatingUserNameInput" class="form-label"><?=lang('Auth.username')?></label>
+                <input type="text" class="form-control" id="floatingUserNameInput" name="username" inputmode="username"
+                  autocomplete="username" placeholder="<?=lang('Auth.username')?>" value="<?=old('username')?>"
+                  required>
               </div>
               <!-- Password -->
               <div class="mb-4">

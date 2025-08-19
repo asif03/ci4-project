@@ -35,8 +35,8 @@ $routes->group('applications', static function ($routes) {
 
 });
 
-$routes->group('bills', static function ($routes) {
-    $routes->get('/', 'Honorarium::index');
+$routes->group('bills', ['filter' => 'groups:admin'], static function ($routes) {
+    $routes->get('/', 'Honorarium::index', ['as' => 'bills.index']);
     $routes->post('get-statistics', 'Honorarium::getStatistics');
     $routes->post('fetch-honorariums', 'Honorarium::getSearchedHonorariums');
     $routes->post('approve-honorarium', 'Honorarium::approveHonorarium');
