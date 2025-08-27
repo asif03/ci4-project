@@ -16,7 +16,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
         <li class="nav-item <?=($current == base_url('/') ? 'active' : 'text-muted')?>">
-          <a class="nav-link" href="#">Home</a>
+          <a class="nav-link" href="<?=base_url()?>">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#contact">Contact</a>

@@ -94,7 +94,7 @@
       <h2 class="display-6 fw-bold text-dark mb-3">Ready to get started?</h2>
       <p class="lead text-muted mb-4">Collect your Registration No. & Password to access the platform and streamline
         your training management today.</p>
-      <a href="student-login.html" class="btn btn-primary btn-lg fw-bold rounded-pill shadow-sm">
+      <a href="<?=base_url('registration-no-sms')?>" class="btn btn-primary btn-lg fw-bold rounded-pill shadow-sm">
         Go ->
       </a>
     </div>

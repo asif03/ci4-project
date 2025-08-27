@@ -6,6 +6,7 @@ class Dashboard extends BaseController
 {
     public function index(): string
     {
+
         $data = [
             'title'     => 'Dashboard',
             'routeName' => 'dashboard',

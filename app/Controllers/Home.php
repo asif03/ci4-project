@@ -8,4 +8,9 @@ class Home extends BaseController
     {
         return view('home');
     }
+
+    public function registrationNoSms(): string
+    {
+        return view('registration_no_sms');
+    }
 }
