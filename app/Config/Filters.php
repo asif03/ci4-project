@@ -76,7 +76,7 @@ class Filters extends BaseFilters
                 'applications/fetch-files', 'reports/get-bills', 'reports/get-applications', 'reports/export-bill-to-excel', 'reports/export-application-to-excel',
                 'fcps-part-one/fetch-candidates']],
             // 'invalidchars',
-            'session' => ['except' => ['/', 'login*', 'register', 'logout', 'registration-no-sms']],
+            'session' => ['except' => ['/', 'login', 'register', 'logout', 'registration-no-sms']],
         ],
         'after'  => [
             // 'honeypot',

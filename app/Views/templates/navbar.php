@@ -21,12 +21,21 @@
         <li class="nav-item">
           <a class="nav-link" href="#contact">Contact</a>
         </li>
+        <?php if (auth()->loggedIn()): ?>
+        <!-- Login button -->
+        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+          <a href="<?=base_url('dashboard')?>" class="btn btn-primary btn-lg fw-bold rounded-pill shadow-sm">
+            Dashboard
+          </a>
+        </li>
+        <?php else: ?>
         <!-- Login button -->
         <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
           <a href="<?=base_url('login')?>" class="btn btn-primary btn-lg fw-bold rounded-pill shadow-sm">
             Login
           </a>
         </li>
+        <?php endif; ?>
       </ul>
     </div>
   </div>

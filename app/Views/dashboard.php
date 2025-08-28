@@ -54,6 +54,20 @@
 <?php $this->section('title')?>Dashboard<?php $this->endSection()?>
 
 <?php $this->section('main')?>
+<!-- Dashboard Header -->
+<header class="d-flex align-items-center justify-content-between p-4 bg-white rounded-3 shadow-sm mb-4">
+  <div>
+    <h1 class="h3 fw-bold text-dark">Dashboard</h1>
+    <p class="text-muted mt-1 mb-0">Welcome back, Jane Doe!</p>
+  </div>
+  <div class="d-flex align-items-center">
+    <div class="text-end me-3">
+      <div class="fw-semibold text-dark">Jane Doe</div>
+      <div class="text-muted small">Trainee</div>
+    </div>
+    <img src="https://placehold.co/40x40/22c55e/ffffff?text=J" alt="User Profile" class="rounded-circle">
+  </div>
+</header>
 <!-- Summary Cards Section -->
 <section class="row g-4 mb-4">
   <div class="col-12 col-md-6 col-lg-3">
@@ -74,29 +88,59 @@
 </section>
 <section class="row g-4 mb-4">
   <!-- Progress Chart Panel -->
-  <div class="col-lg-8">
+  <div class="col-lg-12">
     <div class="card p-4 rounded-3 shadow-sm h-100">
       <h5 class="fw-bold text-dark mb-4">My Progress</h5>
-      <div class="progress-bar-container">
-        <div class="progress-bar-stack" style="height: 65%;">
-          <div class="progress-bar-fill" style="height: 100%;"></div>
-          <span class="progress-bar-label">65%</span>
+      <!-- Flex container for the graph and scale -->
+      <div class="d-flex align-items-start">
+        <!-- Progress Bars -->
+        <div class="progress-bar-container w-75">
+          <div class="progress-bar-stack" style="height: 65%;">
+            <div class="progress-bar-fill" style="height: 100%;"></div>
+            <span class="progress-bar-label">65%</span>
+          </div>
+          <div class="progress-bar-stack" style="height: 80%;">
+            <div class="progress-bar-fill" style="height: 100%;"></div>
+            <span class="progress-bar-label">80%</span>
+          </div>
+          <div class="progress-bar-stack" style="height: 50%;">
+            <div class="progress-bar-fill" style="height: 100%;"></div>
+            <span class="progress-bar-label">50%</span>
+          </div>
+          <div class="progress-bar-stack" style="height: 90%;">
+            <div class="progress-bar-fill" style="height: 100%;"></div>
+            <span class="progress-bar-label">90%</span>
+          </div>
+          <div class="progress-bar-stack" style="height: 75%;">
+            <div class="progress-bar-fill" style="height: 100%;"></div>
+            <span class="progress-bar-label">75%</span>
+          </div>
         </div>
-        <div class="progress-bar-stack" style="height: 80%;">
-          <div class="progress-bar-fill" style="height: 100%;"></div>
-          <span class="progress-bar-label">80%</span>
-        </div>
-        <div class="progress-bar-stack" style="height: 50%;">
-          <div class="progress-bar-fill" style="height: 100%;"></div>
-          <span class="progress-bar-label">50%</span>
-        </div>
-        <div class="progress-bar-stack" style="height: 90%;">
-          <div class="progress-bar-fill" style="height: 100%;"></div>
-          <span class="progress-bar-label">90%</span>
-        </div>
-        <div class="progress-bar-stack" style="height: 75%;">
-          <div class="progress-bar-fill" style="height: 100%;"></div>
-          <span class="progress-bar-label">75%</span>
+        <!-- Progress Scale Legend -->
+        <div class="ms-4">
+          <h6 class="fw-semibold text-dark mb-2">Progress Scale:</h6>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
+              <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
+              <div class="fw-normal text-muted">Attendance</div>
+            </li>
+            <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
+              <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
+              <div class="fw-normal text-muted">Class Participation</div>
+            </li>
+            <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
+              <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
+              <div class="fw-normal text-muted">Assignment Completion</div>
+            </li>
+            <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
+              <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
+              <div class="fw-normal text-muted">Project Performance</div>
+            </li>
+            <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
+              <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
+              <div class="fw-normal text-muted">Clinical Behavior</div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
