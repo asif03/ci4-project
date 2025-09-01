@@ -64,19 +64,23 @@ class AuthGroups extends ShieldAuthGroups
      * If a permission is not listed here it cannot be used.
      */
     public array $permissions = [
-        'admin.access'        => 'Can access the sites admin area',
-        'admin.settings'      => 'Can access the main site settings',
-        'users.manage-admins' => 'Can manage other admins',
-        'users.create'        => 'Can create new non-admin users',
-        'users.edit'          => 'Can edit existing non-admin users',
-        'users.delete'        => 'Can delete existing non-admin users',
+        'admin.access'          => 'Can access the sites admin area',
+        'admin.settings'        => 'Can access the main site settings',
+        'users.manage-admins'   => 'Can manage other admins',
+        'users.create'          => 'Can create new non-admin users',
+        'users.edit'            => 'Can edit existing non-admin users',
+        'users.delete'          => 'Can delete existing non-admin users',
+
+        //Part-I Data
+        'partone.list'          => 'Can list all FCPS Part-I candidates',
 
         //Training permissions
-        'training.basic.get'  => 'Can access the basic info of trainee',
-        'training.basic.edit' => 'Can edit basic information',
-        'training.create'     => 'Can create training data',
-        'training.edit'       => 'Can edit training data',
-        'training.delete'     => 'Can delete training data',
+        'training.trainee.list' => 'Can list all trainees',
+        'training.basic.get'    => 'Can access the basic info of trainee',
+        'training.basic.edit'   => 'Can edit basic information',
+        'training.create'       => 'Can create training data',
+        'training.edit'         => 'Can edit training data',
+        'training.delete'       => 'Can delete training data',
     ];
 
     /**
@@ -98,6 +102,7 @@ class AuthGroups extends ShieldAuthGroups
             'users.create',
             'users.edit',
             'users.delete',
+            'partone.list',
         ],
         'user'       => [],
     ];

@@ -36,19 +36,27 @@
           <thead>
             <tr>
               <th>ID</th>
+              <th>Session</th>
+              <th>Online Reg. No.</th>
+              <th>PEN No.</th>
               <th>Name</th>
-              <th>Father</th>
-              <th>Mother Name</th>
-              <th>BCPS Reg. No.</th>
+              <th>Father's Name</th>
+              <th>Mobile No.</th>
+              <th>Email</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th>ID</th>
+              <th>Session</th>
+              <th>Online Reg. No.</th>
+              <th>PEN No.</th>
               <th>Name</th>
-              <th>Father</th>
-              <th>Mother Name</th>
-              <th>BCPS Reg. No.</th>
+              <th>Father's Name</th>
+              <th>Mobile No.</th>
+              <th>Email</th>
+              <th>Action</th>
             </tr>
           </tfoot>
         </table>
@@ -73,16 +81,34 @@ $('#partOneList').DataTable({
       "data": "id"
     },
     {
+      "data": function(data, type, row) {
+        return data.fcps_part_one_session + '-' + data.fcps_part_one_year;
+      }
+    },
+    {
+      "data": "reg_no"
+    },
+
+    {
+      "data": "pen_number"
+    },
+    {
       "data": "name"
     },
     {
       "data": "father_name"
     },
     {
-      "data": "mother_name"
+      "data": "cell"
     },
     {
-      "data": "reg_no"
+      "data": "email"
+    },
+    {
+      "data": null,
+      "render": function(data, type, row) {
+        return `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumModal" onclick="loadHonorariumView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
+      }
     }
   ],
   "columnDefs": [{
@@ -90,20 +116,27 @@ $('#partOneList').DataTable({
       "visible": false,
       "searchable": false
     },
-
+    {
+      "target": 1,
+      "orderable": false,
+      "searchable": false,
+      "className": "dt-left"
+    },
     {
       "target": 2,
       "orderable": false,
-      "searchable": false
+      "searchable": false,
+      "className": "dt-center"
     },
     {
-      "target": 3,
+      "target": 6,
       "orderable": false,
-      "searchable": false
+      "className": "dt-center"
     },
     {
-      "target": 4,
-      "orderable": false
+      "target": 8,
+      "orderable": false,
+      "className": "dt-center"
     },
   ]
 });

@@ -19,14 +19,10 @@ class PartOneController extends BaseController
     public function index()
     {
         // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
+        if (!auth()->user()->can('partone.list')) {
             // User does not have permission, so deny access.
-            return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-
-            $data['name'] = 'You are not authorized to edit posts.';
+            return redirect()->to('/401')->with('error', 'You are not authorized to access this page !');
         }
-
-        //$statisticsData = $this->applicationModel->getStatistics();
 
         $data = [
             'title'     => 'FCPS Part-I',

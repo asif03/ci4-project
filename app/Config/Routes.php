@@ -5,11 +5,15 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
+// Frontend Routes
 $routes->get('/', 'Home::index');
 $routes->get('/registration-no-sms', 'Home::registrationNoSms');
 
+$routes->get('/401', function () {
+    return view('401');
+});
 $routes->get('/profile', 'UserController::profile');
-
 $routes->get('/dashboard', 'Dashboard::index');
 
 $routes->group('api', static function ($routes) {
@@ -22,11 +26,11 @@ $routes->group('fcps-part-one', static function ($routes) {
 });
 
 $routes->group('trainings', static function ($routes) {
-    $routes->get('basic-info', 'TrainingController::traineeBasicInfo');
-    $routes->get('progress-reports', 'TrainingController::progressReports');
+    $routes->get('basic-info', 'TraineeController::traineeBasicInfo');
+    $routes->get('progress-reports', 'TraineeController::progressReports');
 
     //For Admin
-    $routes->get('trainees', 'TrainingController::trainees');
+    $routes->get('trainees', 'TraineeController::trainees');
 });
 
 $routes->group('applications', static function ($routes) {

@@ -2,54 +2,27 @@
 
 namespace App\Controllers;
 
+use App\Models\FcpsPartOneModel;
+
 class TrainingController extends BaseController
 {
-    public function trainees()
+    /**
+     * FCPS Part-I Passed Student List
+     */
+    public function index()
     {
         // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
+        if (!auth()->user()->can('training.list')) {
             // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-
-            $data['name'] = 'You are not authorized to edit posts.';
-        } else {
-            $data['name'] = 'Asif';
+            return redirect()->to('/401')->with('error', 'You are not authorized to access this page !');
         }
 
-        return view('Training/index', $data);
+        $data = [
+            'title'     => 'FCPS Part-I',
+            'pageTitle' => 'FCPS Part-I Passed Candidates',
+            //'statistics' => $statisticsData,
+        ];
 
-    }
-
-    public function traineeBasicInfo()
-    {
-
-        // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-
-            $data['name'] = 'You are not authorized to edit posts.';
-        } else {
-            $data['name'] = 'Asif';
-        }
-
-        return view('Training/basic-info', $data);
-
-    }
-
-    public function progressReports()
-    {
-        // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-
-            $data['name'] = 'You are not authorized to edit posts.';
-        } else {
-            $data['name'] = 'Asif';
-        }
-
-        return view('Training/trainings', $data);
-
+        return view('Partone/index', $data);
     }
 }

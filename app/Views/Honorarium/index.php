@@ -258,7 +258,6 @@ $('#billList').DataTable({
         }
       }
     },
-
     {
       "data": null,
       "render": function(data, type, row) {

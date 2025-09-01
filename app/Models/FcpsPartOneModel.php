@@ -33,7 +33,7 @@ class FcpsPartOneModel extends Model
     public function getData($searchValue = '', $start = 0, $length = 10)
     {
         $builder = $this->db->table('fcps_one_pass_applicants ap');
-        $builder->select('ap.id, UPPER(ap.applicant_name) as name, UPPER(ap.father_name) as father_name, UPPER(ap.mother_name) as mother_name, ap.reg_no, ap.cell, ap.email');
+        $builder->select('ap.id, ap.fcps_part_one_year, ap.fcps_part_one_session, UPPER(ap.applicant_name) as name, UPPER(ap.father_name) as father_name, ap.pen_number, ap.reg_no, ap.cell, ap.email');
         $builder->join('speciality sp', 'ap.subject_id = sp.speciality_id', 'left');
 
         // Apply search filter
