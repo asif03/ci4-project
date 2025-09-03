@@ -54,10 +54,10 @@
             <p>Part-I Passed Candidates</p>
           </a>
         </li>
-        <li class="nav-item <?=set_active('trainings/trainees')?>">
+        <li class="nav-item <?=set_active('trainings/trainee-list')?>">
           <a href="<?=base_url('trainings/trainee-list')?>">
             <i class="fa fa-book" aria-hidden="true"></i>
-            <p>Trainee List</p>
+            <p>Progress Reports</p>
           </a>
         </li>
         <?php }?>

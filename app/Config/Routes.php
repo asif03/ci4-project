@@ -30,7 +30,9 @@ $routes->group('trainings', static function ($routes) {
     $routes->get('progress-reports', 'TraineeController::progressReports');
 
     //For Admin
-    $routes->get('trainees', 'TraineeController::trainees');
+    $routes->get('trainee-list', 'TrainingController::trainees');
+    $routes->post('fetch-trainees', 'TrainingController::getSearchedTrainees');
+    $routes->get('trainees/(:num)', 'TrainingController::getTrainee/$1');
 });
 
 $routes->group('applications', static function ($routes) {
