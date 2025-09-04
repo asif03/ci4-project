@@ -58,14 +58,16 @@
 <header class="d-flex align-items-center justify-content-between p-4 bg-white rounded-3 shadow-sm mb-4">
   <div>
     <h1 class="h3 fw-bold text-dark">Dashboard</h1>
-    <p class="text-muted mt-1 mb-0">Welcome back, Jane Doe!</p>
+    <p class="text-muted mt-1 mb-0">Welcome back, <?=esc($userInfo->full_name)?>!</p>
   </div>
   <div class="d-flex align-items-center">
     <div class="text-end me-3">
-      <div class="fw-semibold text-dark">Jane Doe</div>
+      <div class="fw-semibold text-dark"><?=esc($userInfo->full_name)?></div>
       <div class="text-muted small">Trainee</div>
     </div>
-    <img src="https://placehold.co/40x40/22c55e/ffffff?text=J" alt="User Profile" class="rounded-circle">
+    <img
+      src="https://placehold.co/40x40/22c55e/ffffff?text=<?=esc(implode('', array_map(fn($w) => strtoupper($w[0]), explode(' ', $userInfo->full_name))))?>"
+      alt="User Profile" class="rounded-circle">
   </div>
 </header>
 <!-- Summary Cards Section -->
@@ -79,7 +81,7 @@
           </div>
           <div>
             <div class="text-muted small fw-semibold">Progress Report Submitted</div>
-            <div class="fs-2 fw-bold text-dark">4</div>
+            <div class="fs-2 fw-bold text-dark"><?=esc(count($progressReports))?></div>
           </div>
         </div>
       </div>
@@ -94,28 +96,24 @@
       <!-- Flex container for the graph and scale -->
       <div class="d-flex align-items-start">
         <!-- Progress Bars -->
-        <div class="progress-bar-container w-75">
-          <div class="progress-bar-stack" style="height: 65%;">
+
+        <?php if ($progressCharts !== []): ?>
+        <div class="progress-bar-container w-75" style="justify-content:start !important;">
+          <?php foreach ($progressCharts as $index => $barChart): ?>
+
+          <div class="progress-bar-stack" style="height: <?=esc($barChart)?>%;">
             <div class="progress-bar-fill" style="height: 100%;"></div>
-            <span class="progress-bar-label">65%</span>
+            <span class="progress-bar-label"><?=esc($index + 1)?> Report (<?=esc($barChart)?>%)</span>
           </div>
-          <div class="progress-bar-stack" style="height: 80%;">
-            <div class="progress-bar-fill" style="height: 100%;"></div>
-            <span class="progress-bar-label">80%</span>
-          </div>
-          <div class="progress-bar-stack" style="height: 50%;">
-            <div class="progress-bar-fill" style="height: 100%;"></div>
-            <span class="progress-bar-label">50%</span>
-          </div>
-          <div class="progress-bar-stack" style="height: 90%;">
-            <div class="progress-bar-fill" style="height: 100%;"></div>
-            <span class="progress-bar-label">90%</span>
-          </div>
-          <div class="progress-bar-stack" style="height: 75%;">
-            <div class="progress-bar-fill" style="height: 100%;"></div>
-            <span class="progress-bar-label">75%</span>
-          </div>
+
+          <?php endforeach?>
         </div>
+        <?php else: ?>
+        <div class="d-flex text-center w-75 justify-content-center align-items-center fw-bold">
+          No record found!
+        </div>
+        <?php endif?>
+
         <!-- Progress Scale Legend -->
         <div class="ms-4">
           <h6 class="fw-semibold text-dark mb-2">Progress Scale:</h6>
@@ -126,19 +124,15 @@
             </li>
             <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
               <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
-              <div class="fw-normal text-muted">Class Participation</div>
+              <div class="fw-normal text-muted">Knowledge</div>
             </li>
             <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
               <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
-              <div class="fw-normal text-muted">Assignment Completion</div>
+              <div class="fw-normal text-muted">Skill</div>
             </li>
             <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
               <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
-              <div class="fw-normal text-muted">Project Performance</div>
-            </li>
-            <li class="list-group-item d-flex align-items-center py-2 px-0 border-0">
-              <div class="me-2" style="width: 12px; height: 12px; background-color: #22c55e; border-radius: 4px;"></div>
-              <div class="fw-normal text-muted">Clinical Behavior</div>
+              <div class="fw-normal text-muted">Attitude</div>
             </li>
           </ul>
         </div>
@@ -154,42 +148,38 @@
       <table class="table table-hover mb-0">
         <thead class="bg-light rounded-top-2">
           <tr>
-            <th scope="col" class="py-3 px-4 rounded-start">Course ID</th>
-            <th scope="col" class="py-3 px-4">Course Name</th>
-            <th scope="col" class="py-3 px-4">Instructor</th>
-            <th scope="col" class="py-3 px-4">Grade</th>
-            <th scope="col" class="py-3 px-4 rounded-end">Status</th>
+            <th scope="col" class="py-3 px-4 rounded-start">SL</th>
+            <th scope="col" class="py-3 px-4">Training Institute</th>
+            <th scope="col" class="py-3 px-4">Supervisor Name & Address</th>
+            <th scope="col" class="py-3 px-4">Training Period</th>
+            <th scope="col" class="py-3 px-4">Training Duration (in months)</th>
+            <th scope="col" class="py-3 px-4">Status</th>
+            <th scope="col" class="py-3 px-4 rounded-end">Action</th>
           </tr>
         </thead>
         <tbody>
+          <?php if ($progressReports !== []): ?>
+<?php foreach ($progressReports as $index => $progressReport): ?>
           <tr class="bg-white border-bottom">
-            <th scope="row" class="py-4 px-4 fw-normal text-dark">CS-101</th>
+            <th scope="row" class="py-4 px-4 fw-normal text-dark"><?=esc($index + 1)?></th>
             <td class="py-4 px-4">Cardiology Foundations</td>
-            <td class="py-4 px-4">Dr. P. Khan</td>
-            <td class="py-4 px-4 fw-bold">A</td>
-            <td class="py-4 px-4"><span class="badge rounded-pill text-bg-success py-1 px-2">Completed</span></td>
+            <td class="py-4 px-4">Cardiology Foundations</td>
+            <td class="py-4 px-4"><?=esc($progressReport['training_start_date'])?> to
+              <?=esc($progressReport['training_end_date'])?></td>
+            <td class="py-4 px-4">Cardiology Foundations</td>
+            <td class="py-4 px-4">
+              <span class="badge rounded-pill text-bg-success py-1 px-2">Completed</span>
+              <span class="badge rounded-pill text-bg-info py-1 px-2">In Progress</span>
+            </td>
           </tr>
+          <?php endforeach?>
+
+          <?php else: ?>
           <tr class="bg-white border-bottom">
-            <th scope="row" class="py-4 px-4 fw-normal text-dark">NR-205</th>
-            <td class="py-4 px-4">Neurology Practices</td>
-            <td class="py-4 px-4">Dr. A. Chowdhury</td>
-            <td class="py-4 px-4 fw-bold">B+</td>
-            <td class="py-4 px-4"><span class="badge rounded-pill text-bg-success py-1 px-2">Completed</span></td>
+            <th scope="row" class="py-4 px-4 fw-normal text-dark text-center" colspan="7">No record found!</th>
           </tr>
-          <tr class="bg-white border-bottom">
-            <th scope="row" class="py-4 px-4 fw-normal text-dark">PD-310</th>
-            <td class="py-4 px-4">Pediatric Care</td>
-            <td class="py-4 px-4">Dr. M. Akter</td>
-            <td class="py-4 px-4 fw-bold">A-</td>
-            <td class="py-4 px-4"><span class="badge rounded-pill text-bg-success py-1 px-2">Completed</span></td>
-          </tr>
-          <tr class="bg-white border-bottom">
-            <th scope="row" class="py-4 px-4 fw-normal text-dark">SR-401</th>
-            <td class="py-4 px-4">Advanced Surgical Techniques</td>
-            <td class="py-4 px-4">Dr. R. Hussain</td>
-            <td class="py-4 px-4 fw-bold">N/A</td>
-            <td class="py-4 px-4"><span class="badge rounded-pill text-bg-info py-1 px-2">In Progress</span></td>
-          </tr>
+
+          <?php endif?>
         </tbody>
       </table>
     </div>
