@@ -13,4 +13,9 @@ class Home extends BaseController
     {
         return view('registration_no_sms');
     }
+
+    public function contactUs(): string
+    {
+        return view('contact');
+    }
 }

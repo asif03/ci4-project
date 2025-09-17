@@ -18,8 +18,8 @@
         <li class="nav-item <?=($current == base_url('/') ? 'active' : 'text-muted')?>">
           <a class="nav-link" href="<?=base_url()?>">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#contact">Contact</a>
+        <li class="nav-item <?=($current == base_url('contact-us') ? 'active' : 'text-muted')?>">
+          <a class="nav-link" href="<?=base_url('contact-us')?>">Contact Us</a>
         </li>
         <?php if (auth()->loggedIn()): ?>
         <!-- Login button -->

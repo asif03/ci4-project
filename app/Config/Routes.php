@@ -9,6 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 // Frontend Routes
 $routes->get('/', 'Home::index');
 $routes->get('/registration-no-sms', 'Home::registrationNoSms');
+$routes->get('/contact-us', 'Home::contactUs');
 
 $routes->get('/401', function () {
     return view('401');
