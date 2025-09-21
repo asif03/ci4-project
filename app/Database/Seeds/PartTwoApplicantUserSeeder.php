@@ -21,6 +21,7 @@ class PartTwoApplicantUserSeeder extends Seeder
                 'active'     => 1,
                 'created_at' => Time::now(),
                 'updated_at' => Time::now(),
+                'full_name'  => $applicant->applicant_name,
             ]);
 
             $userId = $db->insertID();
@@ -28,7 +29,7 @@ class PartTwoApplicantUserSeeder extends Seeder
             // Insert into auth_identities
             $db->table('auth_identities')->insert([
                 'user_id'    => $userId,
-                'type'       => 'username', // adjust if your shield uses different type
+                'type'       => 'email_password', // adjust if your shield uses different type
                 'name'       => $applicant->applicant_name,
                 'secret'     => $applicant->reg_no,
                 'secret2'    => service('passwords')->hash($applicant->password),

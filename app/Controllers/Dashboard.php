@@ -3,19 +3,20 @@
 namespace App\Controllers;
 
 use App\Models\FcpsPartOneModel;
+use App\Models\InstituteModel;
 use App\Models\ProgressReportModel;
 
 class Dashboard extends BaseController
 {
-
+    protected $trainingInstituteModel;
     protected $fcpsPartOneModel;
     protected $progressReportModel;
 
     public function __construct()
     {
-
-        $this->progressReportModel = new ProgressReportModel();
-        $this->fcpsPartOneModel    = new FcpsPartOneModel();
+        $this->trainingInstituteModel = new InstituteModel();
+        $this->progressReportModel    = new ProgressReportModel();
+        $this->fcpsPartOneModel       = new FcpsPartOneModel();
     }
 
     public function index(): string

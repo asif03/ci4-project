@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
             // Insert into auth_identities
             $db->table('auth_identities')->insert([
                 'user_id'    => $userId,
-                'type'       => 'username',
+                'type'       => 'email_password',
                 'secret'     => $user['username'],
                 'secret2'    => service('passwords')->hash($user['password']),
                 'created_at' => Time::now(),

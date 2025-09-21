@@ -39,6 +39,10 @@ class TraineeController extends BaseController
 
     public function progressReports()
     {
+        $trainingInstituteModel = $this->trainingInstituteModel->where('status', true)->get();
+
+        dd($trainingInstituteModel);
+
         // Check if the authenticated user has the 'posts.edit' permission
         if (!auth()->user()->can('training.basic.get')) {
             // User does not have permission, so deny access.
