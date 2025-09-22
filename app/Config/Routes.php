@@ -28,7 +28,8 @@ $routes->group('fcps-part-one', static function ($routes) {
 
 $routes->group('trainings', static function ($routes) {
     $routes->get('basic-info', 'TraineeController::traineeBasicInfo');
-    $routes->get('progress-reports', 'TraineeController::progressReports');
+    $routes->get('progress-reports', 'TraineeController::createProgressReport');
+    $routes->post('progress-reports', 'TraineeController::storeProgressReport');
 
     //For Admin
     $routes->get('trainee-list', 'TrainingController::trainees');

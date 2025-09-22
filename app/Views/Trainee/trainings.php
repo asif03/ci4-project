@@ -9,31 +9,30 @@
     <p class="text-muted mb-2">
       Please fill out the form below to add a new academic record.
     </p>
-    <form>
+    <?=session()->getFlashdata('error')?>
+    <?=validation_list_errors()?>
+    <form action="<?=base_url('trainings/progress-reports')?>" method="post">
+      <?=csrf_field()?>
       <!-- Training Details Section -->
       <div class="card p-4 rounded-3 shadow-sm mb-4">
         <h6 class="fw-bold text-dark mb-3">Training Details</h6>
         <div class="mb-3">
           <label for="institute" class="form-label fw-semibold text-dark">Training Institute:</label>
-          <select class="form-select rounded-lg" id="institute" required>
+          <select class="form-select rounded-lg" name="instituteName" id="institute">
             <option selected disabled value="">Select Institute...</option>
-            <option value="BCPS">BCPS</option>
-            <option value="Dhaka Medical College">Dhaka Medical College</option>
-            <option value="BSMMU">BSMMU</option>
-            <option value="Ibrahim Medical College">Ibrahim Medical College</option>
-            <option value="Other">Other</option>
+            <?php foreach ($trainingInstitutes as $institute) {?>
+            <option value="<?=esc($institute['institute_id'])?>"><?=esc($institute['name'])?></option>
+            <?php }?>
           </select>
         </div>
         <div class="mb-3 row">
           <div class="col-md-6">
             <label for="department" class="form-label fw-semibold text-dark">Department</label>
-            <select class="form-select rounded-lg" id="department" required>
+            <select class="form-select rounded-lg" name="departmentName" id="department">
               <option selected disabled value="">Select Department...</option>
-              <option value="Cardiology">Cardiology</option>
-              <option value="Neurology">Neurology</option>
-              <option value="Pediatrics">Pediatrics</option>
-              <option value="Surgery">Surgery</option>
-              <option value="General Medicine">General Medicine</option>
+              <?php foreach ($departments as $department) {?>
+              <option value="<?=esc($department['speciality_id'])?>"><?=esc($department['name'])?></option>
+              <?php }?>
             </select>
           </div>
           <div class="col-md-6">
