@@ -152,24 +152,35 @@
             <th scope="col" class="py-3 px-4">Training Institute</th>
             <th scope="col" class="py-3 px-4">Supervisor Name & Address</th>
             <th scope="col" class="py-3 px-4">Training Period</th>
-            <th scope="col" class="py-3 px-4">Training Duration (in months)</th>
+            <th scope="col" class="py-3 px-4">Duration (in months)</th>
             <th scope="col" class="py-3 px-4">Status</th>
+            <th scope="col" class="py-3 px-4">Report Submitted?</th>
             <th scope="col" class="py-3 px-4 rounded-end">Action</th>
           </tr>
         </thead>
         <tbody>
           <?php if ($progressReports !== []): ?>
-<?php foreach ($progressReports as $index => $progressReport): ?>
+          <?php foreach ($progressReports as $index => $progressReport): ?>
           <tr class="bg-white border-bottom">
             <th scope="row" class="py-4 px-4 fw-normal text-dark"><?=esc($index + 1)?></th>
             <td class="py-4 px-4">Cardiology Foundations</td>
             <td class="py-4 px-4">Cardiology Foundations</td>
             <td class="py-4 px-4"><?=esc($progressReport['training_start_date'])?> to
               <?=esc($progressReport['training_end_date'])?></td>
-            <td class="py-4 px-4">Cardiology Foundations</td>
-            <td class="py-4 px-4">
-              <span class="badge rounded-pill text-bg-success py-1 px-2">Completed</span>
-              <span class="badge rounded-pill text-bg-info py-1 px-2">In Progress</span>
+            <td class="py-4 px-4 text-center"><?=esc($progressReport['countable_duration_month'])?></td>
+            <td class="py-4 px-4 text-center">
+              <?php if ($progressReport['training_accepted'] == true): ?>
+              <span class="badge rounded-pill bg-success text-white py-1 px-2">Completed</span>
+              <?php else: ?>
+              <span class="badge rounded-pill bg-warning text-white py-1 px-2">Pending</span>
+              <?php endif; ?>
+            </td>
+            <td class="py-4 px-4 text-center">
+              <?php if ($progressReport['progress_report_received'] == true): ?>
+              <span class="badge rounded-pill bg-success text-white py-1 px-2">Yes</span>
+              <?php else: ?>
+              <span class="badge rounded-pill bg-danger text-white py-1 px-2">No</span>
+              <?php endif; ?>
             </td>
           </tr>
           <?php endforeach?>

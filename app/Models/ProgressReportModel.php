@@ -10,7 +10,7 @@ class ProgressReportModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = ['reg_no', 'training_start_date', 'training_end_date', 'countable_duration_month', 'training_accepted', 'progress_report_received',
-        'progress_report_url', 'training_institute_id', 'institute_p2_training', 'supervisor_id', 'supervisor_name', 'supervisor_department', 'no_of_beds',
+        'progress_report_url', 'training_institute_id', 'institute_p2_training', 'supervisor_id', 'supervisor_name', 'department_id', 'supervisor_department', 'no_of_beds',
         'no_of_trainees', 'no_of_faculty_mem', 'designation_id', 'supervisor_designation', 'subject_id', 'supervisor_subject', 'supervisor_mobile_no', 'supervisor_mailing_address',
         'attendance', 'knowledge', 'skill', 'attitude', 'status',
     ];
