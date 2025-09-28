@@ -12,12 +12,14 @@ class TraineeController extends BaseController
     protected $trainingInstituteModel;
     protected $specialityModel;
     protected $designationModel;
+    protected $progressReportModel;
 
     public function __construct()
     {
         $this->trainingInstituteModel = new InstituteModel();
         $this->specialityModel        = new SpecialityModel();
         $this->designationModel       = new DesignationModel();
+        $this->progressReportModel    = new ProgressReportModel();
     }
 
     public function trainees()
@@ -157,4 +159,13 @@ class TraineeController extends BaseController
             return redirect()->back()->with('error', 'Ohh! Something went wrong...!');
         }
     }
+
+    public function showProgressReport($reportId)
+    {
+        $progressReportDetails  = $this->progressReportModel->getProgressReportById($reportId);
+        $data['progressReport'] = $progressReportDetails;
+
+        return view('Trainee/view-report-details', $data);
+    }
+
 }

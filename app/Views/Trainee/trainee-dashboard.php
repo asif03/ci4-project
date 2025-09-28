@@ -150,7 +150,8 @@
           <tr>
             <th scope="col" class="py-3 px-4 rounded-start">SL</th>
             <th scope="col" class="py-3 px-4">Training Institute</th>
-            <th scope="col" class="py-3 px-4">Supervisor Name & Address</th>
+            <th scope="col" class="py-3 px-4">Department</th>
+            <th scope="col" class="py-3 px-4">Supervisor Name</th>
             <th scope="col" class="py-3 px-4">Training Period</th>
             <th scope="col" class="py-3 px-4">Duration (in months)</th>
             <th scope="col" class="py-3 px-4">Status</th>
@@ -163,8 +164,26 @@
           <?php foreach ($progressReports as $index => $progressReport): ?>
           <tr class="bg-white border-bottom">
             <th scope="row" class="py-4 px-4 fw-normal text-dark"><?=esc($index + 1)?></th>
-            <td class="py-4 px-4">Cardiology Foundations</td>
-            <td class="py-4 px-4">Cardiology Foundations</td>
+            <td class="py-4 px-4">
+              <?php if ($progressReport['training_institute_id'] != null): ?>
+              <?=esc($progressReport['training_institute_name'])?>
+              <?php else: ?>
+              <?=esc($progressReport['institute_p2_training'])?>
+              <?php endif; ?></td>
+            <td class="py-4 px-4">
+              <?php if ($progressReport['department_id'] != null): ?>
+              <?=esc($progressReport['department_name'])?>
+              <?php else: ?>
+              <?=esc($progressReport['supervisor_department'])?>
+              <?php endif; ?>
+            </td>
+            <td class="py-4 px-4">
+              <?php if ($progressReport['supervisor_id'] != null): ?>
+              <?=esc($progressReport['new_supervisor_name'])?>
+              <?php else: ?>
+              <?=esc($progressReport['supervisor_name'])?>
+              <?php endif; ?>
+            </td>
             <td class="py-4 px-4"><?=esc($progressReport['training_start_date'])?> to
               <?=esc($progressReport['training_end_date'])?></td>
             <td class="py-4 px-4 text-center"><?=esc($progressReport['countable_duration_month'])?></td>
@@ -182,19 +201,57 @@
               <span class="badge rounded-pill bg-danger text-white py-1 px-2">No</span>
               <?php endif; ?>
             </td>
+            <td class="">
+              <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewTrainingModal"
+                onclick="loadReporDetailsView(<?=esc($progressReport['id'])?>)"><i class="fa fa-eye"
+                  aria-hidden="true"></i></button>
+              <?php if ($progressReport['progress_report_received'] != true): ?>
+              <a href="#" class="btn btn-primary text-white py-1 px-2">Edit</a>
+              <?php endif; ?>
+            </td>
           </tr>
           <?php endforeach?>
-
           <?php else: ?>
           <tr class="bg-white border-bottom">
-            <th scope="row" class="py-4 px-4 fw-normal text-dark text-center" colspan="7">No record found!</th>
+            <th scope="row" class="py-4 px-4 fw-normal text-dark text-center" colspan="8">No record found!</th>
           </tr>
-
           <?php endif?>
         </tbody>
       </table>
     </div>
   </div>
-</section>
 
+  <!-- Modal -->
+  <div class="modal fade" id="viewTrainingModal" tabindex="-1" aria-labelledby="viewTrainingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewTrainingLabel">Progress Report Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="viewProgressReportContents"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<?php $this->endSection()?>
+<?php $this->section('pageScripts')?>
+<script>
+function loadReporDetailsView(reportId) {
+  alert(reportId);
+  $.ajax({
+    type: 'GET',
+    url: '<?php echo base_url(); ?>trainings/fetch-progress-report/' + reportId,
+    success: function(response) {
+      $('#viewProgressReportContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
+</script>
 <?php $this->endSection()?>

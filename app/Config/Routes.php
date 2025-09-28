@@ -15,6 +15,7 @@ $routes->get('/401', function () {
     return view('401');
 });
 $routes->get('/profile', 'UserController::profile');
+
 $routes->get('/dashboard', 'Dashboard::index');
 
 $routes->group('api', static function ($routes) {
@@ -30,6 +31,7 @@ $routes->group('trainings', static function ($routes) {
     $routes->get('basic-info', 'TraineeController::traineeBasicInfo');
     $routes->get('progress-reports', 'TraineeController::createProgressReport');
     $routes->post('progress-reports', 'TraineeController::storeProgressReport');
+    $routes->get('fetch-progress-report/(:num)', 'TraineeController::showProgressReport/$1');
 
     //For Admin
     $routes->get('trainee-list', 'TrainingController::trainees');

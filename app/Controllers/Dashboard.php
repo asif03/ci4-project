@@ -25,7 +25,9 @@ class Dashboard extends BaseController
         $user = auth()->user();
 
         //dd($user->inGroup);
-        $progressReports = $this->progressReportModel->where('reg_no', $user->username)->where('status', true)->findAll();
+        //$progressReports = $this->progressReportModel->where('reg_no', $user->username)->where('status', true)->findAll();
+
+        $progressReports = $this->progressReportModel->getProgressReportByRegNo($user->username);
 
         $prgresScale = [
             'Poor'         => 1,
@@ -66,17 +68,11 @@ class Dashboard extends BaseController
             'progressCharts'  => $percentageOfProgress,
         ];
 
-        //dd($data);
-
         // Check if the user is in the 'admin' group
-        if (!$user->inGroup('superadmin', 'admin')) {
-            return view('trainee/trainee-dashboard', $data);
-        } else {
+        if ($user->inGroup('superadmin', 'admin')) {
             return view('dashboard', $data);
+        } elseif ($user->inGroup('user')) {
+            return view('trainee/trainee-dashboard', $data);
         }
-
-        // The user is an admin, so load the dashboard view.
-        //return view('dashboard');
-
     }
 }
