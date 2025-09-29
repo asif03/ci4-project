@@ -74,6 +74,7 @@ class ProgressReportModel extends Model
         $builder->join('supervisors', 'supervisors.id  = pr.supervisor_id', 'left');
         $builder->where('pr.reg_no', $regNo);
         $builder->where('pr.status', true);
+        $builder->orderBy('pr.training_start_date', 'ASC');
         $query = $builder->get();
 
         return $query->getResultArray();
@@ -82,14 +83,17 @@ class ProgressReportModel extends Model
     public function getProgressReportById($reportId)
     {
         $builder = $this->db->table('progress_reports pr');
-        $builder->select('pr.*, institute.name AS training_institute_name, speciality.name AS department_name, supervisors.supervisor_name AS new_supervisor_name');
+        $builder->select('pr.*, institute.name AS training_institute_name, speciality.name AS department_name, sv.supervisor_name AS new_supervisor_name, sv.mobile,
+                            sv.email, sv.mailing_address,  dg.designation AS new_designation, sp.name AS new_supervisor_subject_name');
         $builder->join('institute', 'institute.institute_id  = pr.training_institute_id', 'left');
         $builder->join('speciality', 'speciality.speciality_id  = pr.department_id', 'left');
-        $builder->join('supervisors', 'supervisors.id  = pr.supervisor_id', 'left');
+        $builder->join('supervisors sv', 'sv.id  = pr.supervisor_id', 'left');
+        $builder->join('designations dg', 'sv.designation_id  = dg.id', 'left');
+        $builder->join('speciality sp', 'sv.subject_id  = sp.speciality_id', 'left');
         $builder->where('pr.id', $reportId);
         $builder->where('pr.status', true);
         $query = $builder->get();
 
-        return $query->getResultArray();
+        return $query->getRowArray();
     }
 }

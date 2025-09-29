@@ -162,10 +162,16 @@ class TraineeController extends BaseController
 
     public function showProgressReport($reportId)
     {
-        $progressReportDetails  = $this->progressReportModel->getProgressReportById($reportId);
+        $progressReportDetails = $this->progressReportModel->getProgressReportById($reportId);
+
         $data['progressReport'] = $progressReportDetails;
 
         return view('Trainee/view-report-details', $data);
+    }
+
+    public function editProgressReport($reportId)
+    {
+        echo 'Asif';
     }
 
 }

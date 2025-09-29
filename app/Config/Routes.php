@@ -32,6 +32,7 @@ $routes->group('trainings', static function ($routes) {
     $routes->get('progress-reports', 'TraineeController::createProgressReport');
     $routes->post('progress-reports', 'TraineeController::storeProgressReport');
     $routes->get('fetch-progress-report/(:num)', 'TraineeController::showProgressReport/$1');
+    $routes->get('progress-reports/(:num)', 'TraineeController::editProgressReport/$1');
 
     //For Admin
     $routes->get('trainee-list', 'TrainingController::trainees');
