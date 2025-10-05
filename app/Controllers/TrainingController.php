@@ -12,7 +12,6 @@ class TrainingController extends BaseController
 
     public function __construct()
     {
-
         $this->progressReportModel = new ProgressReportModel();
         $this->fcpsPartOneModel    = new FcpsPartOneModel();
     }
@@ -77,17 +76,48 @@ class TrainingController extends BaseController
 
     public function getTrainee($id)
     {
-        $traineeDetails = $this->fcpsPartOneModel->find($id);
+        $traineeDetails  = $this->fcpsPartOneModel->find($id);
+        $progressReports = $this->progressReportModel->getProgressReportByRegNo($traineeDetails['reg_no']);
 
-        //dd($traineeDetails);
+        //dd($progressReports);
 
         $data = [
-            'title'         => 'FCPS Part-I Trainees',
-            'pageTitle'     => 'FCPS Part-I Passed Trainees',
-            'traineeDetail' => $traineeDetails,
+            'title'           => 'FCPS Part-I Trainees',
+            'pageTitle'       => 'FCPS Part-I Passed Trainees',
+            'traineeDetails'  => $traineeDetails,
+            'progressReports' => $progressReports,
         ];
 
         return view('Training/progress-reports', $data);
     }
 
+    public function approveProgressReport()
+    {
+        $request = service('request');
+
+        $reportId = $request->getPost('reportId');
+
+        $isApproved = $this->progressReportModel->approveProgressReport($reportId);
+
+        if ($isApproved) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Approved successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to approve.']);
+        }
+    }
+
+    public function receiveProgressReport()
+    {
+        $request = service('request');
+
+        $reportId = $request->getPost('reportId');
+
+        $isApproved = $this->progressReportModel->receiveProgressReport($reportId);
+
+        if ($isApproved) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Receive successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to receive.']);
+        }
+    }
 }

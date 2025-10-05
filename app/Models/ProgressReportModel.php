@@ -96,4 +96,27 @@ class ProgressReportModel extends Model
 
         return $query->getRowArray();
     }
+
+    public function approveProgressReport($reportId)
+    {
+        $user = service('auth')->user();
+
+        $builder = $this->db->table('progress_reports');
+        $builder->where('id', $reportId);
+        $builder->update(['training_accepted' => true, 'accepted_by' => $user->id, 'accepted_date' => date('Y-m-d H:i:s')]);
+
+        return $this->db->affectedRows();
+    }
+
+    public function receiveProgressReport($reportId)
+    {
+        $user = service('auth')->user();
+
+        $builder = $this->db->table('progress_reports');
+        $builder->where('id', $reportId);
+        $builder->update(['progress_report_received' => true, 'received_by' => $user->id, 'received_date' => date('Y-m-d H:i:s')]);
+
+        return $this->db->affectedRows();
+    }
+
 }

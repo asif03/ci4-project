@@ -38,6 +38,9 @@ $routes->group('trainings', static function ($routes) {
     $routes->get('trainee-list', 'TrainingController::trainees');
     $routes->post('fetch-trainees', 'TrainingController::getSearchedTrainees');
     $routes->get('trainees/(:num)', 'TrainingController::getTrainee/$1');
+    $routes->post('approve-progress-report', 'TrainingController::approveProgressReport');
+    $routes->post('receive-progress-report', 'TrainingController::receiveProgressReport');
+
 });
 
 $routes->group('applications', static function ($routes) {
