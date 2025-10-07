@@ -43,7 +43,7 @@
     <img src="https://placehold.co/120x120/22c55e/ffffff?text=JD" alt="User Profile"
       class="profile-avatar mb-4 mb-md-0 me-md-4">
     <div>
-      <h1 class="h2 fw-bold mb-1"><?=esc($userInfo->full_name)?></h1>
+      <h1 class="h2 fw-bold mb-1">Asif</h1>
       <p class="lead mb-0">Trainee</p>
     </div>
   </header>

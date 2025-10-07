@@ -34,6 +34,8 @@ $routes->group('trainings', static function ($routes) {
     $routes->get('fetch-progress-report/(:num)', 'TraineeController::showProgressReport/$1');
     $routes->get('progress-reports/(:num)', 'TraineeController::editProgressReport/$1');
 
+    $routes->get('get-supervisors/(:num)', 'TraineeController::getSupervisorsByInstitute/$1');
+
     //For Admin
     $routes->get('trainee-list', 'TrainingController::trainees');
     $routes->post('fetch-trainees', 'TrainingController::getSearchedTrainees');

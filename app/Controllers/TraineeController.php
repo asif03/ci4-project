@@ -6,6 +6,7 @@ use App\Models\DesignationModel;
 use App\Models\InstituteModel;
 use App\Models\ProgressReportModel;
 use App\Models\SpecialityModel;
+use App\Models\SupervisorModel;
 
 class TraineeController extends BaseController
 {
@@ -13,6 +14,7 @@ class TraineeController extends BaseController
     protected $specialityModel;
     protected $designationModel;
     protected $progressReportModel;
+    protected $supervisorModel;
 
     public function __construct()
     {
@@ -20,6 +22,7 @@ class TraineeController extends BaseController
         $this->specialityModel        = new SpecialityModel();
         $this->designationModel       = new DesignationModel();
         $this->progressReportModel    = new ProgressReportModel();
+        $this->supervisorModel        = new SupervisorModel();
     }
 
     public function trainees()
@@ -53,6 +56,13 @@ class TraineeController extends BaseController
 
         return view('Trainee/basic-info', $data);
 
+    }
+
+    public function getSupervisorsByInstitute($instituteId)
+    {
+        $data = $this->supervisorModel->where('institute_id', $instituteId)->findAll();
+
+        return $this->response->setJSON($data);
     }
 
     public function createProgressReport()
@@ -129,10 +139,25 @@ class TraineeController extends BaseController
         $model  = model(ProgressReportModel::class);
         $reg_no = auth()->user()->username;
 
+        if ($this->request->getPost('supervisor') === '99999999') {
+            $supervisorId = $this->supervisorModel->insert([
+                'supervisor_name' => $validData['supervisorName'],
+                'institute_id'    => $validData['instituteName'],
+                'department_id'   => $validData['departmentName'],
+                'designation_id'  => $validData['supervisorDesignation'],
+                'subject_id'      => $validData['supervisorSubject'],
+                'mobile'          => $validData['supervisorMobile'],
+                'email'           => $this->request->getPost('supervisorEmail'),
+                'mailing_address' => $this->request->getPost('supervisorAddress'),
+            ]);
+        } else {
+            $supervisorId = $this->request->getPost('supervisor');
+        }
+
         $successId = $model->insert([
             'reg_no'                   => $reg_no,
             'training_institute_id'    => $validData['instituteName'],
-            'department_id'            => 7,
+            'department_id'            => $validData['departmentName'],
             'no_of_beds'               => $validData['beds'],
             'no_of_trainees'           => $validData['trainees'],
             'no_of_faculty_mem'        => $validData['facultyMembers'],
@@ -141,11 +166,11 @@ class TraineeController extends BaseController
             'training_end_date'        => $validData['toDate'],
             'countable_duration_month' => 6,
 
-            //'supervisor_id'=>$post['supervisorMobile'],
-            'supervisor_name'          => $validData['supervisorName'],
-            'designation_id'           => $validData['supervisorDesignation'],
-            'subject_id'               => $validData['supervisorSubject'],
-            'supervisor_mobile_no'     => $validData['supervisorMobile'],
+            'supervisor_id'            => $supervisorId,
+            //'supervisor_name'          => $validData['supervisorName'],
+            //'designation_id'           => $validData['supervisorDesignation'],
+            //'subject_id'               => $validData['supervisorSubject'],
+            //'supervisor_mobile_no'     => $validData['supervisorMobile'],
 
             'attendance'               => $validData['attendance'],
             'knowledge'                => $validData['knowledge'],
@@ -154,6 +179,7 @@ class TraineeController extends BaseController
         ]);
 
         if ($successId) {
+
             return redirect()->back()->with('success', 'Data saved successfully.');
         } else {
             return redirect()->back()->with('error', 'Ohh! Something went wrong...!');
