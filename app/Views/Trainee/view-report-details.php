@@ -42,22 +42,23 @@
   <p class="fw-bold text-info">Training Details:</p>
   <div class="row g-1">
     <div class="col-md-6">
-      <p><strong>From Date:</strong> <span><?=esc($progressReport['training_start_date'])?></span></p>
-      <p><strong>To Date:</strong> <span><?=esc($progressReport['training_end_date'])?></span></p>
-      <p><strong>Duration:</strong> <span><?=esc($progressReport['countable_duration_month'])?> Months</span></p>
+      <div class="col"><strong>From Date:</strong> <span><?=esc($progressReport['training_start_date'])?></span></div>
+      <div class="col"><strong>To Date:</strong> <span><?=esc($progressReport['training_end_date'])?></span></div>
+      <div class="col"><strong>Duration:</strong> <span><?=esc($progressReport['countable_duration_month'])?>
+          Months</span></div>
     </div>
     <div class="col-md-6">
       <p class="fw-bold mb-2 text-danger-emphasis">Performance:</p>
-      <p><strong>Attendance:</strong> <span><?=esc($progressReport['attendance'])?></span></p>
-      <p><strong>Knowledge:</strong> <span><?=esc($progressReport['knowledge'])?></span></p>
-      <p><strong>Skill:</strong> <span><?=esc($progressReport['skill'])?></span></p>
-      <p><strong>Attitude:</strong> <span><?=esc($progressReport['attitude'])?></span></p>
+      <div class="col"><strong>Attendance:</strong> <span><?=esc($progressReport['attendance'])?></span></div>
+      <div class="col" p><strong>Knowledge:</strong> <span><?=esc($progressReport['knowledge'])?></span></div>
+      <div class="col"><strong>Skill:</strong> <span><?=esc($progressReport['skill'])?></span></div>
+      <div class="col"><strong>Attitude:</strong> <span><?=esc($progressReport['attitude'])?></span></div>
     </div>
   </div>
 </div>
 <div class="mt-2 pt-2 border-top">
   <span class="fw-bold mb-2 text-info">Supervisor Details:</span>
-  <p>
+  <div class="col">
     <strong>Name:</strong>
     <span>
       <?php if ($progressReport['supervisor_id'] != null): ?>
@@ -66,9 +67,9 @@
       <?=esc($progressReport['supervisor_name'])?>
       <?php endif; ?>
     </span>
-
-  </p>
-  <p><strong>Designation:</strong>
+  </div>
+  <div class="col">
+    <strong>Designation:</strong>
     <span>
       <?php if ($progressReport['supervisor_id'] != null): ?>
       <?=esc($progressReport['new_designation'])?>
@@ -76,8 +77,9 @@
       <?=esc($progressReport['supervisor_designation'])?>
       <?php endif; ?>
     </span>
-  </p>
-  <p><strong>Subject:</strong>
+  </div>
+  <div class="col">
+    <strong>Subject:</strong>
     <span>
       <?php if ($progressReport['supervisor_id'] != null): ?>
       <?=esc($progressReport['new_supervisor_subject_name'])?>
@@ -85,8 +87,8 @@
       <?=esc($progressReport['supervisor_subject'])?>
       <?php endif; ?>
     </span>
-  </p>
-  <p>
+  </div>
+  <div class="col">
     <strong>Mailing Address:</strong>
     <span>
       <?php if ($progressReport['supervisor_id'] != null): ?>
@@ -95,8 +97,8 @@
       <?=esc($progressReport['supervisor_mailing_address'])?>
       <?php endif; ?>
     </span>
-  </p>
-  <p>
+  </div>
+  <div class="col">
     <strong>Mobile:</strong>
     <span>
       <?php if ($progressReport['supervisor_id'] != null): ?>
@@ -105,5 +107,5 @@
       <?=esc($progressReport['supervisor_mobile_no'])?>
       <?php endif; ?>
     </span>
-  </p>
+  </div>
 </div>

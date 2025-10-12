@@ -64,6 +64,19 @@
     </div>
   </div>
 </div>
+
+<!-- Modal For Edit Applicant -->
+<div class="modal fade" id="viewApplicantModal" tabindex="-1" aria-labelledby="applicantModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="applicantModalLabel">Applicant Info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="viewApplicantContents"></div>
+    </div>
+  </div>
+</div>
 <?php $this->endSection()?>
 
 <?php $this->section('pageScripts')?>
@@ -107,7 +120,7 @@ $('#partOneList').DataTable({
     {
       "data": null,
       "render": function(data, type, row) {
-        return `<a class="btn btn-outline-info btn-sm" href="<?=base_url('trainings/trainees')?>/${row.id}"><i class="fa fa-eye" aria-hidden="true"></i></a>`;
+        return `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewApplicantModal" onclick="loadApplicationView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
       }
     }
   ],
