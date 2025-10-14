@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\DesignationModel;
+use App\Models\FcpsPartOneModel;
 use App\Models\InstituteModel;
 use App\Models\ProgressReportModel;
 use App\Models\SpecialityModel;
@@ -15,6 +16,7 @@ class TraineeController extends BaseController
     protected $designationModel;
     protected $progressReportModel;
     protected $supervisorModel;
+    protected $fcpsPartOneModel;
 
     public function __construct()
     {
@@ -23,6 +25,7 @@ class TraineeController extends BaseController
         $this->designationModel       = new DesignationModel();
         $this->progressReportModel    = new ProgressReportModel();
         $this->supervisorModel        = new SupervisorModel();
+        $this->fcpsPartOneModel       = new FcpsPartOneModel();
     }
 
     public function trainees()
@@ -43,16 +46,20 @@ class TraineeController extends BaseController
 
     public function traineeBasicInfo()
     {
-
         // Check if the authenticated user has the 'posts.edit' permission
         if (!auth()->user()->can('training.basic.get')) {
             // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->back()->with('unauthorized', 'You are not authorized to access this page!');
+            $data['unauthorized'] = array(
+                'status'  => true,
+                'message' => 'You are not authorized to access this page!',
+            );
 
-            $data['name'] = 'You are not authorized to edit posts.';
         } else {
-            $data['name'] = 'Asif';
+            $data['basicInfo'] = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
         }
+
+        //dd($data);
 
         return view('Trainee/basic-info', $data);
 

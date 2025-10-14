@@ -104,6 +104,8 @@ class AuthGroups extends ShieldAuthGroups
             'users.delete',
             'partone.list',
         ],
-        'user'       => [],
+        'user'       => [
+            'training.basic.get',
+        ],
     ];
 }

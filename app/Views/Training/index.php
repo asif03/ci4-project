@@ -120,7 +120,7 @@ $('#partOneList').DataTable({
     {
       "data": null,
       "render": function(data, type, row) {
-        return `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewApplicantModal" onclick="loadApplicationView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
+        return `<a class="btn btn-outline-info btn-sm" href="<?=base_url('trainings/trainees')?>/${row.id}"><i class="fa fa-eye" aria-hidden="true"></i></a>`;
       }
     }
   ],
