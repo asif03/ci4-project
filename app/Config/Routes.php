@@ -28,13 +28,17 @@ $routes->group('fcps-part-one', static function ($routes) {
 });
 
 $routes->group('trainings', static function ($routes) {
+    //For Trainee
     $routes->get('basic-info', 'TraineeController::traineeBasicInfo');
     $routes->get('progress-reports', 'TraineeController::createProgressReport');
     $routes->post('progress-reports', 'TraineeController::storeProgressReport');
     $routes->get('fetch-progress-report/(:num)', 'TraineeController::showProgressReport/$1');
     $routes->get('progress-reports/(:num)', 'TraineeController::editProgressReport/$1');
-
     $routes->get('get-supervisors/(:num)', 'TraineeController::getSupervisorsByInstitute/$1');
+
+    $routes->get('training-application', 'TraineeController::trainingApplication');
+    $routes->get('honorarium-bill-application', 'TraineeController::honorariumBillApplication');
+    $routes->post('honorarium-bill-application', 'TraineeController::storeBillApplication');
 
     //For Admin
     $routes->get('trainee-list', 'TrainingController::trainees');

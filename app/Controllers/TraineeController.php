@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ApplicantInformationModel;
 use App\Models\DesignationModel;
 use App\Models\FcpsPartOneModel;
 use App\Models\InstituteModel;
@@ -17,15 +18,17 @@ class TraineeController extends BaseController
     protected $progressReportModel;
     protected $supervisorModel;
     protected $fcpsPartOneModel;
+    protected $applicantInformationModel;
 
     public function __construct()
     {
-        $this->trainingInstituteModel = new InstituteModel();
-        $this->specialityModel        = new SpecialityModel();
-        $this->designationModel       = new DesignationModel();
-        $this->progressReportModel    = new ProgressReportModel();
-        $this->supervisorModel        = new SupervisorModel();
-        $this->fcpsPartOneModel       = new FcpsPartOneModel();
+        $this->trainingInstituteModel    = new InstituteModel();
+        $this->specialityModel           = new SpecialityModel();
+        $this->designationModel          = new DesignationModel();
+        $this->progressReportModel       = new ProgressReportModel();
+        $this->supervisorModel           = new SupervisorModel();
+        $this->fcpsPartOneModel          = new FcpsPartOneModel();
+        $this->applicantInformationModel = new ApplicantInformationModel();
     }
 
     public function trainees()
@@ -205,6 +208,58 @@ class TraineeController extends BaseController
     public function editProgressReport($reportId)
     {
         echo 'Asif';
+    }
+
+    public function trainingApplication()
+    {
+
+    }
+
+    public function honorariumBillApplication()
+    {
+        helper('form');
+
+        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
+
+        //echo auth()->user()->id;
+
+        $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
+
+        if (!$checkTrainingApplication) {
+            $data['applicationExists'] = false;
+        } else {
+            $data['applicationExists'] = true;
+        }
+
+        //dd($checkTrainingApplication);
+
+        $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
+        $data['trainingInstitutes'] = $trainingInstitutes;
+
+        $departments          = $this->specialityModel->where('status', true)->findAll();
+        $data['departments']  = $departments;
+        $data['specialities'] = $departments;
+        $designations         = $this->designationModel->where('status', true)->findAll();
+        $data['designations'] = $designations;
+
+        //dd($departments);
+
+        // Check if the authenticated user has the 'posts.edit' permission
+        if (!auth()->user()->can('training.basic.get')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+
+            $data['name'] = 'You are not authorized to edit posts.';
+        } else {
+            $data['name'] = 'Asif';
+        }
+
+        return view('Trainee/honorarium-application', $data);
+    }
+
+    public function storeBillApplication()
+    {
+
     }
 
 }

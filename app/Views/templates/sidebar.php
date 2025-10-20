@@ -75,17 +75,30 @@
             <p>Training Information</p>
           </a>
         </li>
-        <?php }}
-        ?>
+        <?php }}?>
 
-
-        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
+        <?php if ($user && $user->inGroup('superadmin', 'admin', 'user')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>
           </span>
           <h4 class="text-section">Honorarium Info</h4>
         </li>
+        <?php if ($user && $user->inGroup('superadmin', 'user')) {?>
+        <li class="nav-item <?=set_active('trainings/training-application')?>">
+          <a href="<?=base_url('trainings/training-application')?>">
+            <i class="fa fa-stethoscope" aria-hidden="true"></i>
+            <p>Training Application</p>
+          </a>
+        </li>
+        <li class="nav-item <?=set_active('trainings/honorarium-bill-application')?>">
+          <a href="<?=base_url('trainings/honorarium-bill-application')?>">
+            <i class="fa fa-money-bill"></i>
+            <p>Honararium Bill Application</p>
+          </a>
+        </li>
+        <?php }?>
+        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
         <li class="nav-item <?=set_active('applications')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarApplications">
             <i class="fas fa-th-list"></i>
@@ -123,6 +136,7 @@
             </ul>
           </div>
         </li>
+        <?php }?>
         <?php if ($user && $user->inGroup('superadmin')) {?>
         <li class="nav-item <?=set_active('reports')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarReports">
@@ -153,7 +167,7 @@
         <?php
             }}
         ?>
-<?php if ($user && $user->inGroup('superadmin')) {?>
+        <?php if ($user && $user->inGroup('superadmin')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>

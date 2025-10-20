@@ -130,7 +130,6 @@ class Application extends BaseController
 
     public function edit($id)
     {
-
         $data = [
             'title'          => 'Application',
             'pageTitle'      => 'Edit Application Information',
