@@ -153,6 +153,7 @@
           <form id="verificationForm">
             <!-- Step 1: User Details -->
             <div id="step1Form">
+              <input type="hidden" id="csrf_token" name="<?=csrf_token()?>" value="<?=csrf_hash()?>">
               <div class="mb-3">
                 <label for="penNoInput" class="form-label text-muted">Pen No</label>
                 <input type="text" class="form-control rounded-pill py-2" id="penNoInput"
@@ -160,8 +161,37 @@
               </div>
               <div class="mb-3">
                 <label for="mobileNoInput" class="form-label text-muted">Mobile No</label>
-                <input type="tel" class="form-control rounded-pill py-2" id="mobileNoInput"
+                <input type="text" class="form-control rounded-pill py-2" id="mobileNoInput"
                   placeholder="Enter your Mobile No" required>
+              </div>
+              <div class="mb-3">
+                <label for="emailInput" class="form-label fw-semibold text-dark">Email Address</label>
+                <input type="text" class="form-control rounded-pill py-2" id="emailInput"
+                  placeholder="example@example.com" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold text-dark mb-2">Preferred Delivery Method</label>
+                <div class="d-flex gap-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="deliveryMethod" id="deliveryEmail" value="email"
+                      checked />
+                    <label class="form-check-label text-muted" for="deliveryEmail">
+                      Email
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="deliveryMethod" id="deliverySms" value="sms" />
+                    <label class="form-check-label text-muted" for="deliverySms">
+                      SMS (Only 2 Times)
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="deliveryMethod" id="deliveryBoth" value="both">
+                    <label class="form-check-label text-muted" for="deliveryBoth">
+                      Both
+                    </label>
+                  </div>
+                </div>
               </div>
               <div class="d-grid mb-4">
                 <button type="button" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" id="nextButton">
@@ -248,8 +278,49 @@ function showAlert(container, message, type) {
 }
 
 // Mock server-side function to simulate OTP sending
-async function sendOtpToServer(penNo, mobileNo) {
-  return new Promise(resolve => {
+async function sendOtpToServer(penNo, mobileNo, emailAddress, chooseOption) {
+
+  // get CSRF token from hidden field
+  const csrfName = document.querySelector('#csrf_token').getAttribute('name');
+  const csrfValue = document.querySelector('#csrf_token').value;
+
+  alert(chooseOption);
+
+  try {
+    const response = await fetch('<?=base_url('fcps-part-one/fetch-otp-candidate')?>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: new URLSearchParams({
+        penNo,
+        mobileNo,
+        emailAddress,
+        chooseOption,
+        [csrfName]: csrfValue
+      })
+    });
+
+    const data = await response.json();
+
+    //Update the CSRF token if CodeIgniter rotates it
+    if (data.csrf_token) {
+      document.querySelector('#csrf_token').value = data.csrf_token;
+    }
+
+    return data;
+
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      success: false,
+      message: 'Server error occurred.'
+    };
+  }
+
+
+  /*return new Promise(resolve => {
     setTimeout(() => {
       if (penNo === '123' && mobileNo === '9876543210') {
         resolve({
@@ -263,7 +334,7 @@ async function sendOtpToServer(penNo, mobileNo) {
         });
       }
     }, 1500); // Simulate a network delay
-  });
+  });*/
 }
 
 // Mock server-side function to simulate OTP verification
@@ -289,10 +360,12 @@ async function verifyOtpToServer(otp) {
 nextButton.addEventListener('click', async function() {
   const penNo = document.getElementById('penNoInput').value;
   const mobileNo = document.getElementById('mobileNoInput').value;
+  const emailAddress = document.getElementById('emailInput').value;
+  const chooseOption = document.querySelector('input[name="deliveryMethod"]:checked')?.value;
 
   showLoading(nextButton, true);
 
-  const response = await sendOtpToServer(penNo, mobileNo);
+  const response = await sendOtpToServer(penNo, mobileNo, emailAddress, chooseOption);
 
   showLoading(nextButton, false);
 

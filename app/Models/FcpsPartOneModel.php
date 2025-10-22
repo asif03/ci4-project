@@ -12,7 +12,7 @@ class FcpsPartOneModel extends Model
     protected $allowedFields = ['date_of_birth', 'mailing_address', 'present_address', 'permanent_address', 'national_id', 'pen_number',
         'subject_id', 'subject', 'contact_res', 'cell', 'tel_office', 'email', 'money_receipt_no', 'money_receipt_date', 'training_institute', 'roll',
         'mbbs_year', 'mbbs_institute_id', 'mbbs_institute', 'eligible_for_final_exam', 'training_completion', 'protocol_acceptance', 'dissertaion_acceptance',
-        'created_by', 'updated_by', 'updated_at'];
+        'hashedotp', 'smscounter', 'created_by', 'updated_by', 'updated_at'];
 
     public function countFilteredData($searchValue = '')
     {
@@ -63,6 +63,27 @@ class FcpsPartOneModel extends Model
         $builder->where('fcps.id', $id);
 
         return $builder->get()->getRowArray();
+    }
+
+    public function getTraineeInfoByParams(array $params = [])
+    {
+        $builder = $this->db->table('fcps_one_pass_applicants ap');
+        $builder->select('ap.id, ap.fcps_part_one_year, ap.fcps_part_one_session, UPPER(ap.applicant_name) as name, UPPER(ap.father_name) as father_name,
+                            ap.pen_number, ap.reg_no, ap.cell, ap.email, ap.smscounter, ap.hashedotp');
+        $builder->join('speciality sp', 'ap.subject_id = sp.speciality_id', 'left');
+
+        // Apply dynamic where conditions
+        foreach ($params as $key => $value) {
+            if ($value !== null && $value !== '') {
+                // Automatically add table alias if not included
+                if (!str_contains($key, '.')) {
+                    $key = 'ap.' . $key;
+                }
+                $builder->where($key, $value);
+            }
+        }
+
+        return $builder->get()->getRowArray(); // ✅ returns single row
     }
 
 }
