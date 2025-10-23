@@ -68,8 +68,8 @@ class FcpsPartOneModel extends Model
     public function getTraineeInfoByParams(array $params = [])
     {
         $builder = $this->db->table('fcps_one_pass_applicants ap');
-        $builder->select('ap.id, ap.fcps_part_one_year, ap.fcps_part_one_session, UPPER(ap.applicant_name) as name, UPPER(ap.father_name) as father_name,
-                            ap.pen_number, ap.reg_no, ap.cell, ap.email, ap.smscounter, ap.hashedotp');
+        $builder->select('ap.id, ap.reg_no, ap.fcps_part_one_year, ap.fcps_part_one_session, UPPER(ap.applicant_name) as name, UPPER(ap.father_name) as father_name,
+                            ap.pen_number, ap.reg_no, ap.cell, ap.email, ap.password, ap.smscounter, ap.hashedotp');
         $builder->join('speciality sp', 'ap.subject_id = sp.speciality_id', 'left');
 
         // Apply dynamic where conditions

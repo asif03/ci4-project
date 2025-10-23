@@ -77,7 +77,7 @@ class Filters extends BaseFilters
                 'fcps-part-one/fetch-candidates', 'trainings/fetch-trainees', 'trainings/fetch-progress-report/*', 'trainings/approve-progress-report',
                 'trainings/receive-progress-report', 'trainings/get-supervisor/*']],
             // 'invalidchars',
-            'session' => ['except' => ['/', 'login', 'register', 'logout', 'registration-no-sms', 'contact-us', 'fcps-part-one/fetch-otp-candidate']],
+            'session' => ['except' => ['/', 'login', 'register', 'logout', 'registration-no-sms', 'contact-us', 'fcps-part-one/fetch-otp-candidate', 'fcps-part-one/verify-otp']],
         ],
         'after'  => [
             // 'honeypot',

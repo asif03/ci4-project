@@ -99,15 +99,23 @@ class Home extends BaseController
 
                     $isUpdate = $this->fcpsPartOneModel->update($trainee['id'], $updateData);
 
-                    return $this->response->setJSON([
-                        'success'    => true,
-                        'message'    => 'OTP sent successfully to your ' . $chooseOption . $isUpdate,
-                        'csrf_token' => csrf_hash(), // send fresh token
-                    ]);
+                    if ($isUpdate) {
+                        return $this->response->setJSON([
+                            'success'    => true,
+                            'message'    => 'OTP sent successfully to your ' . $chooseOption,
+                            'csrf_token' => csrf_hash(), // send fresh token
+                        ]);
+                    } else {
+                        return $this->response->setJSON([
+                            'success'    => false,
+                            'message'    => 'OTP sent failed to your ' . $chooseOption,
+                            'csrf_token' => csrf_hash(), // send fresh token
+                        ]);
+                    }
                 } else {
                     return $this->response->setJSON([
                         'success'    => false,
-                        'message'    => 'OTP sent failed to you ' . $chooseOption,
+                        'message'    => 'OTP sent failed to your ' . $chooseOption,
                         'csrf_token' => csrf_hash(), // send fresh token
                     ]);
                 }
@@ -134,6 +142,95 @@ class Home extends BaseController
             ]);
         }
 
+    }
+
+    public function verifyOtp()
+    {
+        $penNo        = $this->request->getPost('penNo');
+        $mobileNo     = $this->request->getPost('mobileNo');
+        $emailAddress = $this->request->getPost('emailAddress');
+        $chooseOption = $this->request->getPost('chooseOption');
+        $otp          = $this->request->getPost('otp');
+
+        if ($penNo == '' && ($mobileNo == '' || $emailAddress == '')) {
+            return $this->response->setJSON([
+                'success'    => false,
+                'message'    => 'Please fill out required fields!',
+                'csrf_token' => csrf_hash(), // send fresh token
+            ]);
+        }
+
+        $params = [];
+
+        if ($chooseOption === 'both') {
+            $params = [
+                'pen_number' => $penNo,
+                'cell'       => $mobileNo,
+                'email'      => $emailAddress,
+            ];
+        } elseif ($chooseOption === 'sms') {
+            $params = [
+                'pen_number' => $penNo,
+                'cell'       => $mobileNo,
+            ];
+        } elseif ($chooseOption === 'email') {
+            $params = [
+                'pen_number' => $penNo,
+                'email'      => $emailAddress,
+            ];
+        }
+
+        $trainee = $this->fcpsPartOneModel->getTraineeInfoByParams($params);
+
+        if ($trainee) {
+
+            if (password_verify($otp, $trainee['hashedotp'])) {
+
+                if ($chooseOption === 'email') {
+
+                    $data = [
+                        'recipientName' => $trainee['name'],
+                        'regNumber'     => $trainee['reg_no'],
+                        'password'      => $trainee['password'],
+                        // Footer variables (use actual application settings)
+                        'websiteUrl'    => 'https://www.bcps.edu.bd',
+                        'supportEmail'  => 'it@bcps.edu.bd',
+                        'contactNumber' => '+880-2-9132070',
+                        'loginUrl'      => site_url('login'), // Assuming you have a route named 'login'
+                    ];
+
+                    $to      = $trainee['email'];
+                    $subject = 'Welcome! Your BCPS Registration Credentials';
+
+                    // Load the HTML as a string
+                    $message = view('Emails/registration_welcome', $data);
+
+                    $emailService = new EmailService();
+                    $result       = $emailService->sendEmail($to, $subject, $message); // You can pass parameters if needed
+
+                    if ($result) {
+                        return $this->response->setJSON([
+                            'success'    => true,
+                            'message'    => 'Registration info send successfully!',
+                            'csrf_token' => csrf_hash(), // send fresh token
+                        ]);
+                    }
+                } else {
+                    return $this->response->setJSON([
+                        'success'    => false,
+                        'message'    => 'Woo! something heppen.',
+                        'csrf_token' => csrf_hash(), // send fresh token
+                    ]);
+                }
+
+            } else {
+                return $this->response->setJSON([
+                    'success'    => false,
+                    'message'    => 'Invalid OTP!',
+                    'csrf_token' => csrf_hash(), // send fresh token
+                ]);
+            }
+        }
     }
 
     public function contactUs(): string

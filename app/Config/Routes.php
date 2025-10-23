@@ -27,6 +27,7 @@ $routes->group('fcps-part-one', static function ($routes) {
     $routes->post('fetch-candidates', 'PartOneController::getSearchedCandidates');
 
     $routes->post('fetch-otp-candidate', 'Home::sendOtp');
+    $routes->post('verify-otp', 'Home::verifyOtp');
 });
 
 $routes->group('trainings', static function ($routes) {

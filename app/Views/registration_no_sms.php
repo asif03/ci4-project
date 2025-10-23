@@ -155,14 +155,14 @@
             <div id="step1Form">
               <input type="hidden" id="csrf_token" name="<?=csrf_token()?>" value="<?=csrf_hash()?>">
               <div class="mb-3">
-                <label for="penNoInput" class="form-label text-muted">Pen No</label>
-                <input type="text" class="form-control rounded-pill py-2" id="penNoInput"
-                  placeholder="Enter your Pen No" required>
+                <label for="penNoInput" class="form-label fw-semibold text-dark">Pen No</label>
+                <input type="text" class="form-control rounded-pill py-2" id="penNoInput" placeholder="A-0000-0-00-0000"
+                  required>
               </div>
               <div class="mb-3">
-                <label for="mobileNoInput" class="form-label text-muted">Mobile No</label>
-                <input type="text" class="form-control rounded-pill py-2" id="mobileNoInput"
-                  placeholder="Enter your Mobile No" required>
+                <label for="mobileNoInput" class="form-label fw-semibold text-dark">Mobile No</label>
+                <input type="text" class="form-control rounded-pill py-2" id="mobileNoInput" placeholder="01700000000"
+                  required>
               </div>
               <div class="mb-3">
                 <label for="emailInput" class="form-label fw-semibold text-dark">Email Address</label>
@@ -229,8 +229,9 @@
             <div id="step3Form" style="display: none;">
               <div class="success-page">
                 <i class="fas fa-check-circle text-green mb-4" style="font-size: 4rem;"></i>
-                <h3 class="fw-bold mb-2">SMS Send Successful!</h3>
-                <p class="text-muted">You have been successfully verified. Redirecting you to the dashboard...</p>
+                <h3 class="fw-bold mb-2">Email/SMS Send Successful!</h3>
+                <p class="text-muted">You have been successfully verified. To access dashboard <a
+                    href="<?=base_url('login')?>">Login</a></p>
               </div>
             </div>
           </form>
@@ -284,8 +285,6 @@ async function sendOtpToServer(penNo, mobileNo, emailAddress, chooseOption) {
   const csrfName = document.querySelector('#csrf_token').getAttribute('name');
   const csrfValue = document.querySelector('#csrf_token').value;
 
-  alert(chooseOption);
-
   try {
     const response = await fetch('<?=base_url('fcps-part-one/fetch-otp-candidate')?>', {
       method: 'POST',
@@ -318,42 +317,48 @@ async function sendOtpToServer(penNo, mobileNo, emailAddress, chooseOption) {
       message: 'Server error occurred.'
     };
   }
-
-
-  /*return new Promise(resolve => {
-    setTimeout(() => {
-      if (penNo === '123' && mobileNo === '9876543210') {
-        resolve({
-          success: true,
-          message: 'OTP sent to your mobile number.'
-        });
-      } else {
-        resolve({
-          success: false,
-          message: 'Invalid Pen No or Mobile No. Please try again.'
-        });
-      }
-    }, 1500); // Simulate a network delay
-  });*/
 }
 
 // Mock server-side function to simulate OTP verification
-async function verifyOtpToServer(otp) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      if (otp === '4321') {
-        resolve({
-          success: true,
-          message: 'OTP verified successfully.'
-        });
-      } else {
-        resolve({
-          success: false,
-          message: 'Incorrect OTP. Please try again.'
-        });
-      }
-    }, 1500); // Simulate a network delay
-  });
+async function verifyOtpToServer(penNo, mobileNo, emailAddress, chooseOption, otp) {
+
+  // get CSRF token from hidden field
+  const csrfName = document.querySelector('#csrf_token').getAttribute('name');
+  const csrfValue = document.querySelector('#csrf_token').value;
+
+  try {
+    const response = await fetch('<?=base_url('fcps-part-one/verify-otp')?>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: new URLSearchParams({
+        penNo,
+        mobileNo,
+        emailAddress,
+        chooseOption,
+        [csrfName]: csrfValue,
+        otp
+      })
+    });
+
+    const data = await response.json();
+
+    //Update the CSRF token if CodeIgniter rotates it
+    if (data.csrf_token) {
+      document.querySelector('#csrf_token').value = data.csrf_token;
+    }
+
+    return data;
+
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      success: false,
+      message: 'Server error occurred.'
+    };
+  }
 }
 
 // Event listener for the "Next" button with Ajax
@@ -388,9 +393,14 @@ verifyButton.addEventListener('click', async function() {
   const otp = document.getElementById('otp1').value + document.getElementById('otp2').value + document
     .getElementById('otp3').value + document.getElementById('otp4').value;
 
+  const penNo = document.getElementById('penNoInput').value;
+  const mobileNo = document.getElementById('mobileNoInput').value;
+  const emailAddress = document.getElementById('emailInput').value;
+  const chooseOption = document.querySelector('input[name="deliveryMethod"]:checked')?.value;
+
   showLoading(verifyButton, true);
 
-  const response = await verifyOtpToServer(otp);
+  const response = await verifyOtpToServer(penNo, mobileNo, emailAddress, chooseOption, otp);
 
   showLoading(verifyButton, false);
 
