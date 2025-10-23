@@ -1,0 +1,59 @@
+{
+  "workbench.colorTheme": "Solarized Dark",
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.fontSize": 13,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.quickSuggestions": {
+    "other": "on",
+    "comments": "off",
+    "strings": "off"
+  },
+  "editor.fontFamily": "'JetBrains Mono', Consolas, 'Courier New', monospace",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[php]": {
+    "editor.defaultFormatter": "kokororin.vscode-phpfmt"
+  },
+  "[blade]": {
+    "editor.defaultFormatter": "shufo.vscode-blade-formatter",
+    "editor.autoClosingBrackets": "always"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "phpfmt.passes": [
+    "AlignDoubleArrow",
+    "AlignEquals",
+    "AlignGroupDoubleArrow",
+    "AlignPHPCode"
+  ],
+  "explorer.confirmDelete": false,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "php.validate.executablePath": "D:\\xampp\\php\\php.exe",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.guides.bracketPairs": "active",
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "javascriptreact": false,
+    "php": false
+  },
+  "editor.pasteAs.preferences": [],
+  "editor.codeActionsOnSave": {},
+  "redhat.telemetry.enabled": true,
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "github.copilot.nextEditSuggestions.enabled": false,
+  "editor.dropIntoEditor.preferences": []
+}
