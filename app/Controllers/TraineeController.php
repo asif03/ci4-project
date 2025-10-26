@@ -212,7 +212,31 @@ class TraineeController extends BaseController
 
     public function trainingApplication()
     {
+        helper('form');
 
+        $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
+        $data['trainingInstitutes'] = $trainingInstitutes;
+
+        $departments          = $this->specialityModel->where('status', true)->findAll();
+        $data['departments']  = $departments;
+        $data['specialities'] = $departments;
+        $designations         = $this->designationModel->where('status', true)->findAll();
+        $data['designations'] = $designations;
+
+        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
+        //dd($generalInfo);
+
+        $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
+
+        if (!$checkTrainingApplication) {
+            $data['applicationExists'] = false;
+        } else {
+            $data['applicationExists'] = true;
+        }
+
+        $data['generalInfo'] = $generalInfo;
+
+        return view('Trainee/training-application', $data);
     }
 
     public function honorariumBillApplication()

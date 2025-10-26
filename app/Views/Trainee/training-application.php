@@ -1,0 +1,1116 @@
+<?php $this->extend('layout')?>
+<?php $this->section('title')?>Training Info<?php $this->endSection()?>
+<?php $this->section('main')?>
+<?php $validation = \Config\Services::validation(); ?>
+<?php $this->section('pageStyles')?>
+<style>
+.registration-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+}
+
+.section-header {
+  color: #1a4521;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.form-title {
+  color: #007bff;
+  /* Primary color */
+  font-weight: 700;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 0.5rem;
+  padding: 10px 25px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.form-select {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+
+.training-row {
+  padding: 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 0.75rem;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.file-constraint {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+.declaration-box {
+  border: 1px solid #ffc107;
+  /* Warning color border */
+  border-radius: 0.75rem;
+  padding: 20px;
+  background-color: #fff3cd;
+  /* Light warning background */
+}
+
+/* Styling for the tab bar navigation */
+.nav-pills .nav-link {
+  background-color: #e9ecef;
+  color: #6c757d;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  margin: 3px;
+  padding: 10px 10px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+}
+
+.nav-pills .nav-link.complete {
+  background-color: #218838;
+  /* Green for completed steps */
+  color: white;
+}
+
+/* Ensure tab panes start hidden but the first one is visible */
+.tab-content .tab-pane {
+  display: none;
+}
+
+.tab-content .tab-pane.active {
+  display: block;
+}
+</style>
+<?php $this->endSection()?>
+
+<div class="page-content">
+  <div class="card p-4 rounded-3 shadow-sm">
+    <h5 class="fw-bold text-dark mb-2">Apply for Training (9 Steps)</h5>
+    <p class="text-muted mb-2">
+      (Training allowances for the FCPS Part-II honorary trainees)
+    </p>
+    <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success" role="alert">
+      <?=session()->getFlashdata('success')?>
+    </div>
+    <?php endif; ?>
+    <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger" role="alert">
+      <?=session()->getFlashdata('error')?>
+    </div>
+    <?php endif; ?>
+
+    <?php
+        $applicationExists = true;
+    if (!$applicationExists): ?>
+    <div class="alert alert-danger fw-bold" role="alert">
+      <span class="text-danger"> Training application not found! Please apply before submit the bill form. For apply
+      </span><a class="text-success" href="<?=base_url('trainings/training-application')?>">Click Here</a>
+    </div>
+    <?php else: ?>
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="card registration-card">
+          <form action="#" method="post" id="registrationForm" enctype="multipart/form-data" novalidate>
+
+            <!-- ========================================================= -->
+            <!-- TAB NAVIGATION BAR (9 Steps) -->
+            <!-- ========================================================= -->
+            <ul class="nav nav-pills nav-justified mb-4 flex-column flex-md-row" id="pills-tab" role="tablist">
+              <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-1" type="button" role="tab" aria-controls="tab-step-1"
+                  aria-selected="true">1. General Info</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-2" type="button" role="tab" aria-controls="tab-step-2"
+                  aria-selected="false">2. FCPS Part-I</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-3" type="button" role="tab" aria-controls="tab-step-3"
+                  aria-selected="false">3. Qualification</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-4" type="button" role="tab" aria-controls="tab-step-4"
+                  aria-selected="false">4. Current Training</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-5" type="button" role="tab" aria-controls="tab-step-5"
+                  aria-selected="false">5. Previous FCPS</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-6" type="button" role="tab" aria-controls="tab-step-6"
+                  aria-selected="false">6. Future Choices</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-7" type="button" role="tab" aria-controls="tab-step-7"
+                  aria-selected="false">7. Bank Info</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-8" type="button" role="tab" aria-controls="tab-step-8"
+                  aria-selected="false">8. Documents</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill"
+                  data-bs-target="#tab-step-9" type="button" role="tab" aria-controls="tab-step-9"
+                  aria-selected="false">9. Declaration</button></li>
+            </ul>
+
+            <!-- ========================================================= -->
+            <!-- TAB CONTENT -->
+            <!-- ========================================================= -->
+            <div class="tab-content" id="pills-tabContent">
+
+              <!-- STEP 1: General Information -->
+              <div class="tab-pane fade show active" id="tab-step-1" role="tabpanel" aria-labelledby="pills-step-1-tab">
+                <h4 class="section-header text-center pb-2 fw-bold">General Information</h4>
+                <div class="row g-3 mb-4">
+
+                  <div class="col-md-6">
+                    <label for="applicantName" class="form-label">Applicant’s Name (Block Letters)</label>
+                    <input type="text" class="form-control text-uppercase" id="applicantName"
+                      value="<?=esc($generalInfo['applicant_name'])?>" placeholder="E.g., DR. MUHAMMAD ALI" disabled>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="fatherSpouseName" class="form-label">Father’s/Spouse Name (Block Letters)</label>
+                    <input type="text" class="form-control text-uppercase" id="fatherSpouseName"
+                      value="<?=esc($generalInfo['father_name'])?>" disabled>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="motherName" class="form-label">Mother’s Name (Block Letters)</label>
+                    <input type="text" class="form-control text-uppercase" id="motherName"
+                      value="<?=esc($generalInfo['mother_name'])?>" disabled>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" id="dob" name="dob"
+                      value="<?=esc($generalInfo['date_of_birth'])?>" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="nationality" class="form-label">Nationality</label>
+                    <input type="text" class="form-control" id="nationality" name="nationality"
+                      value="<?=esc($generalInfo['date_of_birth'])?>" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Gender</label>
+                    <div class="d-flex align-items-center">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" id="genderMale" value="Male"
+                          required>
+                        <label class="form-check-label" for="genderMale">Male</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Female"
+                          required>
+                        <label class="form-check-label" for="genderFemale">Female</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="religion" class="form-label">Religion</label>
+                    <select id="religion" class="form-select" required>
+                      <option value="">Select Religion</option>
+                      <option value="Islam">Islam</option>
+                      <option value="Hinduism">Hinduism</option>
+                      <option value="Buddhism">Buddhism</option>
+                      <option value="Christianity">Christianity</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="nationalID" class="form-label">National ID No</label>
+                    <input type="text" class="form-control" id="nationalID" name="nationalID"
+                      value="<?=esc($generalInfo['national_id'])?>" placeholder="e.g., 19901234567890123" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="mobile" class="form-label">Mobile</label>
+                    <input type="tel" class="form-control" id="mobile" name="mobile"
+                      value="<?=esc($generalInfo['cell'])?>" placeholder="e.g., 01XXXXXXXXX" pattern="[0-9]{11}"
+                      required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="residenceTel" class="form-label">Tel (Res)</label>
+                    <input type="tel" class="form-control" id="residenceTel" name="residenceTel"
+                      value="<?=esc($generalInfo['contact_res'])?>" placeholder="Optional landline number">
+                  </div>
+
+                  <div class="col-md-12">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="email" name="email"
+                      value="<?=esc($generalInfo['email'])?>" placeholder="you@example.com" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="communicationAddress" class="form-label">Address of Communication</label>
+                    <textarea class="form-control" id="communicationAddress" name="communicationAddress" rows="3"
+                      required><?=esc($generalInfo['mailing_address'])?></textarea>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="permanentAddress" class="form-label">Permanent Address</label>
+                    <textarea class="form-control" id="permanentAddress" name="permanentAddress"
+                      rows="3"><?=esc($generalInfo['permanent_address'])?></textarea>
+                  </div>
+
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+              <!-- NEW STEP 2: FCPS Part-I Examination Data -->
+              <div class="tab-pane fade" id="tab-step-2" role="tabpanel" aria-labelledby="pills-step-2-tab">
+                <h4 class="section-header text-primary text-center">FCPS Part-I Examination Data</h4>
+                <div class="row g-3 mb-4">
+
+                  <div class="col-md-6">
+                    <label for="fcpsSpecialty" class="form-label">Specialty</label>
+                    <select id="fcpsSpecialty" class="form-select" disabled>
+                      <option selected disabled value="">Select a Subject...</option>
+                      <?php foreach ($specialities as $subject): ?>
+                      <option value="<?=esc($subject['speciality_id'])?>"
+                        <?=($subject['speciality_id'] === $generalInfo['subject_id']) ? 'selected' : ''?>>
+                        <?=esc($subject['name'])?>
+                      </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="fcpsPassYear" class="form-label">Year of Passing</label>
+                    <select id="fcpsPassYear" name="fcpsPassYear" class="form-select" disabled>
+                      <option value="" disabled>
+                        Select Year
+                      </option>
+                      <?php
+                          $current_year = date('Y');
+                          for ($year = 1990; $year <= $current_year; $year++) {
+                              $selected = ($year == $generalInfo['fcps_part_one_year']) ? 'selected' : '';
+                              echo "<option value=\"$year\" $selected>$year</option>";
+                          }
+                      ?>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="fcpsSession" class="form-label">Session</label>
+                    <select id="fcpsSession" class="form-select" disabled>
+                      <option value="" disabled selected>Select Session</option>
+                      <option value="January" <?=('January' === $generalInfo['subject_id']) ? 'selected' : ''?>>January
+                      </option>
+                      <option value="July" <?=('July' === $generalInfo['fcps_part_one_session']) ? 'selected' : ''?>>
+                        July</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="fcpsRollNo" class="form-label">Roll No.</label>
+                    <input type="text" class="form-control" id="fcpsRollNo" name="fcpsRollNo"
+                      placeholder="e.g., 123456">
+                  </div>
+
+                  <div class="col-md-12 border-top pt-3 mt-3">
+                    <label class="form-label mb-2 fw-bold">Are you selected or continuing the residency training/diploma
+                      course/ Govt. service/Private service?</label>
+                    <div class="d-flex align-items-center">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="residencyStatus" id="residencyYes" value="1"
+                          onclick="toggleResidencyDates(true)" required>
+                        <label class="form-check-label" for="residencyYes">Yes</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="residencyStatus" id="residencyNo" value="0"
+                          onclick="toggleResidencyDates(false)" checked required>
+                        <label class="form-check-label" for="residencyNo">No</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Conditional Dates Container -->
+                  <div id="residencyDatesContainer" class="col-md-12 row mx-3 p-3 border rounded"
+                    style="display: none;">
+                    <div class="col-md-6">
+                      <label for="residencyStartDate" class="form-label">Start Date</label>
+                      <input type="date" class="form-control" id="residencyStartDate" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="residencyEndDate" class="form-label">End Date</label>
+                      <input type="date" class="form-control" id="residencyEndDate" required>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+
+              <!-- NEW STEP 3: MBBS/BDS Data (Shifted from old Step 2) -->
+              <div class="tab-pane fade" id="tab-step-3" role="tabpanel" aria-labelledby="pills-step-3-tab">
+                <h4 class="section-header text-primary">III. MBBS/BDS Data (Qualification)</h4>
+                <div class="row g-3 mb-4">
+
+                  <div class="col-md-6">
+                    <label for="qualificationYear" class="form-label">Year of Qualification</label>
+                    <select id="qualificationYear" class="form-select" required>
+                      <option value="" disabled selected>Select Year</option>
+                      <!-- Years generated by JS -->
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="qualificationInstitute" class="form-label">Institute of Qualification</label>
+                    <select id="qualificationInstitute" class="form-select" required>
+                      <option value="" disabled selected>Select Institute</option>
+                      <option value="dhaka_medical">Dhaka Medical College</option>
+                      <option value="ssmc">Sir Salimullah Medical College</option>
+                      <option value="bsmmu">BSMMU</option>
+                      <option value="chittagong_medical">Chittagong Medical College</option>
+                      <option value="rajshahi_medical">Rajshahi Medical College</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-12">
+                    <label for="bmdcRegNo" class="form-label">BMDC Registration Number</label>
+                    <input type="text" class="form-control" id="bmdcRegNo" placeholder="e.g., A-12345" required>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+              <!-- NEW STEP 4: Current Training (Shifted from old Step 3) -->
+              <div class="tab-pane fade" id="tab-step-4" role="tabpanel" aria-labelledby="pills-step-4-tab">
+                <h4 class="section-header text-primary">IV. Current Training Details</h4>
+                <div class="row g-3 mb-4">
+
+                  <div class="col-md-6">
+                    <label for="currentInstitute" class="form-label">Name of the Current Institute</label>
+                    <select id="currentInstitute" class="form-select" required>
+                      <!-- Options populated by JS -->
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="currentDepartment" class="form-label">Name of the Department</label>
+                    <select id="currentDepartment" class="form-select" required>
+                      <!-- Options populated by JS -->
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="supervisorName" class="form-label">Name of the Supervisor</label>
+                    <input type="text" class="form-control" id="supervisorName" placeholder="Dr. John Doe" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="supervisorDesignation" class="form-label">Supervisor's Designation</label>
+                    <select id="supervisorDesignation" class="form-select" required>
+                      <!-- Options populated by JS -->
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="startDate" class="form-label">Training Start Date</label>
+                    <input type="date" class="form-control" id="startDate" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="endDate" class="form-label">Training End Date</label>
+                    <input type="date" class="form-control" id="endDate" required>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+              <!-- NEW STEP 5: Previous FCPS Training (Shifted from old Step 4) -->
+              <div class="tab-pane fade" id="tab-step-5" role="tabpanel" aria-labelledby="pills-step-5-tab">
+                <h4 class="section-header text-primary">V. Previous FCPS Training Records</h4>
+
+                <div class="mb-3 form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="hasPreviousTraining" role="switch">
+                  <label class="form-check-label fw-bold" for="hasPreviousTraining">
+                    Have you obtained FCPS training before?
+                  </label>
+                </div>
+
+                <!-- Container for dynamically added training records -->
+                <div id="previousTrainingContainer" style="display: none;">
+                  <p class="text-muted small mb-3">Please mention here previous completed training of every six month
+                    duration.</p>
+
+                  <button type="button" class="btn btn-outline-success btn-sm mb-4" id="addTrainingRowBtn">
+                    <i class="fas fa-plus-circle me-2"></i>Add Training Record
+                  </button>
+                  <!-- Dynamic rows are added here by JS -->
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+              <!-- NEW STEP 6: Future Training Choices (Shifted from old Step 5) -->
+              <div class="tab-pane fade" id="tab-step-6" role="tabpanel" aria-labelledby="pills-step-6-tab">
+                <h4 class="section-header text-primary">VI. Future Fellowship Training Choices</h4>
+                <p class="text-muted small mb-4">Mention the name of the institutes with department recognized by BCPS
+                  according to your choice where you want to obtain the fellowship training: (Please schedule the rest
+                  of training Including FCPS course and excluding current duration)</p>
+
+                <!-- Choice 1 -->
+                <div class="p-3 mb-4 border border-info rounded-3 bg-light">
+                  <h6 class="mb-4 text-info">Choice #1 (Highest Priority)</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="futureInstitute1" class="form-label small">Name of the Institutes</label>
+                      <select id="futureInstitute1" name="futureInstitute1" class="form-select" required>
+                        <!-- Options populated by JS -->
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureDepartment1" class="form-label small">Name of the Department</label>
+                      <select id="futureDepartment1" name="futureDepartment1" class="form-select" required>
+                        <!-- Options populated by JS -->
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureStartDate1" class="form-label small">Start Date</label>
+                      <input type="date" id="futureStartDate1" name="futureStartDate1" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureEndDate1" class="form-label small">End Date</label>
+                      <input type="date" id="futureEndDate1" name="futureEndDate1" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Choice 2 -->
+                <div class="p-3 mb-4 border border-secondary rounded-3 bg-light">
+                  <h6 class="mb-4 text-secondary">Choice #2 (Medium Priority)</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="futureInstitute2" class="form-label small">Name of the Institutes</label>
+                      <select id="futureInstitute2" name="futureInstitute2" class="form-select" required>
+                        <!-- Options populated by JS -->
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureDepartment2" class="form-label small">Name of the Department</label>
+                      <select id="futureDepartment2" name="futureDepartment2" class="form-select" required>
+                        <!-- Options populated by JS -->
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureStartDate2" class="form-label small">Start Date</label>
+                      <input type="date" id="futureStartDate2" name="futureStartDate2" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureEndDate2" class="form-label small">End Date</label>
+                      <input type="date" id="futureEndDate2" name="futureEndDate2" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Choice 3 -->
+                <div class="p-3 mb-4 border border-secondary rounded-3 bg-light">
+                  <h6 class="mb-4 text-secondary">Choice #3 (Lowest Priority)</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="futureInstitute3" class="form-label small">Name of the Institutes</label>
+                      <select id="futureInstitute3" name="futureInstitute3" class="form-select" required>
+                        <!-- Options populated by JS -->
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureDepartment3" class="form-label small">Name of the Department</label>
+                      <select id="futureDepartment3" name="futureDepartment3" class="form-select" required>
+                        <!-- Options populated by JS -->
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureStartDate3" class="form-label small">Start Date</label>
+                      <input type="date" id="futureStartDate3" name="futureStartDate3" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureEndDate3" class="form-label small">End Date</label>
+                      <input type="date" id="futureEndDate3" name="futureEndDate3" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+              <!-- NEW STEP 7: Personal Bank Information (Shifted from old Step 6) -->
+              <div class="tab-pane fade" id="tab-step-7" role="tabpanel" aria-labelledby="pills-step-7-tab">
+                <h4 class="section-header text-primary">VII. Applicant's Personal Bank Information</h4>
+                <p class="text-muted small mb-4">Provide your bank details for official transactions (e.g., stipends,
+                  refunds).</p>
+
+                <div class="row g-3 mb-4">
+
+                  <div class="col-md-6">
+                    <label for="bankName" class="form-label">Name of the Bank</label>
+                    <select id="bankName" name="bankName" class="form-select" required>
+                      <!-- Options populated by JS -->
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="bankBranch" class="form-label">Name of the Branch</label>
+                    <input type="text" class="form-control" id="bankBranch" name="bankBranch"
+                      placeholder="e.g., Dhaka Central Branch" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="accountNumber" class="form-label">Account Number (13 digits or above)</label>
+                    <input type="text" pattern="[0-9]{13,}" class="form-control" id="accountNumber" name="accountNumber"
+                      placeholder="Minimum 13 digits, numbers only" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="routingNumber" class="form-label">Routing Number</label>
+                    <input type="text" class="form-control" id="routingNumber" name="routingNumber"
+                      placeholder="e.g., 090261019" required>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+              <!-- NEW STEP 8: Required Document Attachments (Shifted from old Step 7) -->
+              <div class="tab-pane fade" id="tab-step-8" role="tabpanel" aria-labelledby="pills-step-8-tab">
+                <h4 class="section-header text-primary">VIII. Required Document Attachments</h4>
+                <p class="text-muted small mb-4">Please upload copies of the required documents. File size must be below
+                  300 kb for all image files.</p>
+
+                <div class="row g-4">
+
+                  <div class="col-md-6">
+                    <label for="signatureFile" class="form-label">1. Applicant’s Signature with Date (File)</label>
+                    <input type="file" class="form-control" id="signatureFile" name="signatureFile" accept="image/*"
+                      required>
+                    <div class="file-constraint">Resolution: **300x80 pixels**, Size: **&lt;300 kb** (Image file)</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="photoFile" class="form-label">2. Recent Passport Size Color Photograph</label>
+                    <input type="file" class="form-control" id="photoFile" name="photoFile" accept="image/*" required>
+                    <div class="file-constraint">Resolution: **300x300 pixels**, Size: **&lt;300 kb** (Image file)</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="fcpsPartIFile" class="form-label">3. FCPS Part-I Passed Document</label>
+                    <input type="file" class="form-control" id="fcpsPartIFile" name="fcpsPartIFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="mbbsCertFile" class="form-label">4. Certificate of MBBS/BDS</label>
+                    <input type="file" class="form-control" id="mbbsCertFile" name="mbbsCertFile" accept=".pdf,image/*"
+                      required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="bmdcRegCertFile" class="form-label">5. Permanent Registration Certificate of
+                      BMDC</label>
+                    <input type="file" class="form-control" id="bmdcRegCertFile" name="bmdcRegCertFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="trainingCertFile" class="form-label">6. Training Certificates (if applicable)</label>
+                    <input type="file" class="form-control" id="trainingCertFile" name="trainingCertFile"
+                      accept=".pdf,image/*">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="chequeBookFile" class="form-label">7. A Page of the Bank Cheque Book</label>
+                    <input type="file" class="form-control" id="chequeBookFile" name="chequeBookFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="nidFile" class="form-label">8. National ID Card</label>
+                    <input type="file" class="form-control" id="nidFile" name="nidFile" accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="joiningLetterFile" class="form-label">9. Joining Letter/Testimonial</label>
+                    <input type="file" class="form-control" id="joiningLetterFile" name="joiningLetterFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="otherDocsFile" class="form-label">10. Other Necessary Documents</label>
+                    <input type="file" class="form-control" id="otherDocsFile" name="otherDocsFile"
+                      accept=".pdf,image/*" multiple>
+                    <div class="file-constraint">You may upload multiple other documents.</div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+              </div>
+
+              <!-- NEW STEP 9: Applicant's Declaration (Undertaking) (Shifted from old Step 8) -->
+              <div class="tab-pane fade" id="tab-step-9" role="tabpanel" aria-labelledby="pills-step-9-tab">
+                <h4 class="section-header text-primary">IX. Applicant's Declaration (Undertaking)</h4>
+
+                <div class="declaration-box mb-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="undertakingCheckbox" required>
+                    <label class="form-check-label text-dark fw-semibold" for="undertakingCheckbox">
+                      Agree
+                    </label>
+                  </div>
+                  <div>**I Dr. <span>Md. Asif Iqbal</span> declared that the information given by
+                    me
+                    in this form is entirely true and authentic. The application may be cancelled if any information
+                    mentioned above is found to be false or incomplete.**</div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-between mt-5">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-check-circle me-2"></i> Submit
+                    Registration</button>
+                </div>
+              </div>
+
+            </div> <!-- End Tab Content -->
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+  </div>
+</div>
+<?php $this->endSection()?>
+<?php $this->section('pageScripts')?>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const registrationForm = document.getElementById('registrationForm');
+  // Select all tab panes, now 9
+  const tabs = document.querySelectorAll('.tab-pane');
+  const navPills = document.querySelectorAll('#pills-tab button');
+  let currentStep = 0; // Starts at 0 (Tab 1)
+
+  // Dynamic elements for Step 5 (Previous FCPS)
+  const hasPreviousTrainingSwitch = document.getElementById('hasPreviousTraining');
+  const trainingContainer = document.getElementById('previousTrainingContainer');
+  const addTrainingRowBtn = document.getElementById('addTrainingRowBtn');
+  let rowCounter = 0;
+
+  // General elements
+  const qualificationYearSelect = document.getElementById('qualificationYear');
+  //const fcpsPassYearSelect = document.getElementById('fcpsPassYear');
+  // The Applicant Name input from Step 1
+  const applicantNameStep1 = document.getElementById('applicantName');
+  // The span element in the Declaration tab
+  const displayedApplicantName = document.getElementById('displayedApplicantName');
+
+  // Conditional date elements for Step 2 (FCPS Part-I)
+  const residencyDatesContainer = document.getElementById('residencyDatesContainer');
+  const residencyStartDate = document.getElementById('residencyStartDate');
+  const residencyEndDate = document.getElementById('residencyEndDate');
+
+  // --- Dropdown Data Definitions ---
+
+  const instituteOptions = `
+            <option value="" disabled selected>Select Institute</option>
+            <option value="nihcr">National Institute of Health Care Research</option>
+            <option value="icddrb">ICDDR,B</option>
+            <option value="bsha">Bangladesh Specialized Hospital & Academy</option>
+            <option value="armed_forces_medical">Armed Forces Medical Institute</option>
+            <option value="other">Other</option>
+        `;
+
+  const departmentOptions = `
+            <option value="" disabled selected>Select Department</option>
+            <option value="cardiology">Cardiology</option>
+            <option value="nephrology">Nephrology</option>
+            <option value="neurology">Neurology</option>
+            <option value="gastroenterology">Gastroenterology</option>
+            <option value="pediatrics">Pediatrics</option>
+            <option value="surgery">General Surgery</option>
+        `;
+
+  const designationOptions = `
+            <option value="" disabled selected>Select Designation</option>
+            <option value="professor">Professor</option>
+            <option value="assoc_professor">Associate Professor</option>
+            <option value="assistant_professor">Assistant Professor</option>
+            <option value="senior_consultant">Senior Consultant</option>
+        `;
+
+  const bankOptions = `
+            <option value="" disabled selected>Select Bank</option>
+            <option value="sonali">Sonali Bank Limited</option>
+            <option value="janata">Janata Bank Limited</option>
+            <option value="agrani">Agrani Bank Limited</option>
+            <option value="dbbl">Dutch-Bangla Bank PLC</option>
+            <option value="brac">BRAC Bank PLC</option>
+            <option value="islami">Islami Bank Bangladesh PLC</option>
+            <option value="city">City Bank PLC</option>
+            <option value="other">Other</option>
+        `;
+
+
+
+  // --- Utility Functions ---
+
+  // Toggle visibility and required status of residency dates (Step 2)
+  window.toggleResidencyDates = function(isVisible) {
+    if (isVisible) {
+      residencyDatesContainer.style.display = 'flex';
+      residencyStartDate.required = true;
+      residencyEndDate.required = true;
+    } else {
+      residencyDatesContainer.style.display = 'none';
+      residencyStartDate.required = false;
+      residencyEndDate.required = false;
+      // Clear values when hiding
+      residencyStartDate.value = '';
+      residencyEndDate.value = '';
+    }
+  }
+
+  function populateFixedDropdowns(elementId, options) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.innerHTML = options;
+    }
+  }
+
+  // Function to generate the HTML for a single training record (Step 5)
+  function createTrainingRow(id) {
+    return `
+                <div class="training-row" data-row-id="${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="removeTrainingRow('${id}')"></button>
+                    <h6 class="mb-4 text-secondary">Training Record #${id}</h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label class="form-label small">Name of the Institutes</label>
+                            <select name="prev_institute_${id}" class="form-select" required>${instituteOptions}</select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small">Name of the Department</label>
+                            <select name="prev_department_${id}" class="form-select" required>${departmentOptions}</select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small">Name of the Supervisor</label>
+                            <input type="text" name="prev_supervisor_name_${id}" class="form-control" placeholder="Dr. Supervisor Name" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small">Designation</label>
+                            <select name="prev_designation_${id}" class="form-select" required>${designationOptions}</select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small">Start Date</label>
+                            <input type="date" name="prev_start_date_${id}" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small">End Date</label>
+                            <input type="date" name="prev_end_date_${id}" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+            `;
+  }
+
+  // Global function to be called by the remove button (Step 5)
+  window.removeTrainingRow = function(id) {
+    const rowToRemove = document.querySelector(`.training-row[data-row-id="${id}"]`);
+    if (rowToRemove) {
+      rowToRemove.remove();
+    }
+    // If the last row is removed, and the switch is on, hide the container.
+    const remainingRows = trainingContainer.querySelectorAll('.training-row').length;
+    if (remainingRows === 0 && hasPreviousTrainingSwitch.checked) {
+      hasPreviousTrainingSwitch.checked = false;
+      trainingContainer.style.display = 'none';
+    }
+  };
+
+  // Function to add a new row (Step 5)
+  function addTrainingRow() {
+    rowCounter++;
+    trainingContainer.insertAdjacentHTML('beforeend', createTrainingRow(rowCounter));
+  }
+
+  // Function to update the applicant's name in the declaration text (Step 9)
+  function updateDeclarationName() {
+    // Get value from the Applicant Name in Step 1
+    const name = applicantNameStep1.value.trim().toUpperCase();
+    displayedApplicantName.textContent = name || '.......';
+  }
+
+  // --- Tab Navigation Logic ---
+
+  function showTab(step) {
+    // Deactivate all content and pills
+    tabs.forEach(tab => tab.classList.remove('show', 'active'));
+    navPills.forEach(pill => pill.classList.remove('active', 'complete'));
+
+    // Activate current tab and pill
+    tabs[step].classList.add('show', 'active');
+    navPills[step].classList.add('active');
+
+    // Mark previous pills as 'complete' (green)
+    for (let i = 0; i < step; i++) {
+      navPills[i].classList.add('complete');
+    }
+    currentStep = step;
+
+    // Special handling for the declaration tab
+    if (currentStep === 8) {
+      updateDeclarationName();
+    }
+  }
+
+  function validateCurrentTab() {
+    const currentTabPane = tabs[currentStep];
+
+    let allValid = true;
+
+    currentTabPane.querySelectorAll('[required]').forEach(field => {
+      // Check if the field is visible (i.e., not inside a hidden container)
+      const isFieldVisible = field.closest('#residencyDatesContainer') ? residencyDatesContainer
+        .style
+        .display !== 'none' : true;
+
+      if (isFieldVisible && !field.checkValidity()) {
+        allValid = false;
+        field.focus();
+        registrationForm.reportValidity();
+        return;
+      }
+    });
+
+    // Special check for dynamic Section V (Step 5/index 4): if the switch is on, check dynamic fields
+    if (currentStep === 4 && hasPreviousTrainingSwitch.checked) {
+      const trainingRows = trainingContainer.querySelectorAll('.training-row').length;
+      if (trainingRows === 0) {
+        console.error(
+          "Validation Error: Please add at least one training record or switch off the toggle.");
+        if (addTrainingRowBtn) addTrainingRowBtn.scrollIntoView({
+          behavior: 'smooth'
+        });
+        allValid = false;
+      }
+
+      const requiredTrainingFields = trainingContainer.querySelectorAll('.training-row [required]');
+      requiredTrainingFields.forEach(field => {
+        if (!field.checkValidity()) {
+          allValid = false;
+          field.focus();
+          registrationForm.reportValidity();
+          return;
+        }
+      });
+    }
+
+    // Special check for Step 9 (index 8): must check the checkbox
+    if (currentStep === 8) {
+      const checkbox = document.getElementById('undertakingCheckbox');
+      if (!checkbox.checked) {
+        allValid = false;
+        checkbox.focus();
+      }
+    }
+
+    return allValid;
+  }
+
+
+  // Global listener for NEXT buttons
+  document.querySelectorAll('.next-tab').forEach(button => {
+    button.addEventListener('click', () => {
+      if (validateCurrentTab()) {
+        if (currentStep < tabs.length - 1) {
+          showTab(currentStep + 1);
+        }
+      }
+    });
+  });
+
+  // Global listener for PREVIOUS buttons
+  document.querySelectorAll('.prev-tab').forEach(button => {
+    button.addEventListener('click', () => {
+      if (currentStep > 0) {
+        showTab(currentStep - 1);
+      }
+    });
+  });
+
+  // Prevent tab links from directly navigating without validation
+  navPills.forEach((pill, index) => {
+    pill.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Allow direct navigation backward
+      if (index < currentStep) {
+        showTab(index);
+      }
+      // Allow navigation to next tab only if current is valid
+      else if (index === currentStep + 1) {
+        if (validateCurrentTab()) {
+          showTab(index);
+        }
+      }
+    });
+  });
+
+  // --- Event Listeners and Initialization ---
+
+  // Initial generation of years (Step 2 and Step 3)
+  generateYearOptions(qualificationYearSelect);
+
+  // Populate fixed dropdowns
+  //populateFixedDropdowns('religion', religionOptions); // Step 1 - General Info
+  populateFixedDropdowns('currentInstitute', instituteOptions); // Step 4 - Current Training
+  populateFixedDropdowns('currentDepartment', departmentOptions);
+  populateFixedDropdowns('supervisorDesignation', designationOptions);
+
+  // Step 6 - Future Choices
+  for (let i = 1; i <= 3; i++) {
+    populateFixedDropdowns(`futureInstitute${i}`, instituteOptions);
+    populateFixedDropdowns(`futureDepartment${i}`, departmentOptions);
+  }
+
+  // Step 7 - Bank Info
+  populateFixedDropdowns('bankName', bankOptions);
+
+
+  // Live update for the declaration name from Step 1's input
+  applicantNameStep1.addEventListener('input', updateDeclarationName);
+
+
+  // Toggle visibility of the dynamic section (Step 5 - Previous FCPS)
+  hasPreviousTrainingSwitch.addEventListener('change', function() {
+    if (this.checked) {
+      trainingContainer.style.display = 'block';
+      // Only add a row if there are no dynamic rows (excluding P and Button)
+      if (trainingContainer.querySelectorAll('.training-row').length === 0) {
+        addTrainingRow();
+      }
+    } else {
+      // Clear all dynamic content when the switch is turned off
+      trainingContainer.querySelectorAll('.training-row').forEach(row => row.remove());
+      trainingContainer.style.display = 'none';
+      rowCounter = trainingContainer.querySelectorAll('.training-row').length; // Reset to 0
+    }
+  });
+
+  // Add row button listener (Step 5)
+  if (addTrainingRowBtn) {
+    addTrainingRowBtn.addEventListener('click', addTrainingRow);
+  }
+
+  // --- Final Form Submission ---
+  registrationForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Final check on the last step (index 8)
+    if (currentStep === 8 && validateCurrentTab()) {
+      console.log(
+        "Form is valid and submitted! All required data and files are being processed.");
+
+      // Show a simple success message
+      const submitButton = this.querySelector('button[type="submit"]');
+      submitButton.textContent = 'Submission Complete!';
+      submitButton.classList.remove('btn-success');
+      submitButton.classList.add('btn-primary');
+
+      setTimeout(() => {
+        submitButton.innerHTML =
+          '<i class="fas fa-check-circle me-2"></i> Submit Registration';
+        submitButton.classList.add('btn-success');
+        submitButton.classList.remove('btn-primary');
+      }, 3000);
+    } else if (currentStep !== 8) {
+      // If submit is hit before the last step, navigate to the next incomplete step
+      for (let i = 0; i < tabs.length; i++) {
+        showTab(i);
+        if (!validateCurrentTab()) {
+          // The user will see the validation error on this tab and can fix it
+          return;
+        }
+      }
+      // If all previous steps are valid, force navigate to the last step for declaration
+      showTab(8);
+    } else {
+      // Prevent submission if validation fails on the last step
+      registrationForm.reportValidity();
+    }
+  });
+
+});
+</script>
+<?php $this->endSection()?>
