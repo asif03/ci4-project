@@ -210,6 +210,50 @@ class TraineeController extends BaseController
         echo 'Asif';
     }
 
+    public function checkApplicationConstraints($regNo)
+    {
+        //Application already exists or not
+        $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($regNo);
+        if ($checkTrainingApplication) {
+            $data['isError'] = true;
+            $data['message'] = "You have already applied.";
+            return $data;
+        }
+
+        $fcpsPartOneInfo = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
+        //dd($fcpsPartOneInfo);
+
+        //Applicant is passed before 2020
+        if ($fcpsPartOneInfo['fcps_part_one_year'] < 2020) {
+            $data['isError'] = true;
+            $data['message'] = 'You are not eligible for application due to the completion of your FCPS Part-I before 2020.';
+            return $data;
+        }
+
+        //Check E-logbook candidates
+        if ($fcpsPartOneInfo['fcps_part_one_year'] >= 2025) {
+
+            $specialityCheck = $this->specialityModel
+                ->where([
+                    'speciality_id' => $fcpsPartOneInfo['subject_id'],
+                    'elogbook'      => 'Y',
+                ])
+                ->countAllResults();
+
+            if ($specialityCheck > 0) {
+                $data['isError'] = true;
+                $data['message'] = 'You are not eligible here for application. Go to e-Logbook for application.';
+            }
+
+            return $data;
+        }
+
+        $data['isError'] = false;
+        $data['message'] = "";
+        return $data;
+
+    }
+
     public function trainingApplication()
     {
         helper('form');
@@ -226,15 +270,14 @@ class TraineeController extends BaseController
         $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
         //dd($generalInfo);
 
-        $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
+        $res = $this->checkApplicationConstraints($generalInfo['reg_no']);
 
-        if (!$checkTrainingApplication) {
-            $data['applicationExists'] = false;
+        if (!$res['isError']) {
+            $data['response']    = $res;
+            $data['generalInfo'] = $generalInfo;
         } else {
-            $data['applicationExists'] = true;
+            $data['response'] = $res;
         }
-
-        $data['generalInfo'] = $generalInfo;
 
         return view('Trainee/training-application', $data);
     }

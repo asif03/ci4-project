@@ -129,16 +129,21 @@
     <?php endif; ?>
 
     <?php
-        $applicationExists = true;
-    if (!$applicationExists): ?>
-    <div class="alert alert-danger fw-bold" role="alert">
-      <span class="text-danger"> Training application not found! Please apply before submit the bill form. For apply
-      </span><a class="text-success" href="<?=base_url('trainings/training-application')?>">Click Here</a>
+
+    if ($response['isError']): ?>
+    <div class="alert alert-danger fw-bold text-center" role="alert">
+      <span class="text-danger"><?=esc($response['message'])?></span>
     </div>
     <?php else: ?>
     <div class="row justify-content-center">
       <div class="col-lg-12">
         <div class="card registration-card">
+          <h6 class="text-center fw-bold p-2 text-warning"><i class='fas fa-exclamation-triangle'></i> Auto fill
+            inforamation can't be changed. Any changes reqired,
+            please
+            contact
+            with BCPS. Please fill up the
+            form below and submit.</h6>
           <form action="#" method="post" id="registrationForm" enctype="multipart/form-data" novalidate>
 
             <!-- ========================================================= -->
@@ -748,7 +753,15 @@
 </div>
 <?php $this->endSection()?>
 <?php $this->section('pageScripts')?>
+
 <script>
+$(document).ready(function() {
+  $('#dob').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true
+  });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   const registrationForm = document.getElementById('registrationForm');
   // Select all tab panes, now 9
@@ -778,43 +791,43 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Dropdown Data Definitions ---
 
   const instituteOptions = `
-            <option value="" disabled selected>Select Institute</option>
-            <option value="nihcr">National Institute of Health Care Research</option>
-            <option value="icddrb">ICDDR,B</option>
-            <option value="bsha">Bangladesh Specialized Hospital & Academy</option>
-            <option value="armed_forces_medical">Armed Forces Medical Institute</option>
-            <option value="other">Other</option>
-        `;
+<option value="" disabled selected>Select Institute</option>
+<option value="nihcr">National Institute of Health Care Research</option>
+<option value="icddrb">ICDDR,B</option>
+<option value="bsha">Bangladesh Specialized Hospital & Academy</option>
+<option value="armed_forces_medical">Armed Forces Medical Institute</option>
+<option value="other">Other</option>
+`;
 
   const departmentOptions = `
-            <option value="" disabled selected>Select Department</option>
-            <option value="cardiology">Cardiology</option>
-            <option value="nephrology">Nephrology</option>
-            <option value="neurology">Neurology</option>
-            <option value="gastroenterology">Gastroenterology</option>
-            <option value="pediatrics">Pediatrics</option>
-            <option value="surgery">General Surgery</option>
-        `;
+<option value="" disabled selected>Select Department</option>
+<option value="cardiology">Cardiology</option>
+<option value="nephrology">Nephrology</option>
+<option value="neurology">Neurology</option>
+<option value="gastroenterology">Gastroenterology</option>
+<option value="pediatrics">Pediatrics</option>
+<option value="surgery">General Surgery</option>
+`;
 
   const designationOptions = `
-            <option value="" disabled selected>Select Designation</option>
-            <option value="professor">Professor</option>
-            <option value="assoc_professor">Associate Professor</option>
-            <option value="assistant_professor">Assistant Professor</option>
-            <option value="senior_consultant">Senior Consultant</option>
-        `;
+<option value="" disabled selected>Select Designation</option>
+<option value="professor">Professor</option>
+<option value="assoc_professor">Associate Professor</option>
+<option value="assistant_professor">Assistant Professor</option>
+<option value="senior_consultant">Senior Consultant</option>
+`;
 
   const bankOptions = `
-            <option value="" disabled selected>Select Bank</option>
-            <option value="sonali">Sonali Bank Limited</option>
-            <option value="janata">Janata Bank Limited</option>
-            <option value="agrani">Agrani Bank Limited</option>
-            <option value="dbbl">Dutch-Bangla Bank PLC</option>
-            <option value="brac">BRAC Bank PLC</option>
-            <option value="islami">Islami Bank Bangladesh PLC</option>
-            <option value="city">City Bank PLC</option>
-            <option value="other">Other</option>
-        `;
+<option value="" disabled selected>Select Bank</option>
+<option value="sonali">Sonali Bank Limited</option>
+<option value="janata">Janata Bank Limited</option>
+<option value="agrani">Agrani Bank Limited</option>
+<option value="dbbl">Dutch-Bangla Bank PLC</option>
+<option value="brac">BRAC Bank PLC</option>
+<option value="islami">Islami Bank Bangladesh PLC</option>
+<option value="city">City Bank PLC</option>
+<option value="other">Other</option>
+`;
 
 
 
@@ -846,44 +859,45 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to generate the HTML for a single training record (Step 5)
   function createTrainingRow(id) {
     return `
-                <div class="training-row" data-row-id="${id}">
-                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="removeTrainingRow('${id}')"></button>
-                    <h6 class="mb-4 text-secondary">Training Record #${id}</h6>
+<div class="training-row" data-row-id="${id}">
+  <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="removeTrainingRow('${id}')"></button>
+  <h6 class="mb-4 text-secondary">Training Record #${id}</h6>
 
-                    <div class="row g-3">
+  <div class="row g-3">
 
-                        <div class="col-md-6">
-                            <label class="form-label small">Name of the Institutes</label>
-                            <select name="prev_institute_${id}" class="form-select" required>${instituteOptions}</select>
-                        </div>
+    <div class="col-md-6">
+      <label class="form-label small">Name of the Institutes</label>
+      <select name="prev_institute_${id}" class="form-select" required>${instituteOptions}</select>
+    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label small">Name of the Department</label>
-                            <select name="prev_department_${id}" class="form-select" required>${departmentOptions}</select>
-                        </div>
+    <div class="col-md-6">
+      <label class="form-label small">Name of the Department</label>
+      <select name="prev_department_${id}" class="form-select" required>${departmentOptions}</select>
+    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label small">Name of the Supervisor</label>
-                            <input type="text" name="prev_supervisor_name_${id}" class="form-control" placeholder="Dr. Supervisor Name" required>
-                        </div>
+    <div class="col-md-6">
+      <label class="form-label small">Name of the Supervisor</label>
+      <input type="text" name="prev_supervisor_name_${id}" class="form-control" placeholder="Dr. Supervisor Name"
+        required>
+    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label small">Designation</label>
-                            <select name="prev_designation_${id}" class="form-select" required>${designationOptions}</select>
-                        </div>
+    <div class="col-md-6">
+      <label class="form-label small">Designation</label>
+      <select name="prev_designation_${id}" class="form-select" required>${designationOptions}</select>
+    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label small">Start Date</label>
-                            <input type="date" name="prev_start_date_${id}" class="form-control" required>
-                        </div>
+    <div class="col-md-6">
+      <label class="form-label small">Start Date</label>
+      <input type="date" name="prev_start_date_${id}" class="form-control" required>
+    </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label small">End Date</label>
-                            <input type="date" name="prev_end_date_${id}" class="form-control" required>
-                        </div>
-                    </div>
-                </div>
-            `;
+    <div class="col-md-6">
+      <label class="form-label small">End Date</label>
+      <input type="date" name="prev_end_date_${id}" class="form-control" required>
+    </div>
+  </div>
+</div>
+`;
   }
 
   // Global function to be called by the remove button (Step 5)
@@ -928,19 +942,16 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < step; i++) {
       navPills[i].classList.add('complete');
     }
-    currentStep = step;
-
-    // Special handling for the declaration tab
+    currentStep = step; // Special handling for the declaration tab
     if (currentStep === 8) {
       updateDeclarationName();
     }
   }
 
   function validateCurrentTab() {
-    const currentTabPane = tabs[currentStep];
-
+    const
+      currentTabPane = tabs[currentStep];
     let allValid = true;
-
     currentTabPane.querySelectorAll('[required]').forEach(field => {
       // Check if the field is visible (i.e., not inside a hidden container)
       const isFieldVisible = field.closest('#residencyDatesContainer') ? residencyDatesContainer
@@ -1000,9 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
-  });
-
-  // Global listener for PREVIOUS buttons
+  }); // Global listener for PREVIOUS buttons
   document.querySelectorAll('.prev-tab').forEach(button => {
     button.addEventListener('click', () => {
       if (currentStep > 0) {
@@ -1018,99 +1027,82 @@ document.addEventListener('DOMContentLoaded', () => {
       // Allow direct navigation backward
       if (index < currentStep) {
         showTab(index);
-      }
-      // Allow navigation to next tab only if current is valid
-      else if (index === currentStep + 1) {
+      } // Allow navigation to next tab only if current is valid else if
+      (index === currentStep + 1) {
         if (validateCurrentTab()) {
           showTab(index);
         }
       }
     });
-  });
-
-  // --- Event Listeners and Initialization ---
-
-  // Initial generation of years (Step 2 and Step 3)
-  generateYearOptions(qualificationYearSelect);
+  }); // --- Event Listeners and Initialization-- - // Initial generation of years (Step 2 and Step 3)
+  generateYearOptions(
+    qualificationYearSelect
+  );
 
   // Populate fixed dropdowns
-  //populateFixedDropdowns('religion', religionOptions); // Step 1 - General Info
-  populateFixedDropdowns('currentInstitute', instituteOptions); // Step 4 - Current Training
+  populateFixedDropdowns('religion', religionOptions);
+  // Step 1 - General Info
+  populateFixedDropdowns('currentInstitute', instituteOptions);
+  // // Step 4 - Current Training
   populateFixedDropdowns('currentDepartment', departmentOptions);
   populateFixedDropdowns('supervisorDesignation', designationOptions);
-
-  // Step 6 - Future Choices
-  for (let i = 1; i <= 3; i++) {
-    populateFixedDropdowns(`futureInstitute${i}`, instituteOptions);
-    populateFixedDropdowns(`futureDepartment${i}`, departmentOptions);
+  // Step 6 - Future Choices for (let i=1; i <= 3; i++) {
+  populateFixedDropdowns(`futureInstitute${i}`, instituteOptions);
+  populateFixedDropdowns(`futureDepartment${i}`, departmentOptions);
+}
+// Step 7 - Bank Info
+populateFixedDropdowns('bankName', bankOptions); // Live update for the declaration name from Step 1's input
+applicantNameStep1.addEventListener('input',
+  updateDeclarationName
+); // Toggle visibility of the dynamic section (Step 5 - Previous FCPS) hasPreviousTrainingSwitch.addEventListener('change', function() {
+if (this.checked) {
+  trainingContainer.style.display = 'block'; // Only add a row if there are no dynamic rows (excluding P and Button)
+  if (trainingContainer.querySelectorAll('.training-row').length === 0) {
+    addTrainingRow();
   }
+} else { // Clear all dynamic content when the switch is turned off trainingContainer.querySelectorAll('.training-row').forEach(row => row.remove());
+  trainingContainer.style.display = 'none';
+  rowCounter = trainingContainer.querySelectorAll('.training-row').length; // Reset to 0
+}
+});
 
-  // Step 7 - Bank Info
-  populateFixedDropdowns('bankName', bankOptions);
+// Add row button listener (Step 5)
+if (addTrainingRowBtn) {
+  addTrainingRowBtn.addEventListener('click', addTrainingRow);
+}
 
+// --- Final Form Submission ---
+registrationForm.addEventListener('submit', function(e) {
+e.preventDefault();
+// Final check on the last step (index 8)
+if (currentStep === 8 && validateCurrentTab()) {
+  console.log(
+    "Form is valid and submitted! All required data and files are being processed.");
 
-  // Live update for the declaration name from Step 1's input
-  applicantNameStep1.addEventListener('input', updateDeclarationName);
+  // Show a simple success message
+  const submitButton = this.querySelector('button[type="submit"]');
+  submitButton.textContent = 'Submission Complete!';
+  submitButton.classList.remove('btn-success');
+  submitButton.classList.add('btn-primary');
 
-
-  // Toggle visibility of the dynamic section (Step 5 - Previous FCPS)
-  hasPreviousTrainingSwitch.addEventListener('change', function() {
-    if (this.checked) {
-      trainingContainer.style.display = 'block';
-      // Only add a row if there are no dynamic rows (excluding P and Button)
-      if (trainingContainer.querySelectorAll('.training-row').length === 0) {
-        addTrainingRow();
-      }
-    } else {
-      // Clear all dynamic content when the switch is turned off
-      trainingContainer.querySelectorAll('.training-row').forEach(row => row.remove());
-      trainingContainer.style.display = 'none';
-      rowCounter = trainingContainer.querySelectorAll('.training-row').length; // Reset to 0
+  setTimeout(() => {
+    submitButton.innerHTML =
+      '<i class="fas fa-check-circle me-2"></i> Submit Registration';
+    submitButton.classList.add('btn-success');
+    submitButton.classList.remove('btn-primary');
+  }, 3000);
+} else if (currentStep !== 8) {
+  // If submit is hit before the last step, navigate to the next incomplete step
+  for (let i = 0; i < tabs.length; i++) {
+    showTab(i);
+    if (!validateCurrentTab()) { // The user will see the validation error on this tab and can fix it
+      return;
     }
-  });
-
-  // Add row button listener (Step 5)
-  if (addTrainingRowBtn) {
-    addTrainingRowBtn.addEventListener('click', addTrainingRow);
-  }
-
-  // --- Final Form Submission ---
-  registrationForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    // Final check on the last step (index 8)
-    if (currentStep === 8 && validateCurrentTab()) {
-      console.log(
-        "Form is valid and submitted! All required data and files are being processed.");
-
-      // Show a simple success message
-      const submitButton = this.querySelector('button[type="submit"]');
-      submitButton.textContent = 'Submission Complete!';
-      submitButton.classList.remove('btn-success');
-      submitButton.classList.add('btn-primary');
-
-      setTimeout(() => {
-        submitButton.innerHTML =
-          '<i class="fas fa-check-circle me-2"></i> Submit Registration';
-        submitButton.classList.add('btn-success');
-        submitButton.classList.remove('btn-primary');
-      }, 3000);
-    } else if (currentStep !== 8) {
-      // If submit is hit before the last step, navigate to the next incomplete step
-      for (let i = 0; i < tabs.length; i++) {
-        showTab(i);
-        if (!validateCurrentTab()) {
-          // The user will see the validation error on this tab and can fix it
-          return;
-        }
-      }
-      // If all previous steps are valid, force navigate to the last step for declaration
-      showTab(8);
-    } else {
-      // Prevent submission if validation fails on the last step
-      registrationForm.reportValidity();
-    }
-  });
-
+  } // If all previous steps are valid, force navigate to the last step  for declaration showTab(8);
+} else { // Prevent submission if validation fails on the last step
+  registrationForm.reportValidity();
+}
+});
 });
 </script>
 <?php $this->endSection()?>
