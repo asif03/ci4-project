@@ -3,9 +3,11 @@
 namespace App\Controllers;
 
 use App\Models\ApplicantInformationModel;
+use App\Models\BankModel;
 use App\Models\DesignationModel;
 use App\Models\FcpsPartOneModel;
 use App\Models\InstituteModel;
+use App\Models\MbbsInstituteModel;
 use App\Models\ProgressReportModel;
 use App\Models\SpecialityModel;
 use App\Models\SupervisorModel;
@@ -13,22 +15,26 @@ use App\Models\SupervisorModel;
 class TraineeController extends BaseController
 {
     protected $trainingInstituteModel;
+    protected $mbbsInstituteModel;
     protected $specialityModel;
     protected $designationModel;
     protected $progressReportModel;
     protected $supervisorModel;
     protected $fcpsPartOneModel;
     protected $applicantInformationModel;
+    protected $bankModel;
 
     public function __construct()
     {
         $this->trainingInstituteModel    = new InstituteModel();
+        $this->mbbsInstituteModel        = new MbbsInstituteModel();
         $this->specialityModel           = new SpecialityModel();
         $this->designationModel          = new DesignationModel();
         $this->progressReportModel       = new ProgressReportModel();
         $this->supervisorModel           = new SupervisorModel();
         $this->fcpsPartOneModel          = new FcpsPartOneModel();
         $this->applicantInformationModel = new ApplicantInformationModel();
+        $this->bankModel                 = new BankModel();
     }
 
     public function trainees()
@@ -59,7 +65,7 @@ class TraineeController extends BaseController
             );
 
         } else {
-            $data['basicInfo'] = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
+            $data['basicInfo'] = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
         }
 
         //dd($data);
@@ -220,7 +226,7 @@ class TraineeController extends BaseController
             return $data;
         }
 
-        $fcpsPartOneInfo = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
+        $fcpsPartOneInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo($regNo);
         //dd($fcpsPartOneInfo);
 
         //Applicant is passed before 2020
@@ -261,14 +267,23 @@ class TraineeController extends BaseController
         $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
         $data['trainingInstitutes'] = $trainingInstitutes;
 
+        $mbbsInstitutes         = $this->mbbsInstituteModel->where('status', true)->findAll();
+        $data['mbbsInstitutes'] = $mbbsInstitutes;
+
         $departments          = $this->specialityModel->where('status', true)->findAll();
         $data['departments']  = $departments;
         $data['specialities'] = $departments;
         $designations         = $this->designationModel->where('status', true)->findAll();
         $data['designations'] = $designations;
 
-        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
-        //dd($generalInfo);
+        $banks         = $this->bankModel->where('status', true)->findAll();
+        $data['banks'] = $banks;
+
+        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
+
+        /*dd(auth()->user());
+        echo auth()->user()->reg_no;
+        dd($generalInfo);*/
 
         $res = $this->checkApplicationConstraints($generalInfo['reg_no']);
 
@@ -282,11 +297,55 @@ class TraineeController extends BaseController
         return view('Trainee/training-application', $data);
     }
 
+    public function storeTrainingApplication()
+    {
+        helper('form');
+        $validation = service('validation');
+
+        $rules = [
+            'dob'                   => [
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'Date of birth can\'t be blank.',
+                ],
+            ],
+            'departmentName'        => [
+                'label' => 'Department',
+                'rules' => 'required',
+            ],
+            'beds'                  => 'required|is_natural_no_zero',
+            'trainees'              => 'required|is_natural',
+            'facultyMembers'        => 'required|is_natural',
+            'fromDate'              => 'required',
+            'toDate'                => 'required',
+            'supervisorName'        => 'required',
+            'supervisorDesignation' => 'required',
+            'supervisorMobile'      => 'required',
+            'supervisorSubject'     => 'required',
+            'attendance'            => 'required',
+            'knowledge'             => 'required',
+            'skill'                 => 'required',
+            'attitude'              => 'required',
+        ];
+
+        $data = $this->request->getPost(array_keys($rules));
+
+        if (!$this->validateData($data, $rules)) {
+            return $this->createProgressReport();
+        }
+
+        // If you want to get the validated data.
+        $validData = $this->validator->getValidated();
+
+        //dd($validData);
+
+    }
+
     public function honorariumBillApplication()
     {
         helper('form');
 
-        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeById(auth()->user()->id);
+        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
 
         //echo auth()->user()->id;
 

@@ -65,6 +65,16 @@ class FcpsPartOneModel extends Model
         return $builder->get()->getRowArray();
     }
 
+    public function getPartOneTraineeByRegNo($regNo)
+    {
+        $builder = $this->db->table('fcps_one_pass_applicants fcps');
+        $builder->select('fcps.*, sp.name AS subject_name');
+        $builder->join('speciality sp', 'fcps.subject_id = sp.speciality_id', 'left');
+        $builder->where('fcps.reg_no', $regNo);
+
+        return $builder->get()->getRowArray();
+    }
+
     public function getTraineeInfoByParams(array $params = [])
     {
         $builder = $this->db->table('fcps_one_pass_applicants ap');

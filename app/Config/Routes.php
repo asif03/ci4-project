@@ -40,6 +40,7 @@ $routes->group('trainings', static function ($routes) {
     $routes->get('get-supervisors/(:num)', 'TraineeController::getSupervisorsByInstitute/$1');
 
     $routes->get('training-application', 'TraineeController::trainingApplication');
+    $routes->post('training-application', 'TraineeController::storeTrainingApplication');
     $routes->get('honorarium-bill-application', 'TraineeController::honorariumBillApplication');
     $routes->post('honorarium-bill-application', 'TraineeController::storeBillApplication');
 
