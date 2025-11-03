@@ -302,42 +302,83 @@ class TraineeController extends BaseController
         helper('form');
         $validation = service('validation');
 
+        //dd($this->request->getPost());
+
         $rules = [
-            'dob'                   => [
+            'dob'         => [
                 'rules'  => 'required',
                 'errors' => [
                     'required' => 'Date of birth can\'t be blank.',
                 ],
             ],
-            'departmentName'        => [
-                'label' => 'Department',
+            'nationality' => [
+                'label' => 'Nationality',
                 'rules' => 'required',
             ],
-            'beds'                  => 'required|is_natural_no_zero',
-            'trainees'              => 'required|is_natural',
-            'facultyMembers'        => 'required|is_natural',
-            'fromDate'              => 'required',
-            'toDate'                => 'required',
-            'supervisorName'        => 'required',
-            'supervisorDesignation' => 'required',
-            'supervisorMobile'      => 'required',
-            'supervisorSubject'     => 'required',
-            'attendance'            => 'required',
-            'knowledge'             => 'required',
-            'skill'                 => 'required',
-            'attitude'              => 'required',
+            'gender'      => 'required',
+            'nationalID'  => [
+                'label' => 'National ID',
+                'rules' => 'required',
+            ],
+            'mobile'      => 'required',
+            'email'       => 'required',
+
+            /*'trainees'              => 'required|is_natural',
+        'facultyMembers'        => 'required|is_natural',
+        'fromDate'              => 'required',
+        'toDate'                => 'required',
+        'supervisorName'        => 'required',
+        'supervisorDesignation' => 'required',
+        'supervisorMobile'      => 'required',
+        'supervisorSubject'     => 'required',
+        'attendance'            => 'required',
+        'knowledge'             => 'required',
+        'skill'                 => 'required',
+        'attitude'              => 'required',*/
         ];
 
         $data = $this->request->getPost(array_keys($rules));
 
         if (!$this->validateData($data, $rules)) {
-            return $this->createProgressReport();
+            return $this->trainingApplication();
         }
 
         // If you want to get the validated data.
         $validData = $this->validator->getValidated();
 
         //dd($validData);
+
+        $successId = 1;
+        /*$successId = $model->insert([
+        'reg_no'                   => $reg_no,
+        'training_institute_id'    => $validData['instituteName'],
+        'department_id'            => $validData['departmentName'],
+        'no_of_beds'               => $validData['beds'],
+        'no_of_trainees'           => $validData['trainees'],
+        'no_of_faculty_mem'        => $validData['facultyMembers'],
+
+        'training_start_date'      => $validData['fromDate'],
+        'training_end_date'        => $validData['toDate'],
+        'countable_duration_month' => 6,
+
+        'supervisor_id'            => $supervisorId,
+        //'supervisor_name'          => $validData['supervisorName'],
+        //'designation_id'           => $validData['supervisorDesignation'],
+        //'subject_id'               => $validData['supervisorSubject'],
+        //'supervisor_mobile_no'     => $validData['supervisorMobile'],
+
+        'attendance'               => $validData['attendance'],
+        'knowledge'                => $validData['knowledge'],
+        'skill'                    => $validData['skill'],
+        'attitude'                 => $validData['attitude'],
+        ]);*/
+
+        if ($successId) {
+
+            return redirect()->back()->with('success', 'Data saved successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Ohh! Something went wrong...!');
+        }
 
     }
 
