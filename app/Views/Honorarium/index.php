@@ -2,21 +2,6 @@
 
 <?php $this->section('title')?>Honorarium<?php $this->endSection()?>
 
-<?php $this->section('pageStyles')?>
-<style>
-/*table.dataTable thead tr {
-  background-color: #343a40;
-  color: white;
-}
-
-table.dataTable thead tr>th {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 2px;
-}*/
-</style>
-<?php $this->endSection()?>
-
 <?php $this->section('pageheader')?>
 <h4 class="page-title"><?=$pageTitle?></h4>
 <ul class="breadcrumbs">
@@ -145,6 +130,20 @@ table.dataTable thead tr>th {
     <div class="modal-content" id="viewHonorariumEditContents"></div>
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="viewTrainingModal" tabindex="-1" aria-labelledby="viewTrainingLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" id="viewHonorariumTrainingContents"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="viewHonorariumTrainingEditModal" tabindex="-1"
+  aria-labelledby="viewHonorariumTrainingEditLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" id="viewHonorariumTrainingEditContents"></div>
+  </div>
+</div>
 <?php $this->endSection()?>
 
 <?php $this->section('pageScripts')?>
@@ -263,15 +262,27 @@ $('#billList').DataTable({
       "render": function(data, type, row) {
         $action = '';
         if (row.eligible_status == 'P') {
+          <?php if (auth()->user() && auth()->user()->can('bills.approve')): ?>
           $action +=
             `<button class="btn btn-success font-weight-bold btn-approve btn-sm" data-id="${row.id}"><i class="fas fa-check-circle"></i> Approve</button> `;
+          <?php endif; ?>
+          <?php if (auth()->user() && auth()->user()->can('bills.reject')): ?>
           $action +=
             `<button class="btn btn-danger font-weight-bold btn-reject btn-sm" data-id="${row.id}"><i class="fas fa-times-circle"></i> Reject</button> `;
+          <?php endif; ?>
         }
         $action +=
-          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumModal" onclick="loadHonorariumView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button> `;
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumModal" onclick="loadHonorariumView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
+        $action +=
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewTrainingModal" onclick="loadTrainingView(${row.id})"><i class="fa fa-list"></i></button>`;
+        <?php if (auth()->user() && auth()->user()->can('bills.edit')): ?>
         $action +=
           `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumEditModal" onclick="loadEditView(${row.id})"><i class="fas fa-edit"></i></button>`;
+        <?php endif; ?>
+        <?php if (auth()->user() && auth()->user()->can('bills.training.edit')): ?>
+        $action +=
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumTrainingEditModal" onclick="loadEditTrainingView(${row.id})"><i class="fa fa-tasks" aria-hidden="true"></i></button>`;
+        <?php endif; ?>
         $action +=
           `<a class="btn btn-outline-info btn-sm" href="<?=base_url('bills/download-honorarium-form')?>/${row.id}" target="_blank"><i class="fas fa-download"></i></a>`;
         return $action;
@@ -456,6 +467,32 @@ function loadEditView(honorariumId) {
     url: '<?php echo base_url(); ?>bills/fetch-honorarium/edit/' + honorariumId,
     success: function(response) {
       $('#viewHonorariumEditContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
+function loadTrainingView(honorariumId) {
+  $.ajax({
+    type: 'GET',
+    url: '<?php echo base_url(); ?>bills/fetch-honorarium-trainings/' + honorariumId,
+    success: function(response) {
+      $('#viewHonorariumTrainingContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
+function loadEditTrainingView(honorariumId) {
+  $.ajax({
+    type: 'GET',
+    url: '<?php echo base_url(); ?>bills/fetch-honorarium-training/edit/' + honorariumId,
+    success: function(response) {
+      $('#viewHonorariumTrainingEditContents').html(response);
     },
     error: function(xhr, status, error) {
       console.error('Error:', error);

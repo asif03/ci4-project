@@ -69,7 +69,7 @@ class Dashboard extends BaseController
         ];
 
         // Check if the user is in the 'admin' group
-        if ($user->inGroup('superadmin', 'admin')) {
+        if ($user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user')) {
             return view('dashboard', $data);
         } elseif ($user->inGroup('user')) {
             return view('trainee/trainee-dashboard', $data);

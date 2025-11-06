@@ -14,6 +14,11 @@ $routes->get('/contact-us', 'Home::contactUs');
 $routes->get('/401', function () {
     return view('401');
 });
+
+$routes->get('/403', function () {
+    return view('errors/html/error_403');
+});
+
 $routes->get('/profile', 'UserController::profile');
 
 $routes->get('/dashboard', 'Dashboard::index');
@@ -54,9 +59,9 @@ $routes->group('trainings', static function ($routes) {
 });
 
 $routes->group('applications', static function ($routes) {
-    $routes->get('/', 'Application::index');
-    $routes->post('fetch-applicants', 'Application::getSearchedApplicants');
-    $routes->get('fetch-application/(:num)', 'Application::getApplication/$1');
+    $routes->get('/', 'Application::index', ['as' => 'applications.index']);
+    $routes->post('fetch-applicants', 'Application::getSearchedApplicants', ['as' => 'applications.get']);
+    $routes->get('fetch-application/(:num)', 'Application::getApplication/$1', ['as' => 'applications.show']);
     $routes->get('edit/(:num)', 'Application::edit/$1');
     $routes->put('update-basic', 'Application::updateBasicInfo');
     $routes->put('update-fcps', 'Application::updateFcpsInfo');
@@ -69,17 +74,21 @@ $routes->group('applications', static function ($routes) {
 
 });
 
-$routes->group('bills', ['filter' => 'groups:admin'], static function ($routes) {
+$routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static function ($routes) {
     $routes->get('/', 'Honorarium::index', ['as' => 'bills.index']);
     $routes->post('get-statistics', 'Honorarium::getStatistics');
     $routes->post('fetch-honorariums', 'Honorarium::getSearchedHonorariums');
-    $routes->post('approve-honorarium', 'Honorarium::approveHonorarium');
-    $routes->post('reject-honorarium', 'Honorarium::rejectHonorarium');
+    $routes->post('approve-honorarium', 'Honorarium::approveHonorarium', ['as' => 'bills.approve']);
+    $routes->post('reject-honorarium', 'Honorarium::rejectHonorarium', ['as' => 'bills.reject']);
 
     $routes->get('fetch-honorarium/(:num)', 'Honorarium::getHonorarium/$1');
-    $routes->get('fetch-honorarium/edit/(:num)', 'Honorarium::getBillInfo/$1');
-    $routes->put('update-honorarium/(:num)', 'Honorarium::update/$1');
+    $routes->get('fetch-honorarium/edit/(:num)', 'Honorarium::getBillInfo/$1', ['as' => 'bills.edit']);
+    $routes->put('update-honorarium/(:num)', 'Honorarium::update/$1', ['as' => 'bills.update']);
+    $routes->get('fetch-honorarium-training/edit/(:num)', 'Honorarium::getHonorariumTrainingInfo/$1', ['as' => 'bills.training.edit']);
+    $routes->put('update-honorarium-training/(:num)', 'Honorarium::updateHonorariumTrainingInfo/$1', ['as' => 'bills.training.update']);
+
     $routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
+    $routes->get('fetch-honorarium-trainings/(:num)', 'Honorarium::getHonorariumTrainings/$1');
 
     /*$routes->get('/users', 'Admin::users', ['as' => 'admin.users']);
 $routes->get('/users/(:num)', 'Admin::user/$1', ['as' => 'admin.user']);

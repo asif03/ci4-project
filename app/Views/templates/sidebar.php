@@ -40,7 +40,7 @@
           </a>
         </li>
 
-        <?php if ($user && $user->inGroup('superadmin', 'admin', 'user')) {?>
+        <?php if ($user && $user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user', 'user')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
             <i class="fa fa-user" aria-hidden="true"></i>
@@ -77,7 +77,7 @@
         </li>
         <?php }}?>
 
-        <?php if ($user && $user->inGroup('superadmin', 'admin', 'user')) {?>
+        <?php if ($user && $user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user', 'user')) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>
@@ -98,7 +98,7 @@
           </a>
         </li>
         <?php }?>
-        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
+        <?php if ($user && $user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user')) {?>
         <li class="nav-item <?=set_active('applications')?> submenu">
           <a data-bs-toggle="collapse" href="#sidebarApplications">
             <i class="fas fa-th-list"></i>
@@ -129,7 +129,7 @@
           <div class="collapse <?=set_show('bills')?>" id="sidebarBills">
             <ul class="nav nav-collapse">
               <li class="<?=set_active('bills')?>">
-                <a href="<?=url_to('bills.index')?>">
+                <a href="<?=base_url('bills')?>">
                   <span class="sub-item">Honorarium List</span>
                 </a>
               </li>

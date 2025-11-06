@@ -4,9 +4,11 @@ namespace App\Controllers;
 
 use App\Models\BankModel;
 use App\Models\HonorariumInformationModel;
+use App\Models\HonorariumPreviousTrainingModel;
 use App\Models\HonorariumSlotModel;
 use App\Models\InstituteModel;
 use App\Models\SpecialityModel;
+use App\Models\TrainingCategoryModel;
 use Dompdf\Dompdf;
 
 class Honorarium extends BaseController
@@ -16,18 +18,29 @@ class Honorarium extends BaseController
     protected $HonorariumSlotModel;
     protected $instituteModel;
     protected $bankModel;
+    protected $trainingCategoryModel;
+    protected $honorariumPrevTrainingModel;
 
     public function __construct()
     {
-        $this->honorariumModel     = new HonorariumInformationModel();
-        $this->specialityModel     = new SpecialityModel();
-        $this->HonorariumSlotModel = new HonorariumSlotModel();
-        $this->instituteModel      = new InstituteModel();
-        $this->bankModel           = new BankModel();
+        $this->honorariumModel             = new HonorariumInformationModel();
+        $this->specialityModel             = new SpecialityModel();
+        $this->HonorariumSlotModel         = new HonorariumSlotModel();
+        $this->instituteModel              = new InstituteModel();
+        $this->bankModel                   = new BankModel();
+        $this->trainingCategoryModel       = new TrainingCategoryModel();
+        $this->honorariumPrevTrainingModel = new HonorariumPreviousTrainingModel();
     }
 
     public function index()
     {
+        // Check if the authenticated user has the 'bills.index' permission
+        if (!auth()->user()->can('bills.index')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to view list.');
+        }
 
         $data = [
             'title'       => 'Honorarium',
@@ -88,6 +101,15 @@ class Honorarium extends BaseController
 
     public function approveHonorarium()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('bills.approve')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            //return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to approve bills.']);
+        }
+
         $request = service('request');
 
         $honorariumId = $request->getPost('honorariumId');
@@ -103,6 +125,15 @@ class Honorarium extends BaseController
 
     public function rejectHonorarium()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('bills.reject')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            //return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to reject bills.']);
+        }
+
         $request = service('request');
 
         $honorariumId = $request->getPost('honorariumId');
@@ -198,6 +229,14 @@ class Honorarium extends BaseController
 
     public function edit($id)
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('bills.edit')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to edit bills.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to reject bills.']);
+        }
+
         $data = [
             'title'      => 'Edit Honorarium',
             'honorarium' => $this->model->find($id),
@@ -208,6 +247,14 @@ class Honorarium extends BaseController
 
     public function update($honorariumId)
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('bills.update')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to update bills.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to update bills.']);
+        }
+
         $request   = service('request');
         $updatedId = $request->getPost('honorariumId');
 
@@ -225,6 +272,93 @@ class Honorarium extends BaseController
         ];
 
         if ($this->honorariumModel->update($updatedId, $data)) {
+            return redirect()->to('/bills')->with('success', 'Basic Information updated successfully.');
+        } else {
+            return redirect()->back()->with('errors', 'Failed to update honorarium information.');
+        }
+    }
+
+    public function getHonorariumTrainings($honorariumId)
+    {
+        $honorarium          = $this->honorariumModel->getHonorarium($honorariumId);
+        $honorariumTrainings = $this->honorariumModel->getHonorariumTrainings($honorariumId);
+
+        $data = [
+            'title'               => 'Bill Details',
+            'honorarium'          => $honorarium,
+            'honorariumTrainings' => $honorariumTrainings,
+        ];
+
+        return view('Honorarium/view_training_details', $data);
+
+    }
+
+    public function getHonorariumTrainingInfo($honorariumId)
+    {
+        $honorarium = $this->honorariumModel->getHonorarium($honorariumId);
+
+        $data = [
+            'title'             => 'Bill Details',
+            'specialities'      => $this->specialityModel->findAll(),
+            'institutes'        => $this->instituteModel->where('status', true)->findAll(),
+            'categories'        => $this->trainingCategoryModel->findAll(),
+            'honorarium'        => $honorarium,
+            'previousTrainings' => $this->honorariumModel->getHonorariumTrainings($honorariumId),
+        ];
+
+        if ($honorarium) {
+            return view('Honorarium/edit_prev_training', $data);
+        } else {
+            echo 'Honorarium not found.';
+        }
+    }
+
+    public function updateHonorariumTrainingInfo($honorariumId)
+    {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('bills.training.update')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to update training of bills.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to update bills.']);
+        }
+
+        $request = service('request');
+
+        // Get previous training record IDs
+        $prevTrainingRecordIds = $request->getPost('prevTrainingRecordId');
+
+        //$this->honorariumPrevTrainingModel->whereNotIn('id', $prevTrainingRecordIds)->delete();
+
+        foreach ($prevTrainingRecordIds as $index => $recordId) {
+            $tdata[] = [
+                'id'                    => $recordId ?: null, // null for new inserts
+                'honorarium_id'         => $honorariumId,
+                'slot_sl_no'            => $request->getPost('prevTrainingSlot')[$index],
+                'training_from'         => $request->getPost('prevTrainingFromDt')[$index],
+                'training_to'           => $request->getPost('prevTrainingToDt')[$index],
+                'training_institute_id' => $request->getPost('prevTrainingInstitute')[$index],
+                'speciality_id'         => $request->getPost('prevTrainingDepartment')[$index],
+                'training_category_id'  => $request->getPost('prevTrainingCategory')[$index],
+                'honorarium_taken'      => $request->getPost('prevTrainingHonorariumTaken')[$index],
+            ];
+        }
+
+        // perform upsert
+        $this->honorariumPrevTrainingModel->builder()->insertBatch($tdata, true);
+
+        dd($tdata);
+
+        print_r($prevTrainingRecordIds);die;
+
+        // Update applicant information
+        $hdata = [
+            'previous_training_inmonth' => $request->getPost('previousTrainingPeriod'),
+            'updated_at'                => date('Y-m-d H:i:s'),
+            'updated_by'                => service('auth')->user()->id,
+        ];
+
+        if ($this->honorariumModel->update($honorariumId, $hdata)) {
             return redirect()->to('/bills')->with('success', 'Basic Information updated successfully.');
         } else {
             return redirect()->back()->with('errors', 'Failed to update honorarium information.');

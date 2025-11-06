@@ -49,6 +49,14 @@ class AuthGroups extends ShieldAuthGroups
             'title'       => 'Admin',
             'description' => 'Day to day administrators of the site.',
         ],
+        'rtm-admin'  => [
+            'title'       => 'RTMD Admin',
+            'description' => 'Day to day administrators of the RTMD activitis.',
+        ],
+        'rtm-user'   => [
+            'title'       => 'RTMD User',
+            'description' => 'General users of the RTMD activities.',
+        ],
         'user'       => [
             'title'       => 'User',
             'description' => 'General users of the site. Often customers.',
@@ -81,6 +89,13 @@ class AuthGroups extends ShieldAuthGroups
         'training.create'       => 'Can create training data',
         'training.edit'         => 'Can edit training data',
         'training.delete'       => 'Can delete training data',
+
+        //Honorarium application permissions
+        'applications.index'    => 'Can see the list all honorarium applications',
+
+        //Honorarium permissions
+        'bills.index'           => 'Can see the list all honorarium bills',
+
     ];
 
     /**
@@ -103,6 +118,28 @@ class AuthGroups extends ShieldAuthGroups
             'users.edit',
             'users.delete',
             'partone.list',
+        ],
+        'rtm-admin'  => [
+            'applications.index',
+
+            'bills.index',
+            'bills.approve',
+            'bills.reject',
+            'bills.edit',
+            'bills.update',
+            'bills.training.edit',
+            'bills.training.update',
+        ],
+        'rtm-user'   => [
+            'applications.index',
+            'bills.index',
+
+            'bills.approve',
+            'bills.reject',
+            'bills.edit',
+            'bills.update',
+            'bills.training.edit',
+            'bills.training.update',
         ],
         'user'       => [
             'training.basic.get',
