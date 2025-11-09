@@ -62,16 +62,17 @@ $routes->group('applications', static function ($routes) {
     $routes->get('/', 'Application::index', ['as' => 'applications.index']);
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants', ['as' => 'applications.get']);
     $routes->get('fetch-application/(:num)', 'Application::getApplication/$1', ['as' => 'applications.show']);
-    $routes->get('edit/(:num)', 'Application::edit/$1');
-    $routes->put('update-basic', 'Application::updateBasicInfo');
-    $routes->put('update-fcps', 'Application::updateFcpsInfo');
-    $routes->put('update-mbbs', 'Application::updateMbbsInfo');
-    $routes->put('update-bank', 'Application::updateBankInfo');
+    $routes->get('edit/(:num)', 'Application::edit/$1', ['as' => 'applications.edit']);
+    $routes->put('update-basic', 'Application::updateBasicInfo', ['as' => 'applications.basic.update']);
+    $routes->put('update-fcps', 'Application::updateFcpsInfo', ['as' => 'applications.fcps.update']);
+    $routes->put('update-mbbs', 'Application::updateMbbsInfo', ['as' => 'applications.mbbs.update']);
+    $routes->put('update-bank', 'Application::updateBankInfo', ['as' => 'applications.bank.update']);
 
     $routes->post('fetch-files', 'Application::getFilesInfo');
-    $routes->post('approve-applicant', 'Application::approveApplicant');
-    $routes->post('reject-applicant', 'Application::rejectApplicant');
+    $routes->post('approve-applicant', 'Application::approveApplicant', ['as' => 'applications.approve']);
+    $routes->post('reject-applicant', 'Application::rejectApplicant', ['as' => 'applications.reject']);
 
+    $routes->get('download-application-form/(:num)', 'Application::downloadApplicationForm/$1');
 });
 
 $routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static function ($routes) {

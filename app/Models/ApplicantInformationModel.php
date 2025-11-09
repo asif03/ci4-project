@@ -71,7 +71,8 @@ class ApplicantInformationModel extends Model
     public function getApplicantById($applicantId)
     {
         $builder = $this->db->table('applicant_information ap');
-        $builder->select('ap.*, bnk.bank_name');
+        $builder->select('ap.*, sp.name AS fcps_specility_name,bnk.bank_name');
+        $builder->join('speciality sp', 'ap.speciality_id = sp.speciality_id', 'left');
         $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
         $builder->where('ap.applicant_id', $applicantId);
 

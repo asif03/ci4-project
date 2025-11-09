@@ -157,7 +157,9 @@
               required><?=esc($applicant['permanent_address'])?></textarea>
           </div>
         </div>
+        <?php if (auth()->user() && auth()->user()->can('applications.basic.update')): ?>
         <button type="submit" class="btn btn-primary text-light">Update</button>
+        <?php endif; ?>
       </form>
     </div>
 
@@ -173,7 +175,7 @@
             <div class="col-sm-6">
               <select class="form-select" aria-label="Default select example" name="fcpsYear" id="fcpsYear" disabled>
                 <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
-                <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
+                <option value="<?=$iLoop?>" <?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
                   <?=$iLoop?></option>
                 <?php }?>
               </select>
@@ -184,9 +186,9 @@
             <div class="col-sm-6">
               <select class="form-select" aria-label="Default select example" name="fcpsSession" id="fcpsSession"
                 disabled>
-                <option value="January"                                        <?php if ('January' == $applicant['fcps_month']) {echo 'selected';}?>>
+                <option value="January" <?php if ('January' == $applicant['fcps_month']) {echo 'selected';}?>>
                   January</option>
-                <option value="July"                                     <?php if ('July' == $applicant['fcps_month']) {echo 'selected';}?>>
+                <option value="July" <?php if ('July' == $applicant['fcps_month']) {echo 'selected';}?>>
                   July</option>
               </select>
             </div>
@@ -218,7 +220,9 @@
                 value="<?=esc($applicant['fcps_reg_no'])?>" />
             </div>
           </div>
+          <?php if (auth()->user() && auth()->user()->can('applications.fcps.update')): ?>
           <button type="submit" class="btn btn-primary text-light">Update</button>
+          <?php endif; ?>
         </form>
       </div>
     </div>
@@ -235,7 +239,7 @@
             <div class="col-sm-6">
               <select class="form-select" aria-label="Default select example" name="mbbsBdsYear" id="mbbsBdsYear">
                 <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
-                <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['mbbs_bds_year']) {echo 'selected';}?>>
+                <option value="<?=$iLoop?>" <?php if ($iLoop == $applicant['mbbs_bds_year']) {echo 'selected';}?>>
                   <?=$iLoop?></option>
                 <?php }?>
               </select>
@@ -262,7 +266,9 @@
                 value="<?=esc($applicant['bmdc_reg_no'])?>" disabled />
             </div>
           </div>
+          <?php if (auth()->user() && auth()->user()->can('applications.mbbs.update')): ?>
           <button type="submit" class="btn btn-primary text-light">Update</button>
+          <?php endif; ?>
         </form>
       </div>
     </div>
@@ -280,7 +286,7 @@
               <select class="form-select" aria-label="Default select example" name="bankName" id="bankName" required>
                 <option value="">Select Bank</option>
                 <?php foreach ($banks as $bank) {?>
-                <option value="<?=$bank['id']?>"<?php if ($bank['id'] == $applicant['bank_id']) {echo 'selected';}?>>
+                <option value="<?=$bank['id']?>" <?php if ($bank['id'] == $applicant['bank_id']) {echo 'selected';}?>>
                   <?=$bank['bank_name']?></option>
                 <?php }?>
               </select>
@@ -307,7 +313,9 @@
                 value="<?=esc($applicant['routing_number'])?>" required />
             </div>
           </div>
+          <?php if (auth()->user() && auth()->user()->can('applications.bank.update')): ?>
           <button type="submit" class="btn btn-primary text-light">Update</button>
+          <?php endif; ?>
         </form>
       </div>
     </div>

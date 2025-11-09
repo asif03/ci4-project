@@ -182,4 +182,19 @@ class HonorariumInformationModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    public function getApprovedHonorariumByApplicantId($applicantId)
+    {
+        $builder = $this->db->table('honorarium_information');
+        $builder->select('*');
+        $builder->where('applicant_id', $applicantId);
+        $builder->where('eligible_status', 'Y');
+        $result = $builder->get()->getResultArray();
+
+        if (!empty($result)) {
+            return $result;
+        }
+
+        return null;
+    }
 }

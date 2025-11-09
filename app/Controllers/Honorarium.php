@@ -327,29 +327,40 @@ class Honorarium extends BaseController
 
         // Get previous training record IDs
         $prevTrainingRecordIds = $request->getPost('prevTrainingRecordId');
-
-        //$this->honorariumPrevTrainingModel->whereNotIn('id', $prevTrainingRecordIds)->delete();
+        //Removed previous training records
+        $this->honorariumPrevTrainingModel->whereNotIn('id', $prevTrainingRecordIds)->delete();
 
         foreach ($prevTrainingRecordIds as $index => $recordId) {
-            $tdata[] = [
-                'id'                    => $recordId ?: null, // null for new inserts
-                'honorarium_id'         => $honorariumId,
-                'slot_sl_no'            => $request->getPost('prevTrainingSlot')[$index],
-                'training_from'         => $request->getPost('prevTrainingFromDt')[$index],
-                'training_to'           => $request->getPost('prevTrainingToDt')[$index],
-                'training_institute_id' => $request->getPost('prevTrainingInstitute')[$index],
-                'speciality_id'         => $request->getPost('prevTrainingDepartment')[$index],
-                'training_category_id'  => $request->getPost('prevTrainingCategory')[$index],
-                'honorarium_taken'      => $request->getPost('prevTrainingHonorariumTaken')[$index],
-            ];
+            if ($recordId == '') {
+                $tdata = [
+                    'honorarium_id'         => $honorariumId,
+                    'slot_sl_no'            => $request->getPost('prevTrainingSlot')[$index],
+                    'training_from'         => $request->getPost('prevTrainingFromDt')[$index],
+                    'training_to'           => $request->getPost('prevTrainingToDt')[$index],
+                    'training_institute_id' => $request->getPost('prevTrainingInstitute')[$index],
+                    'speciality_id'         => $request->getPost('prevTrainingDepartment')[$index],
+                    'training_category_id'  => $request->getPost('prevTrainingCategory')[$index],
+                    'honorarium_taken'      => $request->getPost('prevTrainingHonorariumTaken')[$index],
+                    'created_at'            => date('Y-m-d H:i:s'),
+                ];
+
+                $this->honorariumPrevTrainingModel->insert($tdata);
+            } else {
+                $tdata = [
+                    'id'                    => $recordId, // null for new inserts
+                    'honorarium_id'         => $honorariumId,
+                    'slot_sl_no'            => $request->getPost('prevTrainingSlot')[$index],
+                    'training_from'         => $request->getPost('prevTrainingFromDt')[$index],
+                    'training_to'           => $request->getPost('prevTrainingToDt')[$index],
+                    'training_institute_id' => $request->getPost('prevTrainingInstitute')[$index],
+                    'speciality_id'         => $request->getPost('prevTrainingDepartment')[$index],
+                    'training_category_id'  => $request->getPost('prevTrainingCategory')[$index],
+                    'honorarium_taken'      => $request->getPost('prevTrainingHonorariumTaken')[$index],
+                ];
+
+                $this->honorariumPrevTrainingModel->update($recordId, $tdata);
+            }
         }
-
-        // perform upsert
-        $this->honorariumPrevTrainingModel->builder()->insertBatch($tdata, true);
-
-        dd($tdata);
-
-        print_r($prevTrainingRecordIds);die;
 
         // Update applicant information
         $hdata = [

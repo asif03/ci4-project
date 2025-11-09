@@ -5,12 +5,15 @@ namespace App\Controllers;
 use App\Models\ApplicantInformationModel;
 use App\Models\ApplicationAttachmentModel;
 use App\Models\BankModel;
+use App\Models\HonorariumInformationModel;
 use App\Models\MbbsInstituteModel;
 use App\Models\SpecialityModel;
+use Dompdf\Dompdf;
 
 class Application extends BaseController
 {
     protected $applicationModel;
+    protected $honorariumModel;
     protected $specialityModel;
     protected $mbbsInstituteModel;
     protected $bankModel;
@@ -19,6 +22,7 @@ class Application extends BaseController
     public function __construct()
     {
         $this->applicationModel           = new ApplicantInformationModel();
+        $this->honorariumModel            = new HonorariumInformationModel();
         $this->specialityModel            = new SpecialityModel();
         $this->mbbsInstituteModel         = new MbbsInstituteModel();
         $this->bankModel                  = new BankModel();
@@ -27,6 +31,14 @@ class Application extends BaseController
 
     public function index()
     {
+        // Check if the authenticated user has the 'bills.index' permission
+        if (!auth()->user()->can('applications.index')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to view list.');
+        }
+
         $statisticsData = $this->applicationModel->getStatistics();
 
         $data = [
@@ -99,6 +111,15 @@ class Application extends BaseController
 
     public function approveApplicant()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('applications.approve')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            //return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to approve applications.']);
+        }
+
         $request = service('request');
 
         $applicantId = $request->getPost('applicantId');
@@ -114,6 +135,15 @@ class Application extends BaseController
 
     public function rejectApplicant()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('applications.reject')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            //return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to reject applications.']);
+        }
+
         $request = service('request');
 
         $applicantId  = $request->getPost('applicantId');
@@ -130,6 +160,14 @@ class Application extends BaseController
 
     public function edit($id)
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('applications.edit')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to edit application.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to reject bills.']);
+        }
+
         $data = [
             'title'          => 'Application',
             'pageTitle'      => 'Edit Application Information',
@@ -144,6 +182,14 @@ class Application extends BaseController
 
     public function updateBasicInfo()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('applications.basic.update')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to update Basic Information.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to update bills.']);
+        }
+
         $request = service('request');
 
         $applicantId = $request->getPost('applicantId');
@@ -154,7 +200,7 @@ class Application extends BaseController
 
         // Update applicant information
         $data = [
-            'name'               => $request->getPost('name'),
+            //'name'               => $request->getPost('name'),
             'father_spouse_name' => $request->getPost('fatherName'),
             'mother_name'        => $request->getPost('motherName'),
             'date_of_birth'      => $request->getPost('dob'),
@@ -171,8 +217,8 @@ class Application extends BaseController
         ];
 
         if (!$this->validateData($data, [
-            'name' => 'required',
-            'nid'  => [
+            //'name' => 'required',
+            'nid' => [
                 'label'  => 'NID',
                 'rules'  => 'required|min_length[10]',
                 'errors' => [
@@ -211,6 +257,14 @@ class Application extends BaseController
 
     public function updateFcpsInfo()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('applications.fcps.update')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to update FCPS Part-I Information.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to update bills.']);
+        }
+
         $request = service('request');
 
         $applicantId = $request->getPost('applicantId');
@@ -260,6 +314,14 @@ class Application extends BaseController
 
     public function updateMbbsInfo()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('applications.mbbs.update')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to update MBBS Information.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to update bills.']);
+        }
+
         $request = service('request');
 
         $applicantId = $request->getPost('applicantId');
@@ -285,12 +347,25 @@ class Application extends BaseController
 
     public function updateBankInfo()
     {
+        // Check if the authenticated user has the 'bills.approve' permission
+        if (!auth()->user()->can('applications.bank.update')) {
+            // User does not have permission, so deny access.
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to update FCPS Part-I Information.');
+            //return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to update bills.']);
+        }
+
         $request = service('request');
 
         $applicantId = $request->getPost('applicantId');
 
         if (!$applicantId) {
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Invalid applicant ID.');
+        }
+
+        $approvedHonorariums = $this->honorariumModel->getApprovedHonorariumByApplicantId($applicantId);
+        if (count($approvedHonorariums) > 0) {
+            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Bank Information is not possible to update due to get honorarium before.');
         }
 
         // Update Bank information
@@ -340,6 +415,36 @@ class Application extends BaseController
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('success', 'Bank Information updated successfully.');
         } else {
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Failed to update Bank information.');
+        }
+    }
+
+    public function downloadApplicationForm($applicationId)
+    {
+        $photographTypes = ['photograph', 'signature'];
+
+        $applicantInfo = [
+            'application'            => $this->applicationModel->getApplicantById($applicationId),
+            'trainingInfo'           => 'Training Information',
+            'applicationAttachments' => $this->applicationAttachmentModel
+                ->where('applicant_id', $applicationId)
+                ->whereIn('type', $photographTypes)
+                ->findAll(),
+
+        ];
+
+        //return view('Application/pdf_form', $applicantInfo);
+
+        if ($applicantInfo) {
+            $dompdf = new Dompdf();
+            $html   = view('Application/pdf_form', $applicantInfo);
+            $dompdf->setOptions(new \Dompdf\Options(['isRemoteEnabled' => true]));
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            $dompdf->stream('application_' . $applicantInfo['application']['bmdc_reg_no'] . $applicationId . '.pdf', ['Attachment' => true]);
+
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Honorarium not found.']);
         }
     }
 

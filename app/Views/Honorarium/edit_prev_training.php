@@ -1,3 +1,8 @@
+<style>
+.table>tbody>tr>td {
+  padding: 2px 2px !important;
+}
+</style>
 <form action="<?=base_url('bills/update-honorarium-training/' . $honorarium['id'])?>" method="post"
   enctype="multipart/form-data">
   <div class="modal-header">
@@ -93,12 +98,12 @@
             <thead class="table-warning">
               <tr>
                 <th class="text-nowrap">Tr. Slot</th>
-                <th class="text-nowrap">From</th>
+                <th class="text-nowrap">From Date</th>
                 <th class="text-nowrap">To Date</th>
                 <th class="text-nowrap">Name of Department</th>
                 <th class="text-nowrap">Name of Institute</th>
                 <th class="text-nowrap">Training Category</th>
-                <th class="text-center text-nowrap">Honorarium Taken?</th>
+                <th class="text-center">Honorarium Taken?</th>
                 <th class="text-center text-nowrap">Action</th>
               </tr>
             </thead>
@@ -125,11 +130,11 @@
                     <?php }?>
                   </select>
                 </td>
-                <td class="col-lg-3">
-                  <input type="text" name="prevTrainingFromDt[]" class="form-control form-control-sm datepicker"
+                <td>
+                  <input type="text" name="prevTrainingFromDt[]" class="form-control datepicker"
                     value="<?=esc($training['training_from'])?>" required />
                 </td>
-                <td class="col-sm-3">
+                <td>
                   <input type="text" name="prevTrainingToDt[]" class="form-control datepicker"
                     value="<?=esc($training['training_to'])?>" required />
                 </td>
@@ -168,15 +173,16 @@
                   <div class="form-check form-check-inline">
                     <select name="prevTrainingHonorariumTaken[]" class="form-select" required>
                       <option value="" disabled selected>Select Slot</option>
-                      <option value="0"                                        <?php if ($training['honorarium_taken'] == 0) {echo 'selected';}?>>No</option>
-                      <option value="1"                                        <?php if ($training['honorarium_taken'] == 1) {echo 'selected';}?>>
+                      <option value="0" <?php if ($training['honorarium_taken'] == 0) {echo 'selected';}?>>No</option>
+                      <option value="1" <?php if ($training['honorarium_taken'] == 1) {echo 'selected';}?>>
                         Yes
                       </option>
                     </select>
                   </div>
                 </td>
                 <td class="text-center">
-                  <button type="button" onclick="removeTrainingRow(${id})" class="btn btn-sm btn-danger p-1">
+                  <button type="button" onclick="removeTrainingRow(<?=esc($key + 1)?>)"
+                    class="btn btn-sm btn-danger p-1">
                     <i class="fas fa-trash-alt"></i>
                   </button>
                 </td>
@@ -304,13 +310,13 @@ function createTrainingRowHTML(id) {
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="prevTrainingFromDt[]" class="form-control form-control-sm datepicker" required />
+                    <input type="text" name="prevTrainingFromDt[]" class="form-control datepicker" required />
                 </td>
                 <td>
-                    <input type="text" name="prevTrainingToDt[]" class="form-control form-control-sm datepicker" required />
+                    <input type="text" name="prevTrainingToDt[]" class="form-control datepicker" required />
                 </td>
                 <td>
-                    <select name="prevTrainingDepartment[]" class="form-control" required>
+                    <select name="prevTrainingDepartment[]" class="form-select" required>
                         <option value="" disabled selected>Select Department</option>
                         <?php foreach ($specialities as $speciality) {?>
                         <option value="<?php echo $speciality['speciality_id']; ?>">
@@ -319,7 +325,7 @@ function createTrainingRowHTML(id) {
                     </select>
                 </td>
                 <td>
-                    <select name="prevTrainingInstitute[]" class="form-control" required>
+                    <select name="prevTrainingInstitute[]" class="form-select" required>
                         <option value="" disabled selected>Select Institute</option>
                         <?php foreach ($institutes as $institute) {?>
                         <option value="<?php echo $institute['institute_id']; ?>"><?php echo $institute['name']; ?></option>
@@ -327,7 +333,7 @@ function createTrainingRowHTML(id) {
                     </select>
                 </td>
                 <td>
-                    <select name="prevTrainingCategory[]" class="form-control" required>
+                    <select name="prevTrainingCategory[]" class="form-select" required>
                         <option value="" disabled selected>Select Training Category</option>
                         <?php foreach ($categories as $category) {?>
                         <option value="<?php echo $category['id']; ?>"><?php echo $category['training_category_title']; ?></option>

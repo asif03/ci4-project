@@ -1,3 +1,4 @@
+<?php //print_r($data['applicationInfo']); ?>
 <table width="100%" border="0">
   <tr>
     <td width="500px">
@@ -82,12 +83,55 @@
       <td><?=esc($data['applicationInfo']['bmdc_reg_no'])?></td>
     </tr>
     <tr>
+      <td>BMDC Reg. Validity: </td>
+      <td><?=esc($data['applicationInfo']['bmdc_validity'])?></td>
+    </tr>
+    <tr>
       <td>Year of Qualification: </td>
       <td><?=esc($data['applicationInfo']['mbbs_bds_year'])?></td>
     </tr>
     <tr>
       <td>Institute: </td>
       <td><?=esc($data['applicationInfo']['mbbs_bds_institute'])?></td>
+    </tr>
+  <tbody>
+</table>
+
+<table class="table table-striped-columns table-bordered">
+  <thead>
+    <tr class="table-light">
+      <th colspan="2">
+        <h5 class="text-center">FCPS PART-I Examination</h5>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FCPS PART-I Passed Session: </td>
+      <td><?=esc($data['applicationInfo']['fcps_month'])?>, <?=esc($data['applicationInfo']['fcps_year'])?></td>
+    </tr>
+    <tr>
+      <td>Specility: </td>
+      <td><?php if ($data['applicationInfo']['speciality_id'] != '') {
+                  echo $data['applicationInfo']['fcps_specility_name'];
+              } else {
+                  echo $data['applicationInfo']['fcps_speciallity'];
+              }
+
+          ?>
+      </td>
+    </tr>
+    <tr>
+      <td>Roll: </td>
+      <td><?=esc($data['applicationInfo']['fcps_roll'])?></td>
+    </tr>
+    <tr>
+      <td>Online Reg. No./Reg. No. (after passing FCPS Part-I): </td>
+      <td><?=esc($data['applicationInfo']['fcps_reg_no'])?></td>
+    </tr>
+    <tr>
+      <td>Pen No.: </td>
+      <td><?=esc($data['applicationInfo']['pen_no'])?></td>
     </tr>
   <tbody>
 </table>

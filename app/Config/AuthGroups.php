@@ -121,6 +121,13 @@ class AuthGroups extends ShieldAuthGroups
         ],
         'rtm-admin'  => [
             'applications.index',
+            'applications.approve',
+            'applications.reject',
+            'applications.edit',
+            'applications.basic.update',
+            'applications.fcps.update',
+            'applications.mbbs.update',
+            'applications.bank.update',
 
             'bills.index',
             'bills.approve',
@@ -132,8 +139,15 @@ class AuthGroups extends ShieldAuthGroups
         ],
         'rtm-user'   => [
             'applications.index',
-            'bills.index',
+            'applications.approve',
+            'applications.reject',
+            'applications.edit',
+            'applications.basic.update',
+            'applications.fcps.update',
+            'applications.mbbs.update',
+            'applications.bank.update',
 
+            'bills.index',
             'bills.approve',
             'bills.reject',
             'bills.edit',

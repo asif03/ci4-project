@@ -259,16 +259,23 @@ $('#applicantList').DataTable({
       "render": function(data, type, row) {
         $action = '';
         if (row.eligible_status == 'P') {
+          <?php if (auth()->user() && auth()->user()->can('applications.approve')): ?>
           $action +=
             `<button class="btn btn-success font-weight-bold btn-approve btn-sm" data-id="${row.applicant_id}"><i class="fas fa-check-circle"></i> Approve</button> `;
+          <?php endif; ?>
+          <?php if (auth()->user() && auth()->user()->can('applications.reject')): ?>
           $action +=
             `<button class="btn btn-danger btn-reject btn-sm" data-id="${row.applicant_id}"><i class="fas fa-times-circle"></i> Reject</button> `;
+          <?php endif; ?>
         }
+        <?php if (auth()->user() && auth()->user()->can('applications.edit')): ?>
         $action +=
           `<a href="<?=base_url('applications/edit/')?>${row.applicant_id}" class="btn btn-outline-info btn-sm btn-view" data-id="${row.applicant_id}"><i class="fas fa-edit"></i></a> `;
+        <?php endif; ?>
         $action +=
           `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewApplicationModal" onclick="loadApplicationView(${row.applicant_id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
-
+        $action +=
+          `<a class="btn btn-outline-info btn-sm" href="<?=base_url('applications/download-application-form')?>/${row.applicant_id}" target="_blank"><i class="fas fa-download"></i></a>`;
         return $action;
       }
     }
