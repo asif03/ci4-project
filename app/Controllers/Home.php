@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\FcpsPartOneModel;
 use App\Services\EmailService;
+use App\Services\SmsService;
 
 class Home extends BaseController
 {
@@ -121,11 +122,52 @@ class Home extends BaseController
                 }
             }
 
-            /*if ($chooseOption === 'sms') {
-            # code...
+            if ($chooseOption === 'sms') {
+                $data = [
+                    'recipient_name' => $trainee['name'],
+                    'otp'            => $otp,
+                ];
+
+                $mobile  = $trainee['cell'];
+                $message = 'One-Time Password (OTP) from Bangladesh College of Physicians & Surgeons(BCPS) is: ' . $otp . '. Please do not share this OTP with anyone.';
+
+                $smsService = new SmsService();
+                $response   = $smsService->singleSms($mobile, $message, uniqid());
+
+                $responseData = json_decode($response);
+
+                if ($responseData->status == 'SUCCESS') {
+                    $hashedOtp = password_hash($otp, PASSWORD_DEFAULT);
+
+                    $updateData = [
+                        'hashedotp' => $hashedOtp,
+                    ];
+
+                    $isUpdate = $this->fcpsPartOneModel->update($trainee['id'], $updateData);
+
+                    if ($isUpdate) {
+                        return $this->response->setJSON([
+                            'success'    => true,
+                            'message'    => 'OTP sent successfully to your ' . $chooseOption,
+                            'csrf_token' => csrf_hash(), // send fresh token
+                        ]);
+                    } else {
+                        return $this->response->setJSON([
+                            'success'    => false,
+                            'message'    => 'OTP sent failed to your ' . $chooseOption,
+                            'csrf_token' => csrf_hash(), // send fresh token
+                        ]);
+                    }
+                } else {
+                    return $this->response->setJSON([
+                        'success'    => false,
+                        'message'    => 'OTP sent failed to your ' . $chooseOption,
+                        'csrf_token' => csrf_hash(), // send fresh token
+                    ]);
+                }
             }
 
-            if ($chooseOption === 'both') {
+            /*if ($chooseOption === 'both') {
             # code...
             }*/
 

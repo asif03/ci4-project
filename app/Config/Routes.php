@@ -11,6 +11,13 @@ $routes->get('/', 'Home::index');
 $routes->get('/registration-no-sms', 'Home::registrationNoSms');
 $routes->get('/contact-us', 'Home::contactUs');
 
+$routes->get('/send-sms', function () {
+    $smsService = new \App\Services\SmsService();
+    $response   = $smsService->singleSms('01724296191', 'Test message from CodeIgniter SMS Service', uniqid());
+
+    print_r($response);
+});
+
 $routes->get('/401', function () {
     return view('401');
 });
