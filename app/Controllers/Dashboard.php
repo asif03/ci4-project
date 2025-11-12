@@ -72,7 +72,7 @@ class Dashboard extends BaseController
         if ($user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user')) {
             return view('dashboard', $data);
         } elseif ($user->inGroup('user')) {
-            return view('trainee/trainee-dashboard', $data);
+            return view('Trainee/trainee-dashboard', $data);
         }
     }
 }

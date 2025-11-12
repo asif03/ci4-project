@@ -72,30 +72,48 @@ class AuthGroups extends ShieldAuthGroups
      * If a permission is not listed here it cannot be used.
      */
     public array $permissions = [
-        'admin.access'          => 'Can access the sites admin area',
-        'admin.settings'        => 'Can access the main site settings',
-        'users.manage-admins'   => 'Can manage other admins',
-        'users.create'          => 'Can create new non-admin users',
-        'users.edit'            => 'Can edit existing non-admin users',
-        'users.delete'          => 'Can delete existing non-admin users',
+        'admin.access'                    => 'Can access the sites admin area',
+        'admin.settings'                  => 'Can access the main site settings',
+        'users.manage-admins'             => 'Can manage other admins',
+        'users.create'                    => 'Can create new non-admin users',
+        'users.edit'                      => 'Can edit existing non-admin users',
+        'users.delete'                    => 'Can delete existing non-admin users',
 
         //Part-I Data
-        'partone.list'          => 'Can list all FCPS Part-I candidates',
+        'partone.list'                    => 'Can list all FCPS Part-I candidates',
 
         //Training permissions
-        'training.trainee.list' => 'Can list all trainees',
-        'training.basic.get'    => 'Can access the basic info of trainee',
-        'training.basic.edit'   => 'Can edit basic information',
-        'training.create'       => 'Can create training data',
-        'training.edit'         => 'Can edit training data',
-        'training.delete'       => 'Can delete training data',
+        'training.trainee.list'           => 'Can list all trainees',
+        'training.basic.get'              => 'Can access the basic info of trainee',
+        'training.basic.edit'             => 'Can edit basic information',
+        'training.create'                 => 'Can create training data',
+        'training.edit'                   => 'Can edit training data',
+        'training.delete'                 => 'Can delete training data',
+
+        //Trainee permissions
+        'trainee.basic.info'              => 'Can access own basic information',
+        'trainee.progress.reports.create' => 'Can create own progress reports',
+        'trainee.training.application'    => 'Can create training application',
+        'trainee.honorarium.application'  => 'Can create honorarium bill application',
 
         //Honorarium application permissions
-        'applications.index'    => 'Can see the list all honorarium applications',
+        'applications.index'              => 'Can see the list all honorarium applications',
+        'applications.approve'            => 'Can approve training applications',
+        'applications.reject'             => 'Can reject training applications',
+        'applications.edit'               => 'Can edit training applications',
+        'applications.basic.update'       => 'Can update basic info of training applications',
+        'applications.fcps.update'        => 'Can update FCPS info of training applications',
+        'applications.mbbs.update'        => 'Can update MBBS info of training applications',
+        'applications.bank.update'        => 'Can update bank info of training applications',
 
         //Honorarium permissions
-        'bills.index'           => 'Can see the list all honorarium bills',
-
+        'bills.index'                     => 'Can see the list all honorarium bills',
+        'bills.approve'                   => 'Can approve honorarium bills',
+        'bills.reject'                    => 'Can reject honorarium bills',
+        'bills.edit'                      => 'Can edit honorarium bills',
+        'bills.update'                    => 'Can update honorarium bills',
+        'bills.training.edit'             => 'Can edit honorarium bill training info',
+        'bills.training.update'           => 'Can update honorarium bill training info',
     ];
 
     /**
@@ -156,7 +174,10 @@ class AuthGroups extends ShieldAuthGroups
             'bills.training.update',
         ],
         'user'       => [
-            'training.basic.get',
+            'trainee.basic.info',
+            'trainee.progress.reports.create',
+            'trainee.training.application',
+            'trainee.honorarium.application',
         ],
     ];
 }

@@ -72,7 +72,7 @@
         <li class="nav-item <?=set_active('trainings/progress-reports')?>">
           <a href="<?=base_url('trainings/progress-reports')?>">
             <i class="fa fa-clipboard" aria-hidden="true"></i>
-            <p>Training Information</p>
+            <p>Progress Report</p>
           </a>
         </li>
         <?php }}?>

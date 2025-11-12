@@ -66,12 +66,16 @@ class Home extends BaseController
 
             $otp = rand(1000, 9999);
 
-            if ($chooseOption === 'sms' && $trainee['smscounter'] >= 4) {
+            if ($chooseOption === 'sms' && $trainee['smscounter'] >= 2) {
                 return $this->response->setJSON([
                     'success'    => false,
                     'message'    => 'You’ve already requested your Registration No. and Password via SMS twice. Please try a different method to continue.',
                     'csrf_token' => csrf_hash(), // send fresh token
                 ]);
+            }
+
+            if ($chooseOption === 'both' && $trainee['smscounter'] >= 2) {
+                $chooseOption === 'email';
             }
 
             if ($chooseOption === 'email') {
@@ -123,11 +127,6 @@ class Home extends BaseController
             }
 
             if ($chooseOption === 'sms') {
-                $data = [
-                    'recipient_name' => $trainee['name'],
-                    'otp'            => $otp,
-                ];
-
                 $mobile  = $trainee['cell'];
                 $message = 'One-Time Password (OTP) from Bangladesh College of Physicians & Surgeons(BCPS) is: ' . $otp . '. Please do not share this OTP with anyone.';
 
@@ -167,15 +166,70 @@ class Home extends BaseController
                 }
             }
 
-            /*if ($chooseOption === 'both') {
-            # code...
-            }*/
+            if ($chooseOption === 'both') {
+                $data = [
+                    'recipient_name' => $trainee['name'],
+                    'otp'            => $otp,
+                ];
 
-            return $this->response->setJSON([
-                'success'    => true,
-                'message'    => 'OTP sent successfully to your ' . $chooseOption,
-                'csrf_token' => csrf_hash(), // send fresh token
-            ]);
+                $to      = $trainee['email'];
+                $subject = 'One-Time Password (OTP) from Bangladesh College of Physicians & Surgeons';
+
+                // Load the HTML as a string
+                $message = view('Emails/otp_template', $data);
+
+                $emailService = new EmailService();
+                $result       = $emailService->sendEmail($to, $subject, $message); // You can pass parameters if needed
+
+                if ($result) {
+
+                    $hashedOtp = password_hash($otp, PASSWORD_DEFAULT);
+
+                    $updateData = [
+                        'hashedotp' => $hashedOtp,
+                    ];
+
+                    $isUpdate = $this->fcpsPartOneModel->update($trainee['id'], $updateData);
+                } else {
+                    $hashedOtp = password_hash($otp, PASSWORD_DEFAULT);
+
+                    $updateData = [
+                        'hashedotp' => $hashedOtp,
+                    ];
+
+                    $isUpdate = $this->fcpsPartOneModel->update($trainee['id'], $updateData);
+                }
+
+                $smsResponse         = new \stdClass(); // create a blank object
+                $smsResponse->status = 'FAILED';
+
+                if ($isUpdate) {
+                    $mobile  = $trainee['cell'];
+                    $message = 'One-Time Password (OTP) from Bangladesh College of Physicians & Surgeons(BCPS) is: ' . $otp . '. Please do not share this OTP with anyone.';
+
+                    $smsService = new SmsService();
+                    $response   = $smsService->singleSms($mobile, $message, uniqid());
+
+                    $smsResponse = json_decode($response);
+                }
+
+                if (!$result && $smsResponse->status != 'SUCCESS') {
+                    return $this->response->setJSON([
+                        'success'    => false,
+                        'message'    => 'OTP sent failed to your ' . $chooseOption . 'option',
+                        'csrf_token' => csrf_hash(), // send fresh token
+                    ]);
+                }
+
+                if ($result || $smsResponse->status == 'SUCCESS') {
+                    return $this->response->setJSON([
+                        'success'    => true,
+                        'message'    => 'OTP sent successfully to your Email or Mobile.',
+                        'csrf_token' => csrf_hash(), // send fresh token
+                    ]);
+                }
+            }
+
         } else {
             return $this->response->setJSON([
                 'success'    => false,
@@ -228,6 +282,10 @@ class Home extends BaseController
 
             if (password_verify($otp, $trainee['hashedotp'])) {
 
+                if ($chooseOption === 'both' && $trainee['smscounter'] >= 2) {
+                    $chooseOption === 'email';
+                }
+
                 if ($chooseOption === 'email') {
 
                     $data = [
@@ -237,7 +295,7 @@ class Home extends BaseController
                         // Footer variables (use actual application settings)
                         'websiteUrl'    => 'https://www.bcps.edu.bd',
                         'supportEmail'  => 'it@bcps.edu.bd',
-                        'contactNumber' => '+880-2-9132070',
+                        'contactNumber' => '+880-2-222284189',
                         'loginUrl'      => site_url('login'), // Assuming you have a route named 'login'
                     ];
 
@@ -257,14 +315,126 @@ class Home extends BaseController
                             'csrf_token' => csrf_hash(), // send fresh token
                         ]);
                     }
+                } elseif ($chooseOption === 'sms') {
+                    $mobile  = $trainee['cell'];
+                    $message = 'Welcome! Your BCPS Registration Credentials: Registration No.: ' . $trainee['reg_no'] . ', Password: ' . $trainee['password'] . '. Login at: ' . site_url('login') . '. For support, contact +880-222284189.';
+
+                    $smsService   = new SmsService();
+                    $response     = $smsService->singleSms($mobile, $message, uniqid());
+                    $responseData = json_decode($response);
+                    if ($responseData->status == 'SUCCESS') {
+
+                        $updateData = [
+                            'smscounter' => $trainee['smscounter'] + 1,
+                        ];
+
+                        $isUpdate = $this->fcpsPartOneModel->update($trainee['id'], $updateData);
+                        if ($isUpdate) {
+
+                            return $this->response->setJSON([
+                                'success'    => true,
+                                'message'    => 'Registration info send successfully!',
+                                'csrf_token' => csrf_hash(), // send fresh token
+                            ]);
+                        } else {
+                            return $this->response->setJSON([
+                                'success'    => false,
+                                'message'    => 'Woops! something heppen.',
+                                'csrf_token' => csrf_hash(), // send fresh token
+                            ]);
+                        }
+                    } else {
+                        return $this->response->setJSON([
+                            'success'    => false,
+                            'message'    => 'Failed to send registration info via SMS!',
+                            'csrf_token' => csrf_hash(), // send fresh token
+                        ]);
+                    }
+
+                } elseif ($chooseOption === 'both') {
+                    $data = [
+                        'recipientName' => $trainee['name'],
+                        'regNumber'     => $trainee['reg_no'],
+                        'password'      => $trainee['password'],
+                        // Footer variables (use actual application settings)
+                        'websiteUrl'    => 'https://www.bcps.edu.bd',
+                        'supportEmail'  => 'it@bcps.edu.bd',
+                        'contactNumber' => '+880-2-222284189',
+                        'loginUrl'      => site_url('login'), // Assuming you have a route named 'login'
+                    ];
+
+                    $to      = $trainee['email'];
+                    $subject = 'Welcome! Your BCPS Registration Credentials';
+
+                    // Load the HTML as a string
+                    $message = view('Emails/registration_welcome', $data);
+
+                    $emailService = new EmailService();
+                    $result       = $emailService->sendEmail($to, $subject, $message); // You can pass parameters if needed
+
+                    if ($result) {
+                        $mobile  = $trainee['cell'];
+                        $message = 'Welcome! Your BCPS Registration Credentials: Registration No.: ' . $trainee['reg_no'] . ', Password: ' . $trainee['password'] . '. Login at: ' . site_url('login') . '. For support, contact +880-222284189.';
+
+                        $smsService   = new SmsService();
+                        $response     = $smsService->singleSms($mobile, $message, uniqid());
+                        $responseData = json_decode($response);
+                        if ($responseData->status == 'SUCCESS') {
+
+                            $updateData = [
+                                'smscounter' => $trainee['smscounter'] + 1,
+                            ];
+
+                            $isUpdate = $this->fcpsPartOneModel->update($trainee['id'], $updateData);
+                            if ($isUpdate) {
+
+                                return $this->response->setJSON([
+                                    'success'    => true,
+                                    'message'    => 'Registration info send successfully!',
+                                    'csrf_token' => csrf_hash(), // send fresh token
+                                ]);
+                            }
+                        }
+                    } else {
+                        $mobile  = $trainee['cell'];
+                        $message = 'Welcome! Your BCPS Registration Credentials: Registration No.: ' . $trainee['reg_no'] . ', Password: ' . $trainee['password'] . '. Login at: ' . site_url('login') . '. For support, contact +880-222284189.';
+
+                        $smsService   = new SmsService();
+                        $response     = $smsService->singleSms($mobile, $message, uniqid());
+                        $responseData = json_decode($response);
+                        if ($responseData->status == 'SUCCESS') {
+
+                            $updateData = [
+                                'smscounter' => $trainee['smscounter'] + 1,
+                            ];
+
+                            $isUpdate = $this->fcpsPartOneModel->update($trainee['id'], $updateData);
+                            if ($isUpdate) {
+
+                                return $this->response->setJSON([
+                                    'success'    => true,
+                                    'message'    => 'Registration info send successfully!',
+                                    'csrf_token' => csrf_hash(), // send fresh token
+                                ]);
+                            }
+                        }
+                    }
+
+                    if (!$result && $responseData->status != 'SUCCESS') {
+                        return $this->response->setJSON([
+                            'success'    => false,
+                            'message'    => 'Failed to send registration info via Email and SMS!',
+                            'csrf_token' => csrf_hash(), // send fresh token
+                        ]);
+                    }
+
                 } else {
                     return $this->response->setJSON([
                         'success'    => false,
-                        'message'    => 'Woo! something heppen.',
+                        'message'    => 'Woops! something heppen.',
                         'csrf_token' => csrf_hash(), // send fresh token
                     ]);
                 }
-
             } else {
                 return $this->response->setJSON([
                     'success'    => false,

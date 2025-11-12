@@ -55,20 +55,15 @@ class TraineeController extends BaseController
 
     public function traineeBasicInfo()
     {
-        // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
+        // Check if the authenticated user has the 'trainee.basic.info' permission
+        if (!auth()->user()->can('trainee.basic.info')) {
             // User does not have permission, so deny access.
-            //return redirect()->back()->with('unauthorized', 'You are not authorized to access this page!');
-            $data['unauthorized'] = array(
-                'status'  => true,
-                'message' => 'You are not authorized to access this page!',
-            );
-
-        } else {
-            $data['basicInfo'] = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
         }
 
-        //dd($data);
+        $data['basicInfo'] = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
 
         return view('Trainee/basic-info', $data);
 
@@ -83,6 +78,14 @@ class TraineeController extends BaseController
 
     public function createProgressReport()
     {
+        // Check if the authenticated user has the 'trainee.progress.reports.create' permission
+        if (!auth()->user()->can('trainee.progress.reports.create')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+        }
+
         helper('form');
 
         $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
@@ -94,24 +97,20 @@ class TraineeController extends BaseController
         $designations         = $this->designationModel->where('status', true)->findAll();
         $data['designations'] = $designations;
 
-        //dd($departments);
-
-        // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-
-            $data['name'] = 'You are not authorized to edit posts.';
-        } else {
-            $data['name'] = 'Asif';
-        }
-
         return view('Trainee/trainings', $data);
 
     }
 
     public function storeProgressReport()
     {
+        // Check if the authenticated user has the 'trainee.progress.reports.create' permission
+        if (!auth()->user()->can('trainee.progress.reports.create')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+        }
+
         helper('form');
         $validation = service('validation');
 
@@ -262,6 +261,14 @@ class TraineeController extends BaseController
 
     public function trainingApplication()
     {
+        // Check if the authenticated user has the 'trainee.training.application' permission
+        if (!auth()->user()->can('trainee.training.application')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+        }
+
         helper('form');
 
         $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
@@ -299,6 +306,14 @@ class TraineeController extends BaseController
 
     public function storeTrainingApplication()
     {
+        // Check if the authenticated user has the 'trainee.training.application' permission
+        if (!auth()->user()->can('trainee.training.application')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+        }
+
         helper('form');
         $validation = service('validation');
 
@@ -384,6 +399,14 @@ class TraineeController extends BaseController
 
     public function honorariumBillApplication()
     {
+        // Check if the authenticated user has the 'trainee.honorarium.application' permission
+        if (!auth()->user()->can('trainee.honorarium.application')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+        }
+
         helper('form');
 
         $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
@@ -409,24 +432,20 @@ class TraineeController extends BaseController
         $designations         = $this->designationModel->where('status', true)->findAll();
         $data['designations'] = $designations;
 
-        //dd($departments);
-
-        // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-
-            $data['name'] = 'You are not authorized to edit posts.';
-        } else {
-            $data['name'] = 'Asif';
-        }
-
         return view('Trainee/honorarium-application', $data);
     }
 
     public function storeBillApplication()
     {
+        // Check if the authenticated user has the 'trainee.honorarium.application' permission
+        if (!auth()->user()->can('trainee.honorarium.application')) {
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+        }
 
+        helper('form');
     }
 
 }

@@ -39,11 +39,6 @@
 <?php $this->section('main')?>
 <!-- Profile Page -->
 <div id="profile-page" class="page-content">
-  <?php if (isset($unauthorized['status'])): ?>
-  <div class="alert alert-danger text-center fw-bold text-danger" role="alert">
-    <?=esc($unauthorized['message'])?>
-  </div>
-  <?php else: ?>
   <header class="profile-header mb-4 d-flex flex-column flex-md-row align-items-center justify-content-start">
     <img
       src="https://placehold.co/120x120/22c55e/ffffff?text=<?=esc(implode('', array_map(fn($w) => strtoupper($w[0]), explode(' ', $basicInfo['applicant_name']))))?>"

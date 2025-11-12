@@ -44,16 +44,16 @@ $routes->group('fcps-part-one', static function ($routes) {
 
 $routes->group('trainings', static function ($routes) {
     //For Trainee
-    $routes->get('basic-info', 'TraineeController::traineeBasicInfo');
-    $routes->get('progress-reports', 'TraineeController::createProgressReport');
+    $routes->get('basic-info', 'TraineeController::traineeBasicInfo', ['as' => 'trainee.basic.info']);
+    $routes->get('progress-reports', 'TraineeController::createProgressReport', ['as' => 'trainee.progress.reports.create']);
     $routes->post('progress-reports', 'TraineeController::storeProgressReport');
     $routes->get('fetch-progress-report/(:num)', 'TraineeController::showProgressReport/$1');
     $routes->get('progress-reports/(:num)', 'TraineeController::editProgressReport/$1');
     $routes->get('get-supervisors/(:num)', 'TraineeController::getSupervisorsByInstitute/$1');
 
-    $routes->get('training-application', 'TraineeController::trainingApplication');
+    $routes->get('training-application', 'TraineeController::trainingApplication', ['as' => 'trainee.training.application']);
     $routes->post('training-application', 'TraineeController::storeTrainingApplication');
-    $routes->get('honorarium-bill-application', 'TraineeController::honorariumBillApplication');
+    $routes->get('honorarium-bill-application', 'TraineeController::honorariumBillApplication', ['as' => 'trainee.honorarium.application']);
     $routes->post('honorarium-bill-application', 'TraineeController::storeBillApplication');
 
     //For Admin
