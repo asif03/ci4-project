@@ -101,46 +101,101 @@
       <!-- ========================================================= -->
       <div id="formContent">
 
+        <div class="row g-4 mb-5">
+          <!-- BMDC Reg. No. -->
+          <div class="col-md-2">
+            <label for="bmdcRegNo" class="form-label">BMDC Reg. No.</label>
+            <input type="text" class="form-control" id="bmdcRegNo" name="bmdcRegNo"
+              value="<?=esc($applicantInfo['name'])?>" placeholder="E.g., " disabled>
+          </div>
+          <div class="col-md-2">
+            <label for="bmdcValidity" class="form-label">BMDC Reg. Validity</label>
+            <input type="text" class="form-control" id="bmdcValidity" name="bmdcValidity"
+              value="<?=esc($applicantInfo['name'])?>" placeholder="E.g., " disabled>
+          </div>
+          <div class="col-md-4">
+            <label for="bmdcValidity" class="form-label text-center">Training Type</label>
+            <div class="d-flex align-items-center">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="trainingType" id="coreTraining" value="Core"
+                  onchange="changeTrainingType(this.value)" required />
+                <label class="form-check-label" for="coreTraining">
+                  Core
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="trainingType" id="advanceTraining" value="Advance"
+                  onchange="changeTrainingType(this.value)" required />
+                <label class="form-check-label" for="advanceTraining">
+                  Advance
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="bmdcValidity" class="form-label">Have you seat for Mid-Term Exam?</label>
+            <div class="d-flex align-items-center">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="midTermAppeared" id="midTermAppeared"
+                  onchange="changeMidTerm()" />
+                <label class="form-check-label" for="midTermAppeared">
+                  Yes
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Section A: General Information (1-9) -->
         <h4 class="section-header">A) General Information</h4>
         <div class="row g-4 mb-5">
-
           <!-- Field 1: Name of the Trainee -->
           <div class="col-md-12">
             <label for="traineeName" class="form-label">1) Name of the Trainee (In capital letters as per NID
               card)</label>
-            <input type="text" class="form-control" id="traineeName" name="traineeName"
-              placeholder="E.g., DR. SHAFIQUL ISLAM" oninput="this.value = this.value.toUpperCase()" required>
+            <input type="text" class="form-control text-uppercase" id="traineeName" name="traineeName"
+              value="<?=esc($applicantInfo['name'])?>" placeholder="E.g., DR. SHAFIQUL ISLAM" disabled>
           </div>
 
           <!-- Field 2: Specialty -->
           <div class="col-md-6">
             <label for="specialty" class="form-label">2) Specialty</label>
-            <select id="specialty" name="specialty" class="form-select" required>
-              <option value="" disabled selected>Select Please</option>
-              <option value="Anaesthesiology">Anaesthesiology</option>
-              <option value="Biochemistry">Biochemistry</option>
-              <option value="Cardiology">Cardiology</option>
-              <option value="Cardiovascular Surgery">Cardiovascular Surgery</option>
-              <option value="Conservative Dentistry & Endodontics">Conservative Dentistry & Endodontics</option>
-              <option value="Ophthalmology">Ophthalmology</option>
+            <select id="fcpsSpecialty" class="form-select" disabled>
+              <option selected disabled value="">Select a Subject...</option>
+              <?php foreach ($specialities as $subject): ?>
+              <option value="<?=esc($subject['speciality_id'])?>"
+                <?=($subject['speciality_id'] === $basicInfo['subject_id']) ? 'selected' : ''?>>
+                <?=esc($subject['name'])?>
+              </option>
+              <?php endforeach; ?>
             </select>
           </div>
 
           <!-- Field 3: FCPS Part-I Passed Session/Year -->
-          <div class="col-md-6 row g-3">
+          <div class="col-md-6 row mt-4">
             <label class="form-label mb-2">3) FCPS Part-I Passed Session/Year</label>
             <div class="col-6">
-              <select id="fcpsSession" name="fcpsSession" class="form-select" required>
+              <select id="fcpsSession" class="form-select" disabled>
                 <option value="" disabled selected>Select Session</option>
-                <option value="January">January</option>
-                <option value="July">July</option>
+                <option value="January" <?=('January' === $basicInfo['fcps_part_one_session']) ? 'selected' : ''?>>
+                  January
+                </option>
+                <option value="July" <?=('July' === $basicInfo['fcps_part_one_session']) ? 'selected' : ''?>>
+                  July</option>
               </select>
             </div>
             <div class="col-6">
-              <select id="fcpsYear" name="fcpsYear" class="form-select" required>
-                <option value="" disabled selected>Select Year</option>
-                <!-- Years will be dynamically populated by JS -->
+              <select id="fcpsPassYear" name="fcpsPassYear" class="form-select" disabled>
+                <option value="" selected disabled>
+                  Select Year
+                </option>
+                <?php
+                    $current_year = date('Y');
+                for ($year = 1990; $year <= $current_year; $year++) {?>
+                <option value="<?=esc($year)?>" <?=($year == $basicInfo['fcps_part_one_year']) ? 'selected' : ''?>>
+                  <?=esc($year)?>
+                </option>
+                <?php }?>
               </select>
             </div>
           </div>
@@ -148,32 +203,36 @@
           <!-- Field 4: BCPS Reg. No. -->
           <div class="col-md-6">
             <label for="bcpsRegNo" class="form-label">4) BCPS Reg. No. (10 Digit after passing FCPS Part-I)</label>
-            <input type="text" class="form-control" id="bcpsRegNo" name="bcpsRegNo" placeholder="Enter 10-digit number"
-              pattern="\d{10}" maxlength="10" required>
+            <input type="text" value="<?=esc($basicInfo['reg_no'])?>" class="form-control" id="bcpsRegNo"
+              name="bcpsRegNo" placeholder="Enter 10-digit number" pattern="\d{10}" maxlength="10" disabled>
           </div>
 
           <!-- Field 5: National Identity Card No. -->
           <div class="col-md-6">
             <label for="nidNo" class="form-label">5) National Identity Card No.</label>
-            <input type="text" class="form-control" id="nidNo" name="nidNo" placeholder="Enter NID number" required>
+            <input type="text" value="<?=esc($applicantInfo['nid'])?>" class="form-control" id="nidNo" name="nidNo"
+              placeholder="Enter NID number" required>
           </div>
 
           <!-- Field 6: Date of Birth -->
           <div class="col-md-6">
             <label for="dob" class="form-label">6) Date of Birth</label>
-            <input type="date" class="form-control" id="dob" name="dob" required title="Format: YYYY-MM-DD">
+            <input type="text" value="<?=esc($applicantInfo['date_of_birth'])?>" class="form-control" id="dob"
+              name="dob" required title="Format: YYYY-MM-DD">
           </div>
 
           <!-- Field 7: Gender -->
           <div class="col-md-6">
             <label class="form-label">7) Gender</label>
-            <div class="d-flex align-items-center h-100 pt-1">
+            <div class="d-flex align-items-center">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="Male" required>
+                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="Male"
+                  <?=$applicantInfo['gander'] == 'Male' ? 'checked' : '';?> required>
                 <label class="form-check-label" for="genderMale">Male</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Female">
+                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Female"
+                  <?=$applicantInfo['gander'] == 'Female' ? 'checked' : '';?> required>
                 <label class="form-check-label" for="genderFemale">Female</label>
               </div>
             </div>
@@ -182,14 +241,15 @@
           <!-- Field 8: Mobile Number -->
           <div class="col-md-6">
             <label for="mobileNo" class="form-label">8) Mobile Number (Personal)</label>
-            <input type="tel" class="form-control" id="mobileNo" name="mobileNo" placeholder="e.g., 01XXXXXXXXX"
-              pattern="[0-9]{11}" required>
+            <input type="tel" value="<?=esc($applicantInfo['mobile'])?>" class="form-control" id="mobileNo"
+              name="mobileNo" placeholder="e.g., 01XXXXXXXXX" pattern="[0-9]{11}" required>
           </div>
 
           <!-- Field 9: Email -->
           <div class="col-md-6">
             <label for="email" class="form-label">9) Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+            <input type="email" value="<?=esc($applicantInfo['email'])?>" class="form-control" id="email" name="email"
+              placeholder="you@example.com" required>
           </div>
         </div>
 
@@ -199,40 +259,77 @@
 
           <!-- Field 10: Institute Name -->
           <div class="col-md-6">
-            <label for="instituteName" class="form-label">10) Institute Name</label>
-            <select id="instituteName" name="instituteName" class="form-select" required>
-              <option value="" disabled selected>Select Please</option>
-              <!-- Options populated by JS -->
+            <label for="currentTrainingInstitute" class="form-label">10) Institute Name</label>
+            <select name="currentTrainingInstitute" id="currentTrainingInstitute" class="form-select" required>
+              <option value="" disabled selected>Select Current Training Institute</option>
+              <?php foreach ($trainingInstitutes as $institute): ?>
+              <option value="<?=esc($institute['institute_id'])?>">
+                <?=esc($institute['name'])?>
+              </option>
+              <?php endforeach; ?>
             </select>
           </div>
 
           <!-- Field 11: Department -->
           <div class="col-md-6">
-            <label for="department" class="form-label">11) Department</label>
-            <select id="department" name="department" class="form-select" required>
-              <option value="" disabled selected>Select Please</option>
-              <!-- Options populated by JS -->
+            <label for="currentDepartment" class="form-label">11) Department</label>
+            <select name="currentDepartment" id="currentDepartment" class="form-select" required>
+              <option value="" disabled selected>Select Current Department</option>
+              <?php foreach ($departments as $department): ?>
+              <option value="<?=esc($department['speciality_id'])?>">
+                <?=esc($department['name'])?>
+              </option>
+              <?php endforeach; ?>
             </select>
           </div>
 
           <!-- Field 12: Period of Training (Year) -->
           <div class="col-md-6">
-            <label for="trainingPeriodYear" class="form-label">12) Period of Training (Year)</label>
-            <select id="trainingPeriodYear" name="trainingPeriodYear" class="form-select" required>
-              <option value="" disabled selected>Select Please</option>
-              <!-- Years will be populated by JS -->
-            </select>
+            <label for="trainingPeriodYear" class="form-label">12) Period of Training</label>
+            <div class="d-flex gap-3">
+              <select name="honorariumPeriod" id="honorariumPeriod" class="form-select" required>
+                <option value="">Select Please</option>
+                <?php foreach ($slots as $slot) {?>
+                <option value="<?php echo $slot['id']; ?>"<?php if (date('m') <= 6 && $slot['id'] == 1) {
+        echo 'selected';
+    } elseif (date('m') > 6 && $slot['id'] == 2) {
+    echo 'selected';
+}?>>
+                  <?php echo $slot['slot_name']; ?></option>
+                <?php }?>
+              </select>
+              <select name="honorariumYear" id="honorariumYear" class="form-select" required>
+                <option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+              </select>
+            </div>
           </div>
 
           <!-- Field 14: Applying for honorarium (Months) -->
           <div class="col-md-6">
-            <label for="honorariumMonths" class="form-label">14) Applying for Honorarium (Months)</label>
-            <select id="honorariumMonths" name="honorariumMonths" class="form-select" required>
-              <option value="" disabled selected>Select</option>
-              <option value="1">1 Month</option>
-              <option value="2">2 Months</option>
-              <option value="3">3 Months</option>
-              <option value="4">4 Months</option>
+            <label for="honorariumPosition" class="form-label">14) Applying for Honorarium</label>
+            <select name="honorariumPosition" id="honorariumPosition" class="form-select"
+              onchange="changeTrainigPeriod(this.value)" required
+              <?php if ($honorarium->maxHonorariumCnt + 1 > 1) {echo 'disabled';}?>>
+              <option value="" disabled selected>Select Honorarium</option>
+              <?php
+                  for ($cnt = 1; $cnt <= 10; $cnt++) {
+                  ?>
+              <option value="<?php echo $cnt; ?>"<?php if ($honorarium->maxHonorariumCnt + 1 == $cnt) {
+            echo 'selected';
+    }
+    ?>>
+                <?php echo $cnt ?><?php if ($cnt == 1) {
+            echo 'st';
+        } elseif ($cnt == 2) {
+            echo 'nd';
+        } elseif ($cnt == 3) {
+            echo 'rd';
+        } else {
+        echo 'th';
+    }?></option>
+              <?php
+                  }
+              ?>
             </select>
           </div>
 
@@ -428,6 +525,28 @@ $(document).ready(function() {
     todayHighlight: true
   });
 });
+
+function changeTrainigPeriod(value) {
+  //var period = (parseInt(value) - 1) * 6;
+  //$('#coursePeriod').val(period);
+
+  var style = value >= 5 ? 'block' : 'none';
+
+  if (value < 5 && $('#midTermAppeared').is(':checked')) {
+    style = 'block';
+  }
+
+  document.getElementById('midTermExam').style.display = style;
+
+  if (value >= 5) {
+    $('#midTermAppeared').prop('checked', true);
+    $('#midTermExam select').attr('required', true);
+    $('#midTermExamRollNo').attr('required', true);
+  } else {
+    $('#midTermExam select').removeAttr('required');
+    $('#midTermExamRollNo').removeAttr('required');
+  }
+}
 
 let trainingRowCount = 0;
 

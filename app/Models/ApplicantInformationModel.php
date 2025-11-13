@@ -79,6 +79,17 @@ class ApplicantInformationModel extends Model
         return $builder->get()->getRowArray();
     }
 
+    public function getApplicantInfoByRegNo($bcpsRegNo)
+    {
+        $builder = $this->db->table('applicant_information ap');
+        $builder->select('ap.*, sp.name AS fcps_specility_name,bnk.bank_name');
+        $builder->join('speciality sp', 'ap.speciality_id = sp.speciality_id', 'left');
+        $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
+        $builder->where('ap.fcps_reg_no', $bcpsRegNo);
+
+        return $builder->get()->getRowArray();
+    }
+
     public function checkBcpsRegNo($bcpsRegNo)
     {
         $builder = $this->db->table('fcps_one_pass_applicants');

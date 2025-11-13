@@ -6,6 +6,7 @@ use App\Models\ApplicantInformationModel;
 use App\Models\BankModel;
 use App\Models\DesignationModel;
 use App\Models\FcpsPartOneModel;
+use App\Models\HonorariumSlotModel;
 use App\Models\InstituteModel;
 use App\Models\MbbsInstituteModel;
 use App\Models\ProgressReportModel;
@@ -22,7 +23,9 @@ class TraineeController extends BaseController
     protected $supervisorModel;
     protected $fcpsPartOneModel;
     protected $applicantInformationModel;
+    protected $honorariumSlotModel;
     protected $bankModel;
+    protected $db;
 
     public function __construct()
     {
@@ -35,6 +38,8 @@ class TraineeController extends BaseController
         $this->fcpsPartOneModel          = new FcpsPartOneModel();
         $this->applicantInformationModel = new ApplicantInformationModel();
         $this->bankModel                 = new BankModel();
+        $this->honorariumSlotModel       = new HonorariumSlotModel();
+        $this->db                        = \Config\Database::connect();
     }
 
     public function trainees()
@@ -411,6 +416,8 @@ class TraineeController extends BaseController
 
         $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
 
+        //dd($generalInfo);
+
         //echo auth()->user()->id;
 
         $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
@@ -423,14 +430,40 @@ class TraineeController extends BaseController
 
         //dd($checkTrainingApplication);
 
-        $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
+        $trainingInstitutes = $this->trainingInstituteModel
+            ->where('honorarium_status', true)
+            ->where('status', true)
+            ->orderBy('name', 'ASC')
+            ->findAll();
         $data['trainingInstitutes'] = $trainingInstitutes;
 
-        $departments          = $this->specialityModel->where('status', true)->findAll();
-        $data['departments']  = $departments;
-        $data['specialities'] = $departments;
-        $designations         = $this->designationModel->where('status', true)->findAll();
-        $data['designations'] = $designations;
+        $departments           = $this->specialityModel->where('status', true)->findAll();
+        $data['departments']   = $departments;
+        $data['specialities']  = $departments;
+        $designations          = $this->designationModel->where('status', true)->findAll();
+        $data['designations']  = $designations;
+        $data['slots']         = $this->honorariumSlotModel->where('status', true)->findAll();
+        $data['basicInfo']     = $generalInfo;
+        $applicant             = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
+        $data['applicantInfo'] = $applicant;
+
+        $data['honorarium'] = array(
+            'maxHonorariumCnt' => 0,
+        );
+
+        if ($applicant) {
+            $sqlHonorarium = "select MAX(honorarium_position) AS maxHonorariumCnt
+        from honorarium_information where eligible_status='Y' AND bmdc_reg_no='" . $applicant['bmdc_reg_no'] . "' AND applicant_id=" . $applicant['applicant_id'];
+
+            $query              = $this->db->query($sqlHonorarium);
+            $data['honorarium'] = $query->getRow();
+
+            if ($data['honorarium']->maxHonorariumCnt == null) {
+                $data['honorarium']->maxHonorariumCnt = 0;
+            }
+        }
+
+        //dd($data['applicantInfo']);
 
         return view('Trainee/honorarium-application', $data);
     }

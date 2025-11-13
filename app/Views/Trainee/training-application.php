@@ -315,7 +315,7 @@
                   <div class="col-md-6">
                     <label for="fcpsPassYear" class="form-label">Year of Passing</label>
                     <select id="fcpsPassYear" name="fcpsPassYear" class="form-select" disabled>
-                      <option value="" disabled>
+                      <option value="" selected disabled>
                         Select Year
                       </option>
                       <?php
