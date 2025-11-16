@@ -106,14 +106,14 @@
           <div class="col-md-2">
             <label for="bmdcRegNo" class="form-label">BMDC Reg. No.</label>
             <input type="text" class="form-control" id="bmdcRegNo" name="bmdcRegNo"
-              value="<?=esc($applicantInfo['name'])?>" placeholder="E.g., " disabled>
+              value="<?=esc($applicantInfo['bmdc_reg_no'])?>" placeholder="E.g., " disabled>
           </div>
           <div class="col-md-2">
             <label for="bmdcValidity" class="form-label">BMDC Reg. Validity</label>
-            <input type="text" class="form-control" id="bmdcValidity" name="bmdcValidity"
-              value="<?=esc($applicantInfo['name'])?>" placeholder="E.g., " disabled>
+            <input type="text" class="form-control text-center" id="bmdcValidity" name="bmdcValidity"
+              value="<?=esc($applicantInfo['bmdc_validity'])?>" placeholder="E.g.,YYYY-MM-DD">
           </div>
-          <div class="col-md-4">
+          <div class=" col-md-4">
             <label for="bmdcValidity" class="form-label text-center">Training Type</label>
             <div class="d-flex align-items-center">
               <div class="form-check form-check-inline">
@@ -290,7 +290,7 @@
               <select name="honorariumPeriod" id="honorariumPeriod" class="form-select" required>
                 <option value="">Select Please</option>
                 <?php foreach ($slots as $slot) {?>
-                <option value="<?php echo $slot['id']; ?>"<?php if (date('m') <= 6 && $slot['id'] == 1) {
+                <option value="<?php echo $slot['id']; ?>" <?php if (date('m') <= 6 && $slot['id'] == 1) {
         echo 'selected';
     } elseif (date('m') > 6 && $slot['id'] == 2) {
     echo 'selected';
@@ -314,7 +314,7 @@
               <?php
                   for ($cnt = 1; $cnt <= 10; $cnt++) {
                   ?>
-              <option value="<?php echo $cnt; ?>"<?php if ($honorarium->maxHonorariumCnt + 1 == $cnt) {
+              <option value="<?php echo $cnt; ?>" <?php if ($honorarium->maxHonorariumCnt + 1 == $cnt) {
             echo 'selected';
     }
     ?>>
@@ -334,40 +334,47 @@
           </div>
 
           <!-- Field 13: Total Previous Training with Course (In Month) - Dynamic Section Trigger -->
-          <div class="col-md-12">
+          <div class="col-md-6">
             <label for="previousTrainingMonths" class="form-label">
               13) Total Previous Training with Course (In Month) ** Except Current Period of Training
             </label>
-            <select id="previousTrainingMonths" name="previousTrainingMonths" class="form-select"
+            <select name="coursePeriod" id="coursePeriod" class="form-select"
               onchange="togglePreviousTrainingDetails(this.value)" required>
               <option value="" disabled selected>Select</option>
-              <option value="0">0 (None)</option>
-              <option value="1">1 Month</option>
-              <option value="2">2 Months</option>
-              <option value="3">3 Months</option>
-              <option value="4">4 Months</option>
-              <option value="5">5 Months</option>
-              <option value="6">6 Months or More</option>
+              <?php
+                  for ($cnt = 0; $cnt <= 54; $cnt = $cnt + 6) {
+                  ?>
+              <option value="<?php echo $cnt; ?>" <?php if (($honorarium->maxHonorariumCnt * 6) == $cnt) {
+            echo 'selected';
+    }
+    ?>>
+                <?php echo $cnt; ?></option>
+              <?php
+                  }
+              ?>
             </select>
           </div>
 
           <!-- DYNAMIC TABLE SECTION (Field 13 Details) -->
-          <div class="col-md-12 mt-4 p-3 rounded" id="previousTrainingDetails" style="display: none;">
+          <div class="col-md-12 mt-2 p-3 rounded" id="previousTrainingDetails" style="display: none;">
             <p class="text-warning-emphasis fw-bold mb-3">
-              <i class="fas fa-exclamation-triangle me-2"></i> Please provide details for previous training periods (1
-              to 3 Months).
+              <i class="fas fa-exclamation-triangle me-2"></i> Please provide details in <strong>Ascending
+                Order</strong> for
+              previous training
+              periods.
             </p>
-
             <div class="table-responsive">
               <table class="table table-bordered table-striped align-middle">
                 <thead class="table-warning">
                   <tr>
+                    <th class="text-nowrap">Training Slot</th>
                     <th class="text-nowrap">From Date</th>
                     <th class="text-nowrap">To Date</th>
-                    <th class="text-nowrap">Subject</th>
-                    <th class="text-nowrap">Institute</th>
-                    <th class="text-center text-nowrap">Honorarium Taken</th>
-                    <th class="text-center text-nowrap">Action</th>
+                    <th class="text-nowrap">Name of Department</th>
+                    <th class="text-nowrap">Name of Institute</th>
+                    <th class="text-nowrap">Training Category</th>
+                    <th class="text-center text-nowrap">Honorarium Taken from BCPS?</th>
+                    <!-- <th class="text-center text-nowrap">Action</th> -->
                   </tr>
                 </thead>
                 <tbody id="dynamicTrainingRows">
@@ -376,119 +383,131 @@
               </table>
             </div>
 
-            <button type="button" onclick="addTrainingRow()" class="btn btn-sm btn-success mt-2">
-              <i class="fas fa-plus me-1"></i> Add Record
+            <!-- <button type="button" onclick="addTrainingRow()" class="btn btn-sm btn-success mt-2">
+      <i class="fas fa-plus me-1"></i> Add Record
+    </button> -->
+          </div>
+
+          <!-- Section C: Applicant's Personal Bank Information (15-19) -->
+          <h4 class="section-header">C) Applicant's Personal Bank Information</h4>
+          <div class="row g-4 mb-5">
+
+            <!-- Field 15: Name in block letters (Online & Personal) -->
+            <div class="col-md-12">
+              <label for="bankAccountHolderName" class="form-label">15) Name in block letters (Online &
+                Personal)</label>
+              <input type="text" class="form-control" id="bankAccountHolderName" name="bankAccountHolderName"
+                placeholder="E.g., DR. SHAFIQUL ISLAM" value="<?=esc($applicantInfo['name'])?>" disabled>
+            </div>
+
+            <!-- Field 16: Name of the Bank -->
+            <div class="col-md-6">
+              <label for="bankName" class="form-label">16) Name of the Bank</label>
+              <select name="bankName" id="bankName" class="form-select"
+                <?php if ($honorarium->maxHonorariumCnt = !0) {echo 'disabled';} else {echo 'required';}?>>
+                <option value="" disabled selected>Select Please</option>
+                <?php foreach ($banks as $bank) {?>
+                <option value="<?php echo $bank['id']; ?>" <?php if ($applicantInfo['bank_id'] == $bank['id']) {
+        echo 'selected';
+}
+    ?>><?php echo $bank['bank_name']; ?></option>
+                <?php }?>
+              </select>
+            </div>
+
+            <!-- Field 17: Name of the Branch -->
+            <div class="col-md-6">
+              <label for="branchName" class="form-label">17) Name of the Branch</label>
+              <input type="text" class="form-control" id="branchName" name="branchName" placeholder="Enter branch name"
+                value="<?=esc($applicantInfo['branch_name'])?>"
+                <?php if ($honorarium->maxHonorariumCnt = !0) {echo 'disabled';} else {echo 'required';}?>>
+            </div>
+
+            <!-- Field 18: Account Number (Online & Personal) -->
+            <div class="col-md-6">
+              <label for="accountNumber" class="form-label">18) Account Number (Online & Personal)</label>
+              <input type="text" class="form-control" id="accountNumber" name="accountNumber"
+                placeholder="Enter account number" value="<?=esc($applicantInfo['account_no'])?>"
+                <?php if ($honorarium->maxHonorariumCnt = !0) {echo 'disabled';} else {echo 'required';}?>>
+            </div>
+
+            <!-- Field 19: Routing Number -->
+            <div class="col-md-6">
+              <label for="routingNumber" class="form-label">19) Routing Number</label>
+              <input type="text" class="form-control" id="routingNumber" name="routingNumber"
+                placeholder="Enter 9-digit routing number" pattern="\d{9}" maxlength="9"
+                value="<?=esc($applicantInfo['routing_number'])?>"
+                <?php if ($honorarium->maxHonorariumCnt = !0) {echo 'disabled';} else {echo 'required';}?>>
+            </div>
+          </div>
+
+          <!-- ========================================================= -->
+          <!-- Section D: Enclosures (File Uploads) -->
+          <!-- ========================================================= -->
+          <h4 class="section-header">D) Enclosures: (The applicants have to scan and upload the following documents)
+          </h4>
+          <div class="row g-4 mb-5">
+
+            <!-- Document 1: Provisional training certificate -->
+            <div class="col-md-12">
+              <label for="enclosure1" class="form-label">
+                1) Provisional training certificate Signature and seal of Supervisor and Director (Hospital)/
+                Superintendent (Hospital)/ Principal for Basic Subject:
+              </label>
+              <input type="file" class="form-control" id="enclosure1" name="enclosure1" accept=".pdf,.jpg,.jpeg,.png"
+                required>
+              <div class="form-text">Accepted formats: PDF, JPG/JPEG, PNG.</div>
+            </div>
+
+            <!-- Document 2: A page of the Bank Cheque book -->
+            <div class="col-md-12">
+              <label for="enclosure2" class="form-label">
+                2) A page of the **Bank Cheque book** of the applicant:
+              </label>
+              <input type="file" class="form-control" id="enclosure2" name="enclosure2" accept=".pdf,.jpg,.jpeg,.png"
+                required>
+            </div>
+
+            <!-- Document 3: Recent Passport size color Photograph -->
+            <div class="col-md-6">
+              <label for="enclosure3" class="form-label">
+                3) Recent Passport size color **Photograph**:
+              </label>
+              <input type="file" class="form-control" id="enclosure3" name="enclosure3" accept="image/jpeg,image/png"
+                required>
+              <div class="form-text">Resolution: 300x300 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
+            </div>
+
+            <!-- Document 4: Applicant’s Signature -->
+            <div class="col-md-6">
+              <label for="enclosure4" class="form-label">
+                4) Applicant’s **Signature**:
+              </label>
+              <input type="file" class="form-control" id="enclosure4" name="enclosure4" accept="image/jpeg,image/png"
+                required>
+              <div class="form-text">Resolution: 300x80 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
+            </div>
+
+            <!-- Document 5: National Identity Card (NID/Smart Card) -->
+            <div class="col-md-12">
+              <label for="enclosure5" class="form-label">
+                5) National Identity Card (**NID/Smart Card**):
+              </label>
+              <input type="file" class="form-control" id="enclosure5" name="enclosure5" accept=".pdf,.jpg,.jpeg,.png"
+                required multiple>
+              <div class="form-text">Upload front and back if required (use Ctrl/Cmd key). Accepted formats: PDF,
+                JPG/PNG.
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview Button -->
+          <div class="d-grid gap-2">
+            <button type="button" onclick="handlePreview()" class="btn btn-submit">
+              <i class="fas fa-file-invoice me-2"></i> Review & Proceed to Submission
             </button>
           </div>
         </div>
-
-        <!-- Section C: Applicant's Personal Bank Information (15-19) -->
-        <h4 class="section-header">C) Applicant's Personal Bank Information</h4>
-        <div class="row g-4 mb-5">
-
-          <!-- Field 15: Name in block letters (Online & Personal) -->
-          <div class="col-md-12">
-            <label for="bankAccountHolderName" class="form-label">15) Name in block letters (Online & Personal)</label>
-            <input type="text" class="form-control" id="bankAccountHolderName" name="bankAccountHolderName"
-              placeholder="E.g., DR. SHAFIQUL ISLAM" oninput="this.value = this.value.toUpperCase()" required>
-          </div>
-
-          <!-- Field 16: Name of the Bank -->
-          <div class="col-md-6">
-            <label for="bankName" class="form-label">16) Name of the Bank</label>
-            <select id="bankName" name="bankName" class="form-select" required>
-              <option value="" disabled selected>Select Please</option>
-              <!-- Options populated by JS -->
-            </select>
-          </div>
-
-          <!-- Field 17: Name of the Branch -->
-          <div class="col-md-6">
-            <label for="branchName" class="form-label">17) Name of the Branch</label>
-            <input type="text" class="form-control" id="branchName" name="branchName" placeholder="Enter branch name"
-              required>
-          </div>
-
-          <!-- Field 18: Account Number (Online & Personal) -->
-          <div class="col-md-6">
-            <label for="accountNumber" class="form-label">18) Account Number (Online & Personal)</label>
-            <input type="text" class="form-control" id="accountNumber" name="accountNumber"
-              placeholder="Enter account number" required>
-          </div>
-
-          <!-- Field 19: Routing Number -->
-          <div class="col-md-6">
-            <label for="routingNumber" class="form-label">19) Routing Number</label>
-            <input type="text" class="form-control" id="routingNumber" name="routingNumber"
-              placeholder="Enter 9-digit routing number" pattern="\d{9}" maxlength="9" required>
-          </div>
-        </div>
-
-        <!-- ========================================================= -->
-        <!-- Section D: Enclosures (File Uploads) -->
-        <!-- ========================================================= -->
-        <h4 class="section-header">D) Enclosures: (The applicants have to scan and upload the following documents)</h4>
-        <div class="row g-4 mb-5">
-
-          <!-- Document 1: Provisional training certificate -->
-          <div class="col-md-12">
-            <label for="enclosure1" class="form-label">
-              1) Provisional training certificate Signature and seal of Supervisor and Director (Hospital)/
-              Superintendent (Hospital)/ Principal for Basic Subject:
-            </label>
-            <input type="file" class="form-control" id="enclosure1" name="enclosure1" accept=".pdf,.jpg,.jpeg,.png"
-              required>
-            <div class="form-text">Accepted formats: PDF, JPG/JPEG, PNG.</div>
-          </div>
-
-          <!-- Document 2: A page of the Bank Cheque book -->
-          <div class="col-md-12">
-            <label for="enclosure2" class="form-label">
-              2) A page of the **Bank Cheque book** of the applicant:
-            </label>
-            <input type="file" class="form-control" id="enclosure2" name="enclosure2" accept=".pdf,.jpg,.jpeg,.png"
-              required>
-          </div>
-
-          <!-- Document 3: Recent Passport size color Photograph -->
-          <div class="col-md-6">
-            <label for="enclosure3" class="form-label">
-              3) Recent Passport size color **Photograph**:
-            </label>
-            <input type="file" class="form-control" id="enclosure3" name="enclosure3" accept="image/jpeg,image/png"
-              required>
-            <div class="form-text">Resolution: 300x300 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
-          </div>
-
-          <!-- Document 4: Applicant’s Signature -->
-          <div class="col-md-6">
-            <label for="enclosure4" class="form-label">
-              4) Applicant’s **Signature**:
-            </label>
-            <input type="file" class="form-control" id="enclosure4" name="enclosure4" accept="image/jpeg,image/png"
-              required>
-            <div class="form-text">Resolution: 300x80 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
-          </div>
-
-          <!-- Document 5: National Identity Card (NID/Smart Card) -->
-          <div class="col-md-12">
-            <label for="enclosure5" class="form-label">
-              5) National Identity Card (**NID/Smart Card**):
-            </label>
-            <input type="file" class="form-control" id="enclosure5" name="enclosure5" accept=".pdf,.jpg,.jpeg,.png"
-              required multiple>
-            <div class="form-text">Upload front and back if required (use Ctrl/Cmd key). Accepted formats: PDF, JPG/PNG.
-            </div>
-          </div>
-        </div>
-
-        <!-- Preview Button -->
-        <div class="d-grid gap-2">
-          <button type="button" onclick="handlePreview()" class="btn btn-submit">
-            <i class="fas fa-file-invoice me-2"></i> Review & Proceed to Submission
-          </button>
-        </div>
-      </div>
     </form>
     <!-- ========================================================= -->
     <!-- PREVIEW SECTION (Hidden by default) -->
@@ -519,12 +538,44 @@
 <?php $this->section('pageScripts')?>
 <script>
 $(document).ready(function() {
+
+  // Initialize any existing datepickers on page load
+  initDatepicker();
+
+  // When new rows are added dynamically
+  $(document).on('focus', '.datepicker', function() {
+    if (!$(this).hasClass('hasDatepicker')) {
+      $(this).datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true,
+        orientation: 'bottom'
+      }).addClass('hasDatepicker');
+    }
+  });
+
   $('#dob').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
     todayHighlight: true
   });
+
+  $('#bmdcValidity').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
 });
+
+// Helper function to initialize existing datepickers
+function initDatepicker() {
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    orientation: 'bottom'
+  });
+}
 
 function changeTrainigPeriod(value) {
   //var period = (parseInt(value) - 1) * 6;
@@ -553,15 +604,16 @@ let trainingRowCount = 0;
 // --- Utility Functions for Dynamic Table ---
 
 function togglePreviousTrainingDetails(value) {
+
   const container = document.getElementById('previousTrainingDetails');
-  const count = parseInt(value);
+  const count = parseInt(value / 6);
 
   container.style.display = 'none';
   document.getElementById('dynamicTrainingRows').innerHTML = '';
   trainingRowCount = 0;
   setDynamicFieldsRequired(false);
 
-  if (count >= 1 && count <= 3) {
+  if (count >= 1 && count <= 10) {
     container.style.display = 'block';
     for (let i = 0; i < count; i++) {
       addTrainingRow(true);
@@ -579,41 +631,65 @@ function setDynamicFieldsRequired(isRequired) {
 }
 
 function createTrainingRowHTML(id) {
-  const instituteOptions = MOCK_INSTITUTES.map(inst => `<option value="${inst}">${inst}</option>`).join('');
-  const subjectOptions = MOCK_SUBJECTS.map(subj => `<option value="${subj}">${subj}</option>`).join('');
 
   return `
             <tr data-row-id="${id}">
                 <td class="p-2">
-                    <input type="date" name="from_date_${id}" class="form-control form-control-sm" required title="Format: YYYY-MM-DD">
-                </td>
-                <td class="p-2">
-                    <input type="date" name="to_date_${id}" class="form-control form-control-sm" required title="Format: YYYY-MM-DD">
-                </td>
-                <td class="p-2">
-                    <select name="subject_${id}" class="form-select form-select-sm" required>
-                        <option value="" disabled selected>Select Subject</option>
-                        ${subjectOptions}
+                    <select name="prevTrainingSlot[]" class="form-select" required>
+                        <option value="" disabled selected>Select Slot</option>
+                        <?php for ($cnt = 1; $cnt <= 10; $cnt++) {?>
+                        <option value="<?php echo $cnt; ?>">
+                          <?php echo $cnt ?><?php if ($cnt == 1) {
+        echo 'st';
+    } elseif ($cnt == 2) {
+        echo 'nd';
+    } elseif ($cnt == 3) {
+        echo 'rd';
+    } else {
+        echo 'th';
+}?>
+                        </option>
+                        <?php }?>
                     </select>
                 </td>
                 <td class="p-2">
-                    <select name="institute_${id}" class="form-select form-select-sm" required>
+                    <input type="text" name="prevTrainingFromDt[]" class="form-control text-center datepicker" required />
+                </td>
+                <td class="p-2">
+                    <input type="text" name="prevTrainingToDt[]" class="form-control text-center datepicker" required />
+                </td>
+                <td class="p-2">
+                    <select name="prevTrainingDepartment[]" class="form-select" required>
+                        <option value="" disabled selected>Select Department</option>
+                        <?php foreach ($specialities as $speciality) {?>
+                        <option value="<?php echo $speciality['speciality_id']; ?>">
+                          <?php echo $speciality['name']; ?></option>
+                        <?php }?>
+                    </select>
+                </td>
+                <td class="p-2">
+                    <select name="prevTrainingInstitute[]" class="form-select" required>
                         <option value="" disabled selected>Select Institute</option>
-                        ${instituteOptions}
+                        <?php foreach ($prevTrainingInstitutes as $prevTrainingInstitute) {?>
+                        <option value="<?php echo $prevTrainingInstitute['institute_id']; ?>"><?php echo $prevTrainingInstitute['name']; ?></option>
+                        <?php }?>
                     </select>
                 </td>
-                <td class="p-2 text-center">
-                    <div class="form-check form-check-inline">
-                        <input type="checkbox" name="honorarium_taken_${id}" class="form-check-input">
+                <td class="p-2">
+                    <select name="prevTrainingCategory[]" class="form-select" required>
+                        <option value="" disabled selected>Select Training Category</option>
+                        <?php foreach ($trainingCategories as $category) {?>
+                        <option value="<?php echo $category['id']; ?>"><?php echo $category['training_category_title']; ?></option>
+                        <?php }?>
+                    </select>
+                </td>
+                <td class="p-2 d-flex justify-content-center">
+                    <div class="form-check form-check-inline text-center">
+                        <input type="checkbox" name="prevTrainingHonorariumTaken[${id}]" value="1" class="form-check-input">
+                        <label class="form-check-label">Yes</label>
                     </div>
                 </td>
-                <td class="p-2 text-center">
-                    <button type="button" onclick="removeTrainingRow(${id})" class="btn btn-sm btn-danger p-1">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
+            </tr>`;
 }
 
 window.addTrainingRow = function() {

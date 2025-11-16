@@ -12,6 +12,7 @@ use App\Models\MbbsInstituteModel;
 use App\Models\ProgressReportModel;
 use App\Models\SpecialityModel;
 use App\Models\SupervisorModel;
+use App\Models\TrainingCategoryModel;
 
 class TraineeController extends BaseController
 {
@@ -25,6 +26,7 @@ class TraineeController extends BaseController
     protected $applicantInformationModel;
     protected $honorariumSlotModel;
     protected $bankModel;
+    protected $trainingCategoryModel;
     protected $db;
 
     public function __construct()
@@ -39,6 +41,7 @@ class TraineeController extends BaseController
         $this->applicantInformationModel = new ApplicantInformationModel();
         $this->bankModel                 = new BankModel();
         $this->honorariumSlotModel       = new HonorariumSlotModel();
+        $this->trainingCategoryModel     = new TrainingCategoryModel();
         $this->db                        = \Config\Database::connect();
     }
 
@@ -437,6 +440,15 @@ class TraineeController extends BaseController
             ->findAll();
         $data['trainingInstitutes'] = $trainingInstitutes;
 
+        $prevTrainingInstitutes = $this->trainingInstituteModel
+            ->where('status', true)
+            ->orderBy('name', 'ASC')
+            ->findAll();
+        $data['prevTrainingInstitutes'] = $prevTrainingInstitutes;
+
+        $trainingCategories         = $this->trainingCategoryModel->findAll();
+        $data['trainingCategories'] = $trainingCategories;
+
         $departments           = $this->specialityModel->where('status', true)->findAll();
         $data['departments']   = $departments;
         $data['specialities']  = $departments;
@@ -446,6 +458,9 @@ class TraineeController extends BaseController
         $data['basicInfo']     = $generalInfo;
         $applicant             = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
         $data['applicantInfo'] = $applicant;
+        $data['banks']         = $this->bankModel->where('status', true)->findAll();
+
+        //dd($applicant);
 
         $data['honorarium'] = array(
             'maxHonorariumCnt' => 0,
