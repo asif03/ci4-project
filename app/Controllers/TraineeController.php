@@ -478,6 +478,8 @@ class TraineeController extends BaseController
             }
         }
 
+        //dd($data['honorarium']);
+
         //dd($data['applicantInfo']);
 
         return view('Trainee/honorarium-application', $data);
