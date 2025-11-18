@@ -256,8 +256,6 @@
         <!-- Section B: Applicant's Training Information (10-14) -->
         <h4 class="section-header">B) Applicant's Training Information</h4>
         <div class="row g-4 mb-5">
-
-
           <!-- Field 10: Institute Name -->
           <div class="col-md-6">
             <label for="currentTrainingInstitute" class="form-label">10) Institute Name</label>
@@ -326,7 +324,7 @@
           </div>
 
           <!-- DYNAMIC TABLE SECTION (Field 13 Details) -->
-          <div class="col-md-12 mt-2 p-3 rounded" id="previousTrainingDetails" style="display: none;">
+          <div class="col-md-12 mt-3 rounded" id="previousTrainingDetails" style="display: none;">
             <p class="text-warning-emphasis fw-bold mb-3">
               <i class="fas fa-exclamation-triangle me-2"></i> Please provide details in <strong>Ascending
                 Order</strong> for
@@ -428,9 +426,120 @@
               </div>
             </div>
           </div>
+        </div>
 
+        <!-- Section C: Applicant's Personal Bank Information (15-19) -->
+        <h4 class="section-header">C) Applicant's Personal Bank Information</h4>
+        <div class="row g-4 mb-5">
+          <!-- Field 15: Name in block letters (Online & Personal) -->
+          <div class="col-md-12">
+            <label for="bankAccountHolderName" class="form-label">15) Name in block letters (Online &
+              Personal)</label>
+            <input type="text" class="form-control" id="bankAccountHolderName" name="bankAccountHolderName"
+              placeholder="E.g., DR. SHAFIQUL ISLAM" value="<?=esc($applicantInfo['name'])?>" disabled>
+          </div>
+
+          <!-- Field 16: Name of the Bank -->
+          <div class="col-md-6">
+            <label for="bankName" class="form-label">16) Name of the Bank</label>
+            <select name="bankName" id="bankName" class="form-select"
+              <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
+              <option value="" disabled selected>Select Please</option>
+              <?php foreach ($banks as $bank) {?>
+              <option value="<?php echo $bank['id']; ?>"<?php if ($applicantInfo['bank_id'] == $bank['id']) {
+        echo 'selected';
+}
+    ?>><?php echo $bank['bank_name']; ?></option>
+              <?php }?>
+            </select>
+          </div>
+
+          <!-- Field 17: Name of the Branch -->
+          <div class="col-md-6">
+            <label for="branchName" class="form-label">17) Name of the Branch</label>
+            <input type="text" class="form-control" id="branchName" name="branchName" placeholder="Enter branch name"
+              value="<?=esc($applicantInfo['branch_name'])?>"
+              <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
+          </div>
+
+          <!-- Field 18: Account Number (Online & Personal) -->
+          <div class="col-md-6">
+            <label for="accountNumber" class="form-label">18) Account Number (Online & Personal)</label>
+            <input type="text" class="form-control" id="accountNumber" name="accountNumber"
+              placeholder="Enter account number" value="<?=esc($applicantInfo['account_no'])?>"
+              <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
+          </div>
+
+          <!-- Field 19: Routing Number -->
+          <div class="col-md-6">
+            <label for="routingNumber" class="form-label">19) Routing Number</label>
+            <input type="text" class="form-control" id="routingNumber" name="routingNumber"
+              placeholder="Enter 9-digit routing number" pattern="\d{9}" maxlength="9"
+              value="<?=esc($applicantInfo['routing_number'])?>"
+              <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
+          </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- Section D: Enclosures (File Uploads) -->
+        <!-- ========================================================= -->
+        <h4 class="section-header">D) Enclosures: (The applicants have to scan and upload the following documents)
+        </h4>
+        <div class="row g-4 mb-5">
+          <!-- Document 1: Provisional training certificate -->
+          <div class="col-md-12">
+            <label for="enclosure1" class="form-label">
+              1) Provisional training certificate Signature and seal of Supervisor and Director (Hospital)/
+              Superintendent (Hospital)/ Principal for Basic Subject:
+            </label>
+            <input type="file" class="form-control" id="enclosure1" name="enclosure1" accept=".pdf,.jpg,.jpeg,.png"
+              required>
+            <div class="form-text">Accepted formats: PDF, JPG/JPEG, PNG.</div>
+          </div>
+
+          <!-- Document 2: A page of the Bank Cheque book -->
+          <div class="col-md-12">
+            <label for="enclosure2" class="form-label">
+              2) A page of the **Bank Cheque book** of the applicant:
+            </label>
+            <input type="file" class="form-control" id="enclosure2" name="enclosure2" accept=".pdf,.jpg,.jpeg,.png"
+              required>
+          </div>
+
+          <!-- Document 3: Recent Passport size color Photograph -->
+          <div class="col-md-6">
+            <label for="enclosure3" class="form-label">
+              3) Recent Passport size color **Photograph**:
+            </label>
+            <input type="file" class="form-control" id="enclosure3" name="enclosure3" accept="image/jpeg,image/png"
+              required>
+            <div class="form-text">Resolution: 300x300 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
+          </div>
+
+          <!-- Document 4: Applicant’s Signature -->
+          <div class="col-md-6">
+            <label for="enclosure4" class="form-label">
+              4) Applicant’s **Signature**:
+            </label>
+            <input type="file" class="form-control" id="enclosure4" name="enclosure4" accept="image/jpeg,image/png"
+              required>
+            <div class="form-text">Resolution: 300x80 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
+          </div>
+
+          <!-- Document 5: National Identity Card (NID/Smart Card) -->
+          <div class="col-md-12">
+            <label for="enclosure5" class="form-label">
+              5) National Identity Card (**NID/Smart Card**):
+            </label>
+            <input type="file" class="form-control" id="enclosure5" name="enclosure5" accept=".pdf,.jpg,.jpeg,.png"
+              required multiple>
+            <div class="form-text">Upload front and back if required (use Ctrl/Cmd key). Accepted formats: PDF,
+              JPG/PNG.
+            </div>
+          </div>
 
         </div>
+
         <!-- Preview Button -->
         <div class="d-grid gap-2">
           <button type="button" onclick="handlePreview()" class="btn btn-submit text-white">
@@ -455,7 +564,7 @@
           <i class="fas fa-edit me-2"></i> Go Back and Edit
         </button>
         <button type="button" onclick="confirmSubmission()" class="btn btn-success w-50">
-          <i class="fas fa-check-circle me-2"></i> Confirm & Submit Claim
+          <i class="fas fa-check-circle me-2"></i> Confirm & Submit Bill
         </button>
       </div>
       <div id="submissionMessage" class="mt-3 text-center" style="display: none;"></div>
@@ -575,7 +684,7 @@ function createTrainingRowHTML(id) {
   return `
             <tr data-row-id="${id}">
                 <td class="p-2">
-                    <select name="prevTrainingSlot[]" class="form-select" required>
+                    <select name="prevTrainingSlot[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Slot</option>
                         <?php for ($cnt = 1; $cnt <= 10; $cnt++) {?>
                         <option value="<?php echo $cnt; ?>">
@@ -593,13 +702,13 @@ function createTrainingRowHTML(id) {
                     </select>
                 </td>
                 <td class="p-2">
-                    <input type="text" name="prevTrainingFromDt[]" class="form-control text-center datepicker" required />
+                    <input type="text" name="prevTrainingFromDt[${id}]" class="form-control text-center datepicker" required />
                 </td>
                 <td class="p-2">
-                    <input type="text" name="prevTrainingToDt[]" class="form-control text-center datepicker" required />
+                    <input type="text" name="prevTrainingToDt[${id}]" class="form-control text-center datepicker" required />
                 </td>
                 <td class="p-2">
-                    <select name="prevTrainingDepartment[]" class="form-select" required>
+                    <select name="prevTrainingDepartment[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Department</option>
                         <?php foreach ($specialities as $speciality) {?>
                         <option value="<?php echo $speciality['speciality_id']; ?>">
@@ -608,7 +717,7 @@ function createTrainingRowHTML(id) {
                     </select>
                 </td>
                 <td class="p-2">
-                    <select name="prevTrainingInstitute[]" class="form-select" required>
+                    <select name="prevTrainingInstitute[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Institute</option>
                         <?php foreach ($prevTrainingInstitutes as $prevTrainingInstitute) {?>
                         <option value="<?php echo $prevTrainingInstitute['institute_id']; ?>"><?php echo $prevTrainingInstitute['name']; ?></option>
@@ -616,7 +725,7 @@ function createTrainingRowHTML(id) {
                     </select>
                 </td>
                 <td class="p-2">
-                    <select name="prevTrainingCategory[]" class="form-select" required>
+                    <select name="prevTrainingCategory[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Training Category</option>
                         <?php foreach ($trainingCategories as $category) {?>
                         <option value="<?php echo $category['id']; ?>"><?php echo $category['training_category_title']; ?></option>
@@ -690,6 +799,38 @@ handlePreview = function() {
     }
   });
 
+  // 2. Collect dynamic training data
+  const dynamicRowsData = [];
+  const dynamicRows = document.querySelectorAll('#dynamicTrainingRows tr');
+
+  if (dynamicRows.length > 0) {
+    dynamicRows.forEach(row => {
+      const id = row.getAttribute('data-row-id');
+      const rowData = {
+        slot: form.querySelector(`[name="prevTrainingSlot[${id}]"]`).value,
+        fromDate: form.querySelector(`[name="prevTrainingFromDt[${id}]"]`).value,
+        toDate: form.querySelector(`[name="prevTrainingToDt[${id}]"]`).value,
+        subject: form.querySelector(`[name="prevTrainingDepartment[${id}]"]`).value,
+        institute: form.querySelector(`[name="prevTrainingInstitute[${id}]"]`).value,
+        category: form.querySelector(`[name="prevTrainingCategory[${id}]"]`).value,
+        honorariumTaken: form.querySelector(`[name="honorarium_taken_${id}"]`) ? form.querySelector(
+          `[name="honorarium_taken_${id}"]`).checked : false // Check if element exists
+      };
+
+      dynamicRowsData.push(rowData);
+    });
+
+    data.previousTrainingDetails = dynamicRowsData;
+  }
+
+  // 3. Collect File Upload Information (names only for preview)
+  data.enclosure1Name = getFileNamesForPreview('enclosure1');
+  data.enclosure2Name = getFileNamesForPreview('enclosure2');
+  data.enclosure3Name = getFileNamesForPreview('enclosure3');
+  data.enclosure4Name = getFileNamesForPreview('enclosure4');
+  data.enclosure5Name = getFileNamesForPreview('enclosure5', true); // NID is multiple
+
+  collectedData = data; // Store data globally
 
   // 4. Render and show preview
   renderPreview(data);
@@ -706,6 +847,24 @@ function renderPreview(data) {
 
   const previewDiv = document.getElementById('previewData');
   let html = '';
+
+  <?php $instituteList = array_column($trainingInstitutes, 'name', 'institute_id'); ?>
+  const instituteList = <?=json_encode($instituteList);?>;
+
+  <?php $deptList = array_column($departments, 'name', 'speciality_id'); ?>
+  const deptList = <?=json_encode($deptList);?>;
+
+  <?php $slotList = array_column($slots, 'slot_name', 'id'); ?>
+  const slotList = <?=json_encode($slotList);?>;
+
+  <?php $prevTrainingInstituteList = array_column($prevTrainingInstitutes, 'name', 'institute_id'); ?>
+  const prevTrainingInstituteList = <?=json_encode($prevTrainingInstituteList);?>;
+
+  <?php $prevTrainingCategoryList = array_column($trainingCategories, 'training_category_title', 'id'); ?>
+  const prevTrainingCategoryList = <?=json_encode($prevTrainingCategoryList);?>;
+
+  <?php $bankList = array_column($banks, 'bank_name', 'id'); ?>
+  const bankList = <?=json_encode($bankList);?>;
 
   // --- General Information Preview (Section A) ---
   html += '<h5 class="text-primary mt-3">A) General Information</h5>';
@@ -730,6 +889,75 @@ function renderPreview(data) {
     `<dt class="col-sm-5 preview-label">9) Email:</dt><dd class="col-sm-7 preview-value">${data.email || 'N/A'}</dd>`;
   html += '</dl>';
 
+  // --- Training Information Preview (Section B) ---
+  html += '<h5 class="text-primary mt-4">B) Applicant\'s Training Information</h5>';
+  html += '<dl class="row">';
+  html +=
+    `<dt class="col-sm-5 preview-label">10) Institute Name:</dt><dd class="col-sm-7 preview-value">${instituteList[data.currentTrainingInstitute]}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">11) Department:</dt><dd class="col-sm-7 preview-value">${deptList[data.currentDepartment]}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">12) Period of Training:</dt><dd class="col-sm-7 preview-value">${slotList[data.honorariumPeriod]}, ${data.honorariumYear}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">14) Applying for Honorarium:</dt><dd class="col-sm-7 preview-value">${data.honorariumPosition} (st/nd/rd/th)</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">13) Total Previous Training (Months):</dt><dd class="col-sm-7 preview-value">${data.coursePeriod}</dd>`;
+  html += '</dl>';
+
+  // --- Dynamic Previous Training Details Preview ---
+  if (data.previousTrainingDetails && data.previousTrainingDetails.length > 0) {
+    html += '<h6 class="text-muted fw-bold mt-2">Previous Training Details (Detailed)</h6>';
+    html += '<div class="table-responsive">';
+    html += '<table class="table table-sm table-bordered table-striped">';
+    html +=
+      '<thead class="table-info"><tr><th>Slot</th><th>From</th><th>To</th><th>Subject</th><th>Institute</th><th>Training Category</th><th>Honorarium Taken?</th></tr></thead>';
+    html += '<tbody>';
+    data.previousTrainingDetails.forEach(row => {
+      const honorariumStatus = row.honorariumTaken ? '<i class="fas fa-check-circle text-success"></i> Yes' :
+        '<i class="fas fa-times-circle text-danger"></i> No';
+      html += `<tr>
+                    <td>${row.slot}</td>
+                    <td>${row.fromDate}</td>
+                    <td>${row.toDate}</td>
+                    <td>${deptList[row.subject]}</td>
+                    <td>${prevTrainingInstituteList[row.institute]}</td>
+                    <td>${prevTrainingCategoryList[row.category]}</td>
+                    <td class="text-center">${honorariumStatus}</td>
+                </tr>`;
+    });
+    html += '</tbody></table></div>';
+  }
+
+  // --- Bank Information Preview (Section C) ---
+  html += '<h5 class="text-primary mt-4">C) Applicants Personal Bank Information</h5>';
+  html += '<dl class="row">';
+  html +=
+    `<dt class="col-sm-5 preview-label">15) Name (Online & Personal):</dt><dd class="col-sm-7 preview-value"><?=esc($applicantInfo['name'])?></dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">16) Name of the Bank:</dt><dd class="col-sm-7 preview-value">${bankList[data.bankName]}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">17) Name of the Branch:</dt><dd class="col-sm-7 preview-value">${data.branchName || 'N/A'}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">18) Account Number:</dt><dd class="col-sm-7 preview-value">${data.accountNumber || 'N/A'}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">19) Routing Number:</dt><dd class="col-sm-7 preview-value">${data.routingNumber || 'N/A'}</dd>`;
+  html += '</dl>';
+
+  // --- Enclosures Preview (Section D) ---
+  html += '<h5 class="text-primary mt-4">D) Enclosures (Uploaded Documents)</h5>';
+  html += '<dl class="row">';
+  html +=
+    `<dt class="col-sm-8 preview-label">1) Provisional training certificate:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure1Name || 'N/A'}</dd>`;
+  html +=
+    `<dt class="col-sm-8 preview-label">2) A page of the Bank Cheque book:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure2Name || 'N/A'}</dd>`;
+  html +=
+    `<dt class="col-sm-8 preview-label">3) Recent Passport size Photograph:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure3Name || 'N/A'}</dd>`;
+  html +=
+    `<dt class="col-sm-8 preview-label">4) Applicant’s Signature:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure4Name || 'N/A'}</dd>`;
+  html +=
+    `<dt class="col-sm-8 preview-label">5) National Identity Card (NID/Smart Card):</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure5Name || 'N/A'}</dd>`;
+  html += '</dl>';
+
   previewDiv.innerHTML = html;
 }
 
@@ -747,138 +975,91 @@ window.editForm = function() {
  * Step 3: Executes the final submission logic.
  */
 window.confirmSubmission = function() {
-  // Logging the final data to the console, simulating API submission
-  console.log("--- FINAL HONORARIUM FORM SUBMISSION ---");
-  // NOTE: File objects are NOT logged via this JSON.stringify, only the names are available in collectedData.
   console.log(JSON.stringify(collectedData, null, 2));
 
-  // Display success message
   const messageDiv = document.getElementById('submissionMessage');
+
+  // Display a loading message while AJAX is running
   messageDiv.innerHTML =
-    '<div class="alert alert-success mt-4" role="alert"><i class="fas fa-check-circle me-2"></i> **Submission Successful!** Your claim has been recorded.</div>';
+    '<div class="alert alert-info mt-4" role="alert"><i class="fas fa-spinner fa-spin me-2"></i> Submitting & uploading files...</div>';
   messageDiv.style.display = 'block';
 
-  // Disable buttons after final submission
-  document.querySelector('#previewContent .btn-success').disabled = true;
-  document.querySelector('#previewContent .btn-outline-secondary').disabled = true;
+  const formData = new FormData();
+
+  formData.append('collectedDataJson', JSON.stringify(collectedData));
+
+  const file1Input = document.getElementById('enclosure1');
+  if (file1Input && file1Input.files.length > 0) {
+    formData.append('enclosure1', file1Input.files[0]);
+  }
+
+  const file2Input = document.getElementById('enclosure2');
+  if (file2Input && file2Input.files.length > 0) {
+    formData.append('enclosure2', file2Input.files[0]);
+  }
+
+  const file3Input = document.getElementById('enclosure3');
+  if (file2Input && file2Input.files.length > 0) {
+    formData.append('enclosure3', file2Input.files[0]);
+  }
+
+  const file4Input = document.getElementById('enclosure4');
+  if (file2Input && file2Input.files.length > 0) {
+    formData.append('enclosure4', file2Input.files[0]);
+  }
+
+  const file5Input = document.getElementById('enclosure5');
+  if (file2Input && file2Input.files.length > 0) {
+    formData.append('enclosure5', file2Input.files[0]);
+  }
+
+  // AJAX request
+  $.ajax({
+    url: '<?=base_url('trainings/honorarium-bill-application')?>',
+    type: 'POST',
+    data: formData, // Send the FormData object
+    dataType: 'json',
+    // CRITICAL FOR FILE UPLOADS: Prevent jQuery from processing the data and setting the content type
+    processData: false,
+    contentType: false,
+    success: function(response) {
+      if (response.status == 'success') {
+        Swal.fire({
+          title: "Success!",
+          text: response.message,
+          icon: "success"
+        });
+
+        // Display success message
+        messageDiv.innerHTML =
+          '<div class="alert alert-success mt-4" role="alert"><i class="fas fa-check-circle me-2"></i> **Submission Successful!** ' +
+          response.message + '</div>';
+
+        // Disable buttons after final submission
+        document.querySelector('#previewContent .btn-success').disabled = true;
+        document.querySelector('#previewContent .btn-outline-secondary').disabled = true;
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: response.message,
+          icon: "error"
+        });
+
+        // Display error message
+        messageDiv.innerHTML =
+          '<div class="alert alert-danger mt-4" role="alert"><i class="fas fa-times-circle me-2"></i> **Submission Failed!** ' +
+          response.message + '</div>';
+
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+      // Display general AJAX error
+      messageDiv.innerHTML =
+        '<div class="alert alert-danger mt-4" role="alert"><i class="fas fa-times-circle me-2"></i> **Submission Failed!** Server or network error.</div>';
+
+    }
+  });
 }
 </script>
 <?php $this->endSection()?>
-
-
-
-
-
-
-
-<!-- Section C: Applicant's Personal Bank Information (15-19) -->
-<h4 class="section-header">C) Applicant's Personal Bank Information</h4>
-<div class="row g-4 mb-5">
-
-  <!-- Field 15: Name in block letters (Online & Personal) -->
-  <div class="col-md-12">
-    <label for="bankAccountHolderName" class="form-label">15) Name in block letters (Online &
-      Personal)</label>
-    <input type="text" class="form-control" id="bankAccountHolderName" name="bankAccountHolderName"
-      placeholder="E.g., DR. SHAFIQUL ISLAM" value="<?=esc($applicantInfo['name'])?>" disabled>
-  </div>
-
-  <!-- Field 16: Name of the Bank -->
-  <div class="col-md-6">
-    <label for="bankName" class="form-label">16) Name of the Bank</label>
-    <select name="bankName" id="bankName" class="form-select"
-      <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
-      <option value="" disabled selected>Select Please</option>
-      <?php foreach ($banks as $bank) {?>
-      <option value="<?php echo $bank['id']; ?>"<?php if ($applicantInfo['bank_id'] == $bank['id']) {
-        echo 'selected';
-}
-    ?>><?php echo $bank['bank_name']; ?></option>
-      <?php }?>
-    </select>
-  </div>
-
-  <!-- Field 17: Name of the Branch -->
-  <div class="col-md-6">
-    <label for="branchName" class="form-label">17) Name of the Branch</label>
-    <input type="text" class="form-control" id="branchName" name="branchName" placeholder="Enter branch name"
-      value="<?=esc($applicantInfo['branch_name'])?>"
-      <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
-  </div>
-
-  <!-- Field 18: Account Number (Online & Personal) -->
-  <div class="col-md-6">
-    <label for="accountNumber" class="form-label">18) Account Number (Online & Personal)</label>
-    <input type="text" class="form-control" id="accountNumber" name="accountNumber" placeholder="Enter account number"
-      value="<?=esc($applicantInfo['account_no'])?>"
-      <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
-  </div>
-
-  <!-- Field 19: Routing Number -->
-  <div class="col-md-6">
-    <label for="routingNumber" class="form-label">19) Routing Number</label>
-    <input type="text" class="form-control" id="routingNumber" name="routingNumber"
-      placeholder="Enter 9-digit routing number" pattern="\d{9}" maxlength="9"
-      value="<?=esc($applicantInfo['routing_number'])?>"
-      <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
-  </div>
-</div>
-
-<!-- ========================================================= -->
-<!-- Section D: Enclosures (File Uploads) -->
-<!-- ========================================================= -->
-<h4 class="section-header">D) Enclosures: (The applicants have to scan and upload the following documents)
-</h4>
-<div class="row g-4 mb-5">
-
-  <!-- Document 1: Provisional training certificate -->
-  <div class="col-md-12">
-    <label for="enclosure1" class="form-label">
-      1) Provisional training certificate Signature and seal of Supervisor and Director (Hospital)/
-      Superintendent (Hospital)/ Principal for Basic Subject:
-    </label>
-    <input type="file" class="form-control" id="enclosure1" name="enclosure1" accept=".pdf,.jpg,.jpeg,.png" required>
-    <div class="form-text">Accepted formats: PDF, JPG/JPEG, PNG.</div>
-  </div>
-
-  <!-- Document 2: A page of the Bank Cheque book -->
-  <div class="col-md-12">
-    <label for="enclosure2" class="form-label">
-      2) A page of the **Bank Cheque book** of the applicant:
-    </label>
-    <input type="file" class="form-control" id="enclosure2" name="enclosure2" accept=".pdf,.jpg,.jpeg,.png" required>
-  </div>
-
-  <!-- Document 3: Recent Passport size color Photograph -->
-  <div class="col-md-6">
-    <label for="enclosure3" class="form-label">
-      3) Recent Passport size color **Photograph**:
-    </label>
-    <input type="file" class="form-control" id="enclosure3" name="enclosure3" accept="image/jpeg,image/png" required>
-    <div class="form-text">Resolution: 300x300 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
-  </div>
-
-  <!-- Document 4: Applicant’s Signature -->
-  <div class="col-md-6">
-    <label for="enclosure4" class="form-label">
-      4) Applicant’s **Signature**:
-    </label>
-    <input type="file" class="form-control" id="enclosure4" name="enclosure4" accept="image/jpeg,image/png" required>
-    <div class="form-text">Resolution: 300x80 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
-  </div>
-
-  <!-- Document 5: National Identity Card (NID/Smart Card) -->
-  <div class="col-md-12">
-    <label for="enclosure5" class="form-label">
-      5) National Identity Card (**NID/Smart Card**):
-    </label>
-    <input type="file" class="form-control" id="enclosure5" name="enclosure5" accept=".pdf,.jpg,.jpeg,.png" required
-      multiple>
-    <div class="form-text">Upload front and back if required (use Ctrl/Cmd key). Accepted formats: PDF,
-      JPG/PNG.
-    </div>
-  </div>
-</div>
-
-
-</div>

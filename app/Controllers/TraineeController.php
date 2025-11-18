@@ -6,6 +6,7 @@ use App\Models\ApplicantInformationModel;
 use App\Models\BankModel;
 use App\Models\DesignationModel;
 use App\Models\FcpsPartOneModel;
+use App\Models\HonorariumInformationModel;
 use App\Models\HonorariumSlotModel;
 use App\Models\InstituteModel;
 use App\Models\MbbsInstituteModel;
@@ -27,22 +28,24 @@ class TraineeController extends BaseController
     protected $honorariumSlotModel;
     protected $bankModel;
     protected $trainingCategoryModel;
+    protected $honorariumInformationModel;
     protected $db;
 
     public function __construct()
     {
-        $this->trainingInstituteModel    = new InstituteModel();
-        $this->mbbsInstituteModel        = new MbbsInstituteModel();
-        $this->specialityModel           = new SpecialityModel();
-        $this->designationModel          = new DesignationModel();
-        $this->progressReportModel       = new ProgressReportModel();
-        $this->supervisorModel           = new SupervisorModel();
-        $this->fcpsPartOneModel          = new FcpsPartOneModel();
-        $this->applicantInformationModel = new ApplicantInformationModel();
-        $this->bankModel                 = new BankModel();
-        $this->honorariumSlotModel       = new HonorariumSlotModel();
-        $this->trainingCategoryModel     = new TrainingCategoryModel();
-        $this->db                        = \Config\Database::connect();
+        $this->trainingInstituteModel     = new InstituteModel();
+        $this->mbbsInstituteModel         = new MbbsInstituteModel();
+        $this->specialityModel            = new SpecialityModel();
+        $this->designationModel           = new DesignationModel();
+        $this->progressReportModel        = new ProgressReportModel();
+        $this->supervisorModel            = new SupervisorModel();
+        $this->fcpsPartOneModel           = new FcpsPartOneModel();
+        $this->applicantInformationModel  = new ApplicantInformationModel();
+        $this->bankModel                  = new BankModel();
+        $this->honorariumSlotModel        = new HonorariumSlotModel();
+        $this->trainingCategoryModel      = new TrainingCategoryModel();
+        $this->honorariumInformationModel = new HonorariumInformationModel();
+        $this->db                         = \Config\Database::connect();
     }
 
     public function trainees()
@@ -412,16 +415,13 @@ class TraineeController extends BaseController
             // User does not have permission, so deny access.
             //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
             //return redirect()->to('/403');
-            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+            //return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
+            return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to create bills.']);
         }
 
         helper('form');
 
         $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
-
-        //dd($generalInfo);
-
-        //echo auth()->user()->id;
 
         $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
 
@@ -430,8 +430,6 @@ class TraineeController extends BaseController
         } else {
             $data['applicationExists'] = true;
         }
-
-        //dd($checkTrainingApplication);
 
         $trainingInstitutes = $this->trainingInstituteModel
             ->where('honorarium_status', true)
@@ -460,8 +458,6 @@ class TraineeController extends BaseController
         $data['applicantInfo'] = $applicant;
         $data['banks']         = $this->bankModel->where('status', true)->findAll();
 
-        //dd($applicant);
-
         $data['honorarium'] = array(
             'maxHonorariumCnt' => 0,
         );
@@ -478,10 +474,6 @@ class TraineeController extends BaseController
             }
         }
 
-        //dd($data['honorarium']);
-
-        //dd($data['applicantInfo']);
-
         return view('Trainee/honorarium-application', $data);
     }
 
@@ -495,7 +487,154 @@ class TraineeController extends BaseController
             return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
         }
 
-        helper('form');
+        $request = service('request');
+
+        // --- STEP 1: RETRIEVE NON-FILE DATA ---
+        $collectedDataJson = $request->getPost('collectedDataJson');
+        if (empty($collectedDataJson)) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Missing application data.',
+            ])->setStatusCode(400);
+        }
+
+        // Decode the JSON string back into a PHP array
+        $data = json_decode($collectedDataJson, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Data format error. Could not decode application data.',
+            ])->setStatusCode(400);
+        }
+
+        $nidNo        = $data['nidNo'];
+        $bmdcValidity = $data['bmdcValidity'];
+        // ... retrieve all other fields you need ...
+
+        // --- Step 1: Server-Side Validation ---
+        // You should perform model or service validation here using CI4's Validation library
+        if ($bmdcValidity < date('Y-m-d')) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'BMDC Validity date is expired.',
+            ]);
+        }
+
+        // --- STEP 2: HANDLE FILE UPLOADS ---
+        $uploadedFiles  = $this->request->getFiles();
+        $savedFileNames = [];
+        $uploadPath     = WRITEPATH . 'uploads/bills/';
+
+        // Ensure the upload directory exists
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        // Loop through the expected file fields (enclosure1, enclosure2, etc.)
+        foreach ($uploadedFiles as $fieldName => $file) {
+            // Check if the file is a valid upload and the upload was successful
+            if ($file->isValid() && !$file->hasMoved()) {
+                // Generate a secure, unique name for the file to prevent conflicts
+                $newName = $file->getRandomName();
+
+                // Move the file from temp storage to your desired folder
+                $file->move($uploadPath, $newName);
+
+                // Store the new file name for database saving
+                $savedFileNames[$fieldName] = $newName;
+            } else if ($file->getError() !== UPLOAD_ERR_NO_FILE) {
+                // Handle actual upload errors (e.g., file size, type)
+                return $this->response->setJSON([
+                    'status'  => 'error',
+                    'message' => "File upload failed for {$fieldName}: " . $file->getErrorString(),
+                ])->setStatusCode(400);
+            }
+        }
+
+        // --- STEP 3: Database Operations ---
+        try {
+
+            $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
+            $applicant   = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
+
+            $builder = $this->db->table('honorarium_information');
+            $builder->selectMax('bill_sl_no');
+            $builder->where('status', 1);
+            $builder->where('honorarium_slot_id', $data['honorariumPeriod']);
+            $builder->where('honorarium_year', $data['honorariumYear']);
+            $query            = $builder->get();
+            $maxBillSerialRow = $query->getRowArray();
+            $maxBillSerial    = $maxBillSerialRow['bill_sl_no'] + 1 ?? 751; // default 0 if null
+
+            $savedData = [
+                'applicant_id'              => $applicant['applicant_id'],
+                'bmdc_reg_no'               => $applicant['bmdc_reg_no'],
+                'training_type'             => $data['trainingType'],
+                'training_institute_id'     => $data['currentTrainingInstitute'],
+                'department_name'           => $data['currentDepartment'],
+                'honorarium_slot_id'        => $data['honorariumPeriod'],
+                'honorarium_year'           => $data['honorariumYear'],
+                'previous_training_inmonth' => $data['coursePeriod'],
+                'honorarium_position'       => $data['honorariumPosition'],
+                'bill_sl_no'                => $maxBillSerial,
+            ];
+
+            $newHonorariumId = $this->honorariumInformationModel->insert($savedData);
+
+            if ($newHonorariumId) {
+
+                return $this->response->setJSON([
+                    'status'  => 'success',
+                    'message' => 'Your bill has been submitted successfully!',
+                ]);
+            }
+
+            // Merge the form data and the saved file names for insertion
+            // $saveData            = array_merge($data, $savedFileNames);
+            // $saveData['user_id'] = auth()->id();
+
+            // Sanitize data before insertion (e.g., removing the enclosureXName fields
+            // which were just used for display on the front end)
+            //unset($saveData['enclosure1Name'], $saveData['enclosure2Name'], /* ... */);
+
+            // Map the secure names to the database columns
+            //$saveData['enclosure1_path'] = $savedFileNames['enclosure1'] ?? null;
+            // ... repeat mapping for other files ...
+
+            // ... (rest of your success logic) ...
+
+        } catch (\Exception $e) {
+            log_message('error', 'Honorarium Submission Error: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'A server error occurred during data saving.',
+            ])->setStatusCode(500);
+        }
+
+        /*$data = $request->getPost('formData');
+
+    // Check if data was successfully received
+    if (empty($data)) {
+    return $this->response->setJSON([
+    'status'  => 'error',
+    'message' => 'No form data received or data structure is incorrect.',
+    ])->setStatusCode(400); // HTTP 400 Bad Request
+    }
+
+    $nidNo        = $data['nidNo'];
+    $bmdcValidity = $data['bmdcValidity'];
+    // ... retrieve all other fields you need ...
+
+    // --- Step 1: Server-Side Validation ---
+    // You should perform model or service validation here using CI4's Validation library
+    if ($bmdcValidity < date('Y-m-d')) {
+    return $this->response->setJSON([
+    'status'  => 'error',
+    'message' => 'BMDC Validity date is expired.',
+    ]);
+    }*/
+
     }
 
 }
