@@ -813,8 +813,9 @@ handlePreview = function() {
         subject: form.querySelector(`[name="prevTrainingDepartment[${id}]"]`).value,
         institute: form.querySelector(`[name="prevTrainingInstitute[${id}]"]`).value,
         category: form.querySelector(`[name="prevTrainingCategory[${id}]"]`).value,
-        honorariumTaken: form.querySelector(`[name="honorarium_taken_${id}"]`) ? form.querySelector(
-          `[name="honorarium_taken_${id}"]`).checked : false // Check if element exists
+        honorariumTaken: form.querySelector(`[name="prevTrainingHonorariumTaken[${id}]"]`) ? form
+          .querySelector(
+            `[name="prevTrainingHonorariumTaken[${id}]"]`).checked : false // Check if element exists
       };
 
       dynamicRowsData.push(rowData);
@@ -835,7 +836,7 @@ handlePreview = function() {
   // 4. Render and show preview
   renderPreview(data);
 
-  alert(JSON.stringify(data)); // For debugging purposes
+  //alert(JSON.stringify(data)); // For debugging purposes
   document.getElementById('formContent').style.display = 'none';
   document.getElementById('previewContent').style.display = 'block';
 }

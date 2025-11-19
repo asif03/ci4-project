@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Models\ApplicantFileModel;
 use App\Models\ApplicantInformationModel;
 use App\Models\BankModel;
 use App\Models\DesignationModel;
 use App\Models\FcpsPartOneModel;
 use App\Models\HonorariumInformationModel;
+use App\Models\HonorariumPreviousTrainingModel;
 use App\Models\HonorariumSlotModel;
 use App\Models\InstituteModel;
 use App\Models\MbbsInstituteModel;
@@ -29,23 +31,27 @@ class TraineeController extends BaseController
     protected $bankModel;
     protected $trainingCategoryModel;
     protected $honorariumInformationModel;
+    protected $honorariumPreviousTrainingModel;
+    protected $applicantFileModel;
     protected $db;
 
     public function __construct()
     {
-        $this->trainingInstituteModel     = new InstituteModel();
-        $this->mbbsInstituteModel         = new MbbsInstituteModel();
-        $this->specialityModel            = new SpecialityModel();
-        $this->designationModel           = new DesignationModel();
-        $this->progressReportModel        = new ProgressReportModel();
-        $this->supervisorModel            = new SupervisorModel();
-        $this->fcpsPartOneModel           = new FcpsPartOneModel();
-        $this->applicantInformationModel  = new ApplicantInformationModel();
-        $this->bankModel                  = new BankModel();
-        $this->honorariumSlotModel        = new HonorariumSlotModel();
-        $this->trainingCategoryModel      = new TrainingCategoryModel();
-        $this->honorariumInformationModel = new HonorariumInformationModel();
-        $this->db                         = \Config\Database::connect();
+        $this->trainingInstituteModel          = new InstituteModel();
+        $this->mbbsInstituteModel              = new MbbsInstituteModel();
+        $this->specialityModel                 = new SpecialityModel();
+        $this->designationModel                = new DesignationModel();
+        $this->progressReportModel             = new ProgressReportModel();
+        $this->supervisorModel                 = new SupervisorModel();
+        $this->fcpsPartOneModel                = new FcpsPartOneModel();
+        $this->applicantInformationModel       = new ApplicantInformationModel();
+        $this->bankModel                       = new BankModel();
+        $this->honorariumSlotModel             = new HonorariumSlotModel();
+        $this->trainingCategoryModel           = new TrainingCategoryModel();
+        $this->honorariumInformationModel      = new HonorariumInformationModel();
+        $this->honorariumPreviousTrainingModel = new HonorariumPreviousTrainingModel();
+        $this->applicantFileModel              = new ApplicantFileModel();
+        $this->db                              = \Config\Database::connect();
     }
 
     public function trainees()
@@ -533,6 +539,7 @@ class TraineeController extends BaseController
 
         // Loop through the expected file fields (enclosure1, enclosure2, etc.)
         foreach ($uploadedFiles as $fieldName => $file) {
+
             // Check if the file is a valid upload and the upload was successful
             if ($file->isValid() && !$file->hasMoved()) {
                 // Generate a secure, unique name for the file to prevent conflicts
@@ -541,8 +548,35 @@ class TraineeController extends BaseController
                 // Move the file from temp storage to your desired folder
                 $file->move($uploadPath, $newName);
 
-                // Store the new file name for database saving
-                $savedFileNames[$fieldName] = $newName;
+                if ($fieldName == 'enclosure1') {
+                    // Store the new file name for database saving
+                    //$savedFileNames[$fieldName] = $newName;
+                    $savedFileNames[] = [
+                        'fileType' => 'provi_certifice',
+                        'fileName' => $newName,
+                    ];
+                } elseif ($fieldName == 'enclosure2') {
+                    $savedFileNames[] = [
+                        'fileType' => 'cheque',
+                        'fileName' => $newName,
+                    ];
+                } elseif ($fieldName == 'enclosure3') {
+                    $savedFileNames[] = [
+                        'fileType' => 'photograph',
+                        'fileName' => $newName,
+                    ];
+                } elseif ($fieldName == 'enclosure4') {
+                    $savedFileNames[] = [
+                        'fileType' => 'signature',
+                        'fileName' => $newName,
+                    ];
+                } elseif ($fieldName == 'enclosure5') {
+                    $savedFileNames[] = [
+                        'fileType' => 'nid_card',
+                        'fileName' => $newName,
+                    ];
+                }
+
             } else if ($file->getError() !== UPLOAD_ERR_NO_FILE) {
                 // Handle actual upload errors (e.g., file size, type)
                 return $this->response->setJSON([
@@ -567,12 +601,15 @@ class TraineeController extends BaseController
             $maxBillSerialRow = $query->getRowArray();
             $maxBillSerial    = $maxBillSerialRow['bill_sl_no'] + 1 ?? 751; // default 0 if null
 
+            $department = $this->specialityModel->find($data['currentDepartment']);
+
             $savedData = [
                 'applicant_id'              => $applicant['applicant_id'],
                 'bmdc_reg_no'               => $applicant['bmdc_reg_no'],
                 'training_type'             => $data['trainingType'],
                 'training_institute_id'     => $data['currentTrainingInstitute'],
-                'department_name'           => $data['currentDepartment'],
+                'department_id'             => $data['currentDepartment'],
+                'department_name'           => $department['name'],
                 'honorarium_slot_id'        => $data['honorariumPeriod'],
                 'honorarium_year'           => $data['honorariumYear'],
                 'previous_training_inmonth' => $data['coursePeriod'],
@@ -583,26 +620,77 @@ class TraineeController extends BaseController
             $newHonorariumId = $this->honorariumInformationModel->insert($savedData);
 
             if ($newHonorariumId) {
+                //Update applicant info
+                $updatedData = [
+                    'date_of_birth' => $data['dob'],
+                    'nid'           => $data['nidNo'],
+                    'gander'        => $data['gender'],
+                    'bmdc_validity' => $data['bmdcValidity'],
+                    'mobile'        => $data['mobileNo'],
+                    'email'         => $data['email'],
+                    'updated_at'    => date('Y-m-d H:i:s'),
+                    'updated_by'    => auth()->user()->id,
+                ];
+
+                $approvedHonorariums = $this->honorariumInformationModel->getApprovedHonorariumByApplicantId($applicant['applicant_id']);
+
+                if ($approvedHonorariums) {
+                    if (count($approvedHonorariums) > 0) {
+                        array_merge($updatedData, [
+                            'bank_id'        => $data['bank'],
+                            'branch_name'    => $data['branchName'],
+                            'account_no'     => $data['accountNo'],
+                            'routing_number' => $data['routingNumber'],
+                        ]);
+                    }
+                }
+
+                $this->applicantInformationModel->update($applicant['applicant_id'], $updatedData);
+
+                //Inser previous training details
+                if ($data['coursePeriod'] > 0) {
+
+                    foreach ($data['previousTrainingDetails'] as $prevTraining) {
+                        $prevTrainingData[] = [
+                            'honorarium_id'         => $newHonorariumId,
+                            'slot_sl_no'            => $prevTraining['slot'],
+                            'training_from'         => $prevTraining['fromDate'],
+                            'training_to'           => $prevTraining['toDate'],
+                            'speciality_id'         => $prevTraining['subject'],
+                            'training_institute_id' => $prevTraining['institute'],
+                            'training_category_id'  => $prevTraining['category'],
+                            'honorarium_taken'      => $prevTraining['honorariumTaken'],
+                        ];
+                    }
+
+                    $this->honorariumPreviousTrainingModel->insertBatch($prevTrainingData);
+                }
+
+                //Insert or Update files
+                $applicantFiles = $this->applicantFileModel
+                    ->where('applicant_id', $applicant['applicant_id'])
+                    ->findAll();
+
+                foreach ($applicantFiles as $key => $value) {
+                    $applicantFileCategory[] = $value['type'];
+                }
+                foreach ($savedFileNames as $file) {
+                    if (!in_array($file['fileType'], $applicantFileCategory)) {
+                        $fileData = [
+                            'applicant_id' => $applicant['applicant_id'],
+                            'file_name'    => $file['fileName'],
+                            'type'         => $file['fileType'],
+                        ];
+
+                        $this->applicantFileModel->insert($fileData);
+                    }
+                }
 
                 return $this->response->setJSON([
                     'status'  => 'success',
                     'message' => 'Your bill has been submitted successfully!',
                 ]);
             }
-
-            // Merge the form data and the saved file names for insertion
-            // $saveData            = array_merge($data, $savedFileNames);
-            // $saveData['user_id'] = auth()->id();
-
-            // Sanitize data before insertion (e.g., removing the enclosureXName fields
-            // which were just used for display on the front end)
-            //unset($saveData['enclosure1Name'], $saveData['enclosure2Name'], /* ... */);
-
-            // Map the secure names to the database columns
-            //$saveData['enclosure1_path'] = $savedFileNames['enclosure1'] ?? null;
-            // ... repeat mapping for other files ...
-
-            // ... (rest of your success logic) ...
 
         } catch (\Exception $e) {
             log_message('error', 'Honorarium Submission Error: ' . $e->getMessage());

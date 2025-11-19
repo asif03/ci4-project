@@ -7,9 +7,28 @@ use CodeIgniter\Model;
 class HonorariumInformationModel extends Model
 {
 
-    protected $table              = 'honorarium_information';
-    protected $primaryKey         = 'id';
-    protected $allowedFields      = ['training_institute_id', 'department_name', 'previous_training_inmonth', 'eligible_status', 'eligiblity_date', 'eligible_by', 'reject_reason', 'rejected_by', 'reject_date', 'remarks'];
+    protected $table         = 'honorarium_information';
+    protected $primaryKey    = 'id';
+    protected $allowedFields = [
+        'applicant_id',
+        'bmdc_reg_no',
+        'training_type',
+        'training_institute_id',
+        'department_id',
+        'department_name',
+        'honorarium_slot_id',
+        'honorarium_year',
+        'honorarium_position',
+        'previous_training_inmonth',
+        'bill_sl_no',
+        'eligible_status',
+        'eligiblity_date',
+        'eligible_by',
+        'reject_reason',
+        'rejected_by',
+        'reject_date',
+        'remarks',
+    ];
     protected $useTimestamps      = true;
     protected $createdField       = 'created_at';
     protected $updatedField       = 'updated_at';
