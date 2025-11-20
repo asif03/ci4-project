@@ -402,7 +402,7 @@
               <div class="col-sm-2">
                 <select name="midTermExamYear" class="form-select"
                   <?=$honorarium->maxHonorariumCnt + 1 > 4 ? 'required' : ''?>>
-                  <option value="">Select Year</option>
+                  <option value="" disabled selected>Select Year</option>
                   <?php
                       for ($year = date('Y'); $year >= date('Y') - 5; $year--) {
                       ?>
@@ -415,7 +415,7 @@
               <div class="col-sm-2">
                 <select name="midTermExamResult" class="form-select"
                   <?=$honorarium->maxHonorariumCnt + 1 > 4 ? 'required' : ''?>>
-                  <option value="">Select Result</option>
+                  <option value="" disabled selected>Select Result</option>
                   <option value="Pass">Pass</option>
                   <option value="Fail">Fail</option>
                 </select>
@@ -846,6 +846,8 @@ handlePreview = function() {
  */
 function renderPreview(data) {
 
+  console.log(data);
+
   const previewDiv = document.getElementById('previewData');
   let html = '';
 
@@ -976,7 +978,7 @@ window.editForm = function() {
  * Step 3: Executes the final submission logic.
  */
 window.confirmSubmission = function() {
-  console.log(JSON.stringify(collectedData, null, 2));
+  //console.log(JSON.stringify(collectedData, null, 2));
 
   const messageDiv = document.getElementById('submissionMessage');
 
@@ -1033,8 +1035,9 @@ window.confirmSubmission = function() {
 
         // Display success message
         messageDiv.innerHTML =
-          '<div class="alert alert-success mt-4" role="alert"><i class="fas fa-check-circle me-2"></i> **Submission Successful!** ' +
-          response.message + '</div>';
+          '<div class="alert alert-success mt-4" role="alert"><i class="fas fa-check-circle me-2"></i> ' +
+          response.message +
+          'To download .pdf click <a href="<?=base_url('trainings/honorarium-bill-application')?>">Here</a></div>';
 
         // Disable buttons after final submission
         document.querySelector('#previewContent .btn-success').disabled = true;
@@ -1054,7 +1057,7 @@ window.confirmSubmission = function() {
       }
     },
     error: function(xhr, status, error) {
-      console.error('Error:', error);
+      //console.error('Error:', error);
       // Display general AJAX error
       messageDiv.innerHTML =
         '<div class="alert alert-danger mt-4" role="alert"><i class="fas fa-times-circle me-2"></i> **Submission Failed!** Server or network error.</div>';

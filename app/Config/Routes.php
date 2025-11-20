@@ -95,7 +95,7 @@ $routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static 
     $routes->get('fetch-honorarium-training/edit/(:num)', 'Honorarium::getHonorariumTrainingInfo/$1', ['as' => 'bills.training.edit']);
     $routes->put('update-honorarium-training/(:num)', 'Honorarium::updateHonorariumTrainingInfo/$1', ['as' => 'bills.training.update']);
 
-    $routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
+    //$routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
     $routes->get('fetch-honorarium-trainings/(:num)', 'Honorarium::getHonorariumTrainings/$1');
 
     /*$routes->get('/users', 'Admin::users', ['as' => 'admin.users']);
@@ -104,6 +104,9 @@ $routes->get('/roles', 'Admin::roles', ['as' => 'admin.roles']);
 $routes->get('/roles/(:num)', 'Admin::role/$1', ['as' => 'admin.role']);
 $routes->get('/permissions', 'Admin::permissions', ['as' => 'admin.permissions']);
 $routes->get('/permissions/(:num)', 'Admin::permission/$1', ['as' => 'admin.permission']);*/
+});
+$routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user,user'], static function ($routes) {
+    $routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
 });
 
 $routes->group('reports', static function ($routes) {

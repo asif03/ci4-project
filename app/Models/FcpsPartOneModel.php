@@ -68,7 +68,7 @@ class FcpsPartOneModel extends Model
     public function getPartOneTraineeByRegNo($regNo)
     {
         $builder = $this->db->table('fcps_one_pass_applicants fcps');
-        $builder->select('fcps.*, sp.name AS subject_name');
+        $builder->select('fcps.*, sp.name AS subject_name, sp.elogbook');
         $builder->join('speciality sp', 'fcps.subject_id = sp.speciality_id', 'left');
         $builder->where('fcps.reg_no', $regNo);
 

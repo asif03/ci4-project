@@ -12,6 +12,7 @@ use App\Models\HonorariumPreviousTrainingModel;
 use App\Models\HonorariumSlotModel;
 use App\Models\InstituteModel;
 use App\Models\MbbsInstituteModel;
+use App\Models\MidTermModel;
 use App\Models\ProgressReportModel;
 use App\Models\SpecialityModel;
 use App\Models\SupervisorModel;
@@ -33,6 +34,7 @@ class TraineeController extends BaseController
     protected $honorariumInformationModel;
     protected $honorariumPreviousTrainingModel;
     protected $applicantFileModel;
+    protected $midTermModel;
     protected $db;
 
     public function __construct()
@@ -51,6 +53,7 @@ class TraineeController extends BaseController
         $this->honorariumInformationModel      = new HonorariumInformationModel();
         $this->honorariumPreviousTrainingModel = new HonorariumPreviousTrainingModel();
         $this->applicantFileModel              = new ApplicantFileModel();
+        $this->midTermModel                    = new MidTermModel();
         $this->db                              = \Config\Database::connect();
     }
 
@@ -414,6 +417,74 @@ class TraineeController extends BaseController
 
     }
 
+    public function checkHonorariumRestrictions($bcpsRegNo)
+    {
+        $data = [
+            'isError'    => false,
+            'message'    => '',
+            'honorarium' => null,
+        ];
+
+        //Honorarium application opens
+        $honorariumStatus = env('bill.honorarium', 'close');
+        if ($honorariumStatus == 'close') {
+            $data = [
+                'isError'    => true,
+                'message'    => 'Bill application is not open right now!',
+                'honorarium' => null,
+            ];
+
+            return $data;
+        }
+
+        //Check if the applicant is passed before 2020
+        $partOnePassedInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo($bcpsRegNo);
+        if ($partOnePassedInfo['fcps_part_one_year'] < 2020) {
+            $data = [
+                'isError'    => true,
+                'message'    => 'Before 2020 passed FCPS Part-I applicant are not eligible for honorarium!',
+                'honorarium' => null,
+            ];
+            return $data;
+        }
+
+        //Check if applicant is in e-Logbook
+        if ($partOnePassedInfo['fcps_part_one_year'] >= 2025 && $partOnePassedInfo['elogbook'] == 'Y') {
+            $data = [
+                'isError'    => true,
+                'message'    => 'You are not eligible here for application. Go to <a href="https://eportal.bcps.edu.bd/" target="_blank"><u>e-Logbook</u></a> for application.',
+                'honorarium' => null,
+            ];
+            return $data;
+        }
+
+        $applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
+
+        $where = [
+            'hi.applicant_id'       => $applicant['applicant_id'],
+            'hi.honorarium_slot_id' => env('bill.currentSlot', 0),
+            'hi.honorarium_year'    => env('bill.currentYear', date('Y')),
+        ];
+
+        $billInfos = $this->honorariumInformationModel->getBillInfos($where);
+
+        if (count($billInfos) > 0) {
+
+            $slotYear = env('bill.currentSlot', 0) == 1 ? 'January-June, ' : 'July-December, ' . env('bill.currentYear', date('Y'));
+
+            $data = [
+                'isError'    => true,
+                'message'    => 'You have already applied for ' . $slotYear,
+                'honorarium' => $billInfos,
+            ];
+
+            return $data;
+        }
+
+        return $data;
+
+    }
+
     public function honorariumBillApplication()
     {
         // Check if the authenticated user has the 'trainee.honorarium.application' permission
@@ -425,62 +496,69 @@ class TraineeController extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to create bills.']);
         }
 
-        helper('form');
+        $billInfos = $this->checkHonorariumRestrictions(auth()->user()->username);
 
-        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
-
-        $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
-
-        if (!$checkTrainingApplication) {
-            $data['applicationExists'] = false;
+        if ($billInfos['isError']) {
+            return view('Trainee/honorarium-status', $billInfos);
         } else {
-            $data['applicationExists'] = true;
-        }
 
-        $trainingInstitutes = $this->trainingInstituteModel
-            ->where('honorarium_status', true)
-            ->where('status', true)
-            ->orderBy('name', 'ASC')
-            ->findAll();
-        $data['trainingInstitutes'] = $trainingInstitutes;
+            helper('form');
 
-        $prevTrainingInstitutes = $this->trainingInstituteModel
-            ->where('status', true)
-            ->orderBy('name', 'ASC')
-            ->findAll();
-        $data['prevTrainingInstitutes'] = $prevTrainingInstitutes;
+            $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
 
-        $trainingCategories         = $this->trainingCategoryModel->findAll();
-        $data['trainingCategories'] = $trainingCategories;
+            $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
 
-        $departments           = $this->specialityModel->where('status', true)->findAll();
-        $data['departments']   = $departments;
-        $data['specialities']  = $departments;
-        $designations          = $this->designationModel->where('status', true)->findAll();
-        $data['designations']  = $designations;
-        $data['slots']         = $this->honorariumSlotModel->where('status', true)->findAll();
-        $data['basicInfo']     = $generalInfo;
-        $applicant             = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
-        $data['applicantInfo'] = $applicant;
-        $data['banks']         = $this->bankModel->where('status', true)->findAll();
-
-        $data['honorarium'] = array(
-            'maxHonorariumCnt' => 0,
-        );
-
-        if ($applicant) {
-            $sqlHonorarium = "select MAX(honorarium_position) AS maxHonorariumCnt
-        from honorarium_information where eligible_status='Y' AND bmdc_reg_no='" . $applicant['bmdc_reg_no'] . "' AND applicant_id=" . $applicant['applicant_id'];
-
-            $query              = $this->db->query($sqlHonorarium);
-            $data['honorarium'] = $query->getRow();
-
-            if ($data['honorarium']->maxHonorariumCnt == null) {
-                $data['honorarium']->maxHonorariumCnt = 0;
+            if (!$checkTrainingApplication) {
+                $data['applicationExists'] = false;
+            } else {
+                $data['applicationExists'] = true;
             }
-        }
 
-        return view('Trainee/honorarium-application', $data);
+            $trainingInstitutes = $this->trainingInstituteModel
+                ->where('honorarium_status', true)
+                ->where('status', true)
+                ->orderBy('name', 'ASC')
+                ->findAll();
+            $data['trainingInstitutes'] = $trainingInstitutes;
+
+            $prevTrainingInstitutes = $this->trainingInstituteModel
+                ->where('status', true)
+                ->orderBy('name', 'ASC')
+                ->findAll();
+            $data['prevTrainingInstitutes'] = $prevTrainingInstitutes;
+
+            $trainingCategories         = $this->trainingCategoryModel->findAll();
+            $data['trainingCategories'] = $trainingCategories;
+
+            $departments           = $this->specialityModel->where('status', true)->findAll();
+            $data['departments']   = $departments;
+            $data['specialities']  = $departments;
+            $designations          = $this->designationModel->where('status', true)->findAll();
+            $data['designations']  = $designations;
+            $data['slots']         = $this->honorariumSlotModel->where('status', true)->findAll();
+            $data['basicInfo']     = $generalInfo;
+            $applicant             = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
+            $data['applicantInfo'] = $applicant;
+            $data['banks']         = $this->bankModel->where('status', true)->findAll();
+
+            $data['honorarium'] = array(
+                'maxHonorariumCnt' => 0,
+            );
+
+            if ($applicant) {
+                $sqlHonorarium = "select MAX(honorarium_position) AS maxHonorariumCnt
+                    from honorarium_information where eligible_status='Y' AND bmdc_reg_no='" . $applicant['bmdc_reg_no'] . "' AND applicant_id=" . $applicant['applicant_id'];
+
+                $query              = $this->db->query($sqlHonorarium);
+                $data['honorarium'] = $query->getRow();
+
+                if ($data['honorarium']->maxHonorariumCnt == null) {
+                    $data['honorarium']->maxHonorariumCnt = 0;
+                }
+            }
+
+            return view('Trainee/honorarium-application', $data);
+        }
     }
 
     public function storeBillApplication()
@@ -514,9 +592,15 @@ class TraineeController extends BaseController
             ])->setStatusCode(400);
         }
 
-        $nidNo        = $data['nidNo'];
-        $bmdcValidity = $data['bmdcValidity'];
-        // ... retrieve all other fields you need ...
+        $nidNo              = $data['nidNo'];
+        $bmdcValidity       = $data['bmdcValidity'];
+        $honorariumPosition = $data['honorariumPosition'];
+
+        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
+        $applicant   = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
+
+        $applicantId = $applicant['applicant_id'];
+        $bmdcRegNo   = $applicant['bmdc_reg_no'];
 
         // --- Step 1: Server-Side Validation ---
         // You should perform model or service validation here using CI4's Validation library
@@ -526,6 +610,35 @@ class TraineeController extends BaseController
                 'message' => 'BMDC Validity date is expired.',
             ]);
         }
+
+        //Check mid-term result
+        $query = $this->db->query('SELECT *
+                                    FROM (
+                                        SELECT
+                                            `midterm_session`,
+                                            `midterm_year`,
+                                            `bmdc_reg_no`,
+                                            `exam_result`,
+                                            DENSE_RANK() OVER (
+                                                PARTITION BY `bmdc_reg_no`
+                                                ORDER BY `midterm_year` DESC, `midterm_session` DESC
+                                            ) AS ranking
+                                        FROM fcps_mid_term_applicants
+                                    ) AS ranked
+                                    WHERE ranked.ranking = 1 AND ranked.bmdc_reg_no = "' . $bmdcRegNo . '"');
+
+        $midTermResult = $query->getRow();
+
+        if ($honorariumPosition >= 7) {
+            if ($midTermResult) {
+                # code...
+            }
+        }
+
+        echo '<pre>';
+        print_r($midTermResult);
+        echo '</pre>';
+        die;
 
         // --- STEP 2: HANDLE FILE UPLOADS ---
         $uploadedFiles  = $this->request->getFiles();
@@ -588,9 +701,6 @@ class TraineeController extends BaseController
 
         // --- STEP 3: Database Operations ---
         try {
-
-            $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
-            $applicant   = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
 
             $builder = $this->db->table('honorarium_information');
             $builder->selectMax('bill_sl_no');

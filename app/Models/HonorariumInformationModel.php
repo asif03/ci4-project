@@ -138,12 +138,13 @@ class HonorariumInformationModel extends Model
     public function getBillInfos($where = [])
     {
         $builder = $this->db->table('honorarium_information hi');
-        $builder->select('hi.id, hi.applicant_id, hi.bill_sl_no, ap.name, ap.mobile, hi.bmdc_reg_no, ap.fcps_reg_no, ap.date_of_birth, ap.nid, ap.fcps_speciallity,
-            ap.fcps_year, ap.fcps_month, ap.gander, hi.training_institute_id, ti.name AS training_institute_name, hi.department_name, hi.previous_training_inmonth,
+        $builder->select('hi.id, hi.applicant_id, hi.bill_sl_no, hi.training_type, ap.name, ap.mobile, hi.bmdc_reg_no, ap.fcps_reg_no, ap.date_of_birth, ap.nid, ap.fcps_speciallity,
+            ap.fcps_year, ap.fcps_month, ap.gander, hi.training_institute_id, ti.name AS training_institute_name, sp.name AS department_name_new, hi.department_name, hi.previous_training_inmonth,
             hi.honorarium_position, bnk.bank_name AS new_bank_name, ap.branch_name, ap.account_no, ap.routing_number, hi.honorarium_year,  hi.honorarium_slot_id, hs.slot_name, hi.eligible_status');
         $builder->join('applicant_information ap', 'hi.applicant_id = ap.applicant_id', 'left');
         $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
         $builder->join('institute ti', 'hi.training_institute_id = ti.institute_id', 'left');
+        $builder->join('speciality sp', 'hi.department_id = sp.speciality_id', 'left');
         $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
         $builder->orderBy('hi.bill_sl_no', 'ASC');
 
