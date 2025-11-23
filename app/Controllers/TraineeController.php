@@ -552,6 +552,41 @@ class TraineeController extends BaseController
                 $query              = $this->db->query($sqlHonorarium);
                 $data['honorarium'] = $query->getRow();
 
+                $whereLastHonorarium = [
+                    'hi.applicant_id'        => $applicant['applicant_id'],
+                    'hi.honorarium_position' => $data['honorarium']->maxHonorariumCnt,
+                ];
+
+                $lastHonorariumData = $this->honorariumInformationModel->getBillInfos($whereLastHonorarium);
+                $prevTrainingData   = $this->honorariumPreviousTrainingModel->getPreviousTrainingsByApplicationId($applicant['applicant_id']);
+
+                foreach ($prevTrainingData as $prevTraining) {
+                    $training[] = [
+                        'id'                      => $prevTraining['id'],
+                        'slot_sl_no'              => $prevTraining['slot_sl_no'],
+                        'training_institute_name' => $prevTraining['training_institute_name'],
+                        'department_name'         => $prevTraining['department_name'],
+                        'training_from'           => $prevTraining['training_from'],
+                        'training_to'             => $prevTraining['training_to'],
+                        'training_category_title' => $prevTraining['training_category_title'],
+                        'honorarium_taken'        => $prevTraining['honorarium_taken'],
+                    ];
+                }
+
+                dd($training);
+
+                if (count($lastHonorariumData) > 0) {
+                    $prevTrainingData = array_merge($prevTrainingData, [
+                        'id' => null,
+
+                    ]);
+
+                } else {
+                    $data['lastHonorarium'] = null;
+                }
+
+                dd($prevTrainingData);
+
                 if ($data['honorarium']->maxHonorariumCnt == null) {
                     $data['honorarium']->maxHonorariumCnt = 0;
                 }
@@ -592,9 +627,9 @@ class TraineeController extends BaseController
             ])->setStatusCode(400);
         }
 
-        $nidNo              = $data['nidNo'];
         $bmdcValidity       = $data['bmdcValidity'];
         $honorariumPosition = $data['honorariumPosition'];
+        $trainingType       = $data['trainingType'];
 
         $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
         $applicant   = $this->applicantInformationModel->getApplicantInfoByRegNo($generalInfo['reg_no']);
@@ -608,6 +643,32 @@ class TraineeController extends BaseController
             return $this->response->setJSON([
                 'status'  => 'error',
                 'message' => 'BMDC Validity date is expired.',
+            ]);
+        }
+
+        if ($trainingType == 'Advance' && $data['coursePeriod'] < 24) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'For Advance training, previous training period must be at least 24 months.',
+            ]);
+        }
+
+        //print_r($data);
+        //dd($data);
+
+        //Already applied check
+        {
+            $billInfos = $this->honorariumInformationModel->getBillInfos([
+                'hi.applicant_id'       => $applicantId,
+                'hi.honorarium_slot_id' => $data['honorariumPeriod'],
+                'hi.honorarium_year'    => $data['honorariumYear'],
+            ]);
+        }
+
+        if (count($billInfos) > 0) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'You have already applied for this honorarium period.',
             ]);
         }
 
@@ -627,18 +688,44 @@ class TraineeController extends BaseController
                                     ) AS ranked
                                     WHERE ranked.ranking = 1 AND ranked.bmdc_reg_no = "' . $bmdcRegNo . '"');
 
-        $midTermResult = $query->getRow();
+        $midTermResult = $query->getRowArray();
 
         if ($honorariumPosition >= 7) {
             if ($midTermResult) {
-                # code...
+                if ($midTermResult['exam_result'] != 'Passed') {
+                    return $this->response->setJSON([
+                        'status'  => 'error',
+                        'message' => 'You are not eligible for the honorarium because you did not pass the Midterm Exam.',
+                    ]);
+
+                }
+            } else {
+                return $this->response->setJSON([
+                    'status'  => 'error',
+                    'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
+                ]);
+            }
+        } elseif ($honorariumPosition > 4 && $honorariumPosition < 7) {
+
+            if ($midTermResult) {
+                if (count($midTermResult) < 1) {
+                    return $this->response->setJSON([
+                        'status'  => 'error',
+                        'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
+                    ]);
+                }
+            } else {
+                return $this->response->setJSON([
+                    'status'  => 'error',
+                    'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
+                ]);
             }
         }
 
-        echo '<pre>';
+        /*echo '<pre>';
         print_r($midTermResult);
         echo '</pre>';
-        die;
+        dd($midTermResult);*/
 
         // --- STEP 2: HANDLE FILE UPLOADS ---
         $uploadedFiles  = $this->request->getFiles();
@@ -742,11 +829,20 @@ class TraineeController extends BaseController
                     'updated_by'    => auth()->user()->id,
                 ];
 
+                if ($data['midTermAppeared'] == 'on') {
+                    $updatedData = array_merge($updatedData, [
+                        'mid_term_session' => $data['midTermExamSession'],
+                        'mid_term_year'    => $data['midTermExamYear'],
+                        'mid_term_result'  => $data['midTermExamResult'],
+                        'mid_term_roll'    => $data['midTermExamRollNo'],
+                    ]);
+                }
+
                 $approvedHonorariums = $this->honorariumInformationModel->getApprovedHonorariumByApplicantId($applicant['applicant_id']);
 
                 if ($approvedHonorariums) {
                     if (count($approvedHonorariums) > 0) {
-                        array_merge($updatedData, [
+                        $updatedData = array_merge($updatedData, [
                             'bank_id'        => $data['bank'],
                             'branch_name'    => $data['branchName'],
                             'account_no'     => $data['accountNo'],

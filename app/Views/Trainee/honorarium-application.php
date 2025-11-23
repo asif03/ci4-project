@@ -100,8 +100,6 @@
       <!-- FORM ENTRY SECTION (Visible by default) -->
       <!-- ========================================================= -->
       <div id="formContent">
-        <!-- Section A: General Information (1-9) -->
-        <h4 class="section-header">A) General Information</h4>
         <div class="row g-4 mb-5">
           <!-- BMDC Reg. No. -->
           <div class="col-md-2">
@@ -616,6 +614,26 @@ function initDatepicker() {
   });
 }
 
+function changeMidTerm() {
+
+  const value = $('#midTermAppeared').is(':checked') ? '1' : '0';
+  const checkedOption = document.querySelector('input[name="trainingType"]:checked');
+  const trainingTypeSelection = checkedOption ? checkedOption.value : null;
+
+  if (value == '1') {
+    alert('You have selected that you have appeared for the Mid-Term Exam.');
+    $('#advanceTraining').prop('checked', true);
+    $('#midTermExam').show();
+  } else {
+    $('#midTermExam').hide();
+  }
+
+  if (trainingTypeSelection == 'Advance') {
+    $('#midTermAppeared').prop('checked', true);
+    $('#midTermExam').show();
+  }
+}
+
 function changeTrainingType(value) {
   if (value == 'Advance') {
     $('#midTermAppeared').prop('checked', true);
@@ -789,6 +807,27 @@ handlePreview = function() {
   // 1. Collect all non-file form data
   const formData = new FormData(form);
   const data = {};
+  // A. Iterate over all form elements explicitly to handle checkboxes
+  const formElements = form.elements;
+
+  for (let i = 0; i < formElements.length; i++) {
+    const element = formElements[i];
+    if (element.type === 'checkbox') {
+      // **CRITICAL CHANGE HERE:**
+      // Manually set the value for the checkbox.
+      // We can use a boolean or a specific string value ('true'/'false').
+      data[element.name] = element.checked; // Stores true or false
+      // If you prefer string values: data[element.name] = element.checked ? 'accepted' : 'not_accepted';
+
+    } else if (element.type === 'radio') {
+      // FormData handles checked radio buttons correctly, but we need to ensure we only capture the checked one in our manual loop
+      if (element.checked) {
+        data[element.name] = element.value;
+      }
+
+    }
+  }
+
   formData.forEach((value, key) => {
     // Only store non-file values initially. We process files separately below.
     if (document.getElementById(key) && document.getElementById(key).type !== 'file') {
@@ -846,7 +885,7 @@ handlePreview = function() {
  */
 function renderPreview(data) {
 
-  console.log(data);
+  console.log('Rendering preview with data:', data);
 
   const previewDiv = document.getElementById('previewData');
   let html = '';
@@ -868,6 +907,26 @@ function renderPreview(data) {
 
   <?php $bankList = array_column($banks, 'bank_name', 'id'); ?>
   const bankList = <?=json_encode($bankList);?>;
+
+  data.honorariumPosition = data.honorariumPosition ? data.honorariumPosition :
+    <?=esc($honorarium->maxHonorariumCnt + 1)?>;
+
+
+  data.branchName = data.branchName ? data.branchName : '<?=esc($applicantInfo['branch_name'])?>';
+  data.accountNumber = data.accountNumber ? data.accountNumber : '<?=esc($applicantInfo['account_no'])?>';
+  data.routingNumber = data.routingNumber ? data.routingNumber : '<?=esc($applicantInfo['routing_number'])?>';
+
+
+  html += '<dl class="row">';
+  html +=
+    `<dt class="col-sm-5 preview-label">BMDC Reg. No.:</dt><dd class="col-sm-7 preview-value"><?=esc($applicantInfo['bmdc_reg_no'])?></dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">BMDC Validity:</dt><dd class="col-sm-7 preview-value">${data.bmdcValidity}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">Training Type:</dt><dd class="col-sm-7 preview-value">${data.trainingType}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">Have you seat for Mid-Term Exam:</dt><dd class="col-sm-7 preview-value">${data.midTermAppeared ? 'Yes' : 'No'}</dd>`;
+  html += '</dl>';
 
   // --- General Information Preview (Section A) ---
   html += '<h5 class="text-primary mt-3">A) General Information</h5>';
@@ -902,9 +961,9 @@ function renderPreview(data) {
   html +=
     `<dt class="col-sm-5 preview-label">12) Period of Training:</dt><dd class="col-sm-7 preview-value">${slotList[data.honorariumPeriod]}, ${data.honorariumYear}</dd>`;
   html +=
-    `<dt class="col-sm-5 preview-label">14) Applying for Honorarium:</dt><dd class="col-sm-7 preview-value">${data.honorariumPosition} (st/nd/rd/th)</dd>`;
-  html +=
     `<dt class="col-sm-5 preview-label">13) Total Previous Training (Months):</dt><dd class="col-sm-7 preview-value">${data.coursePeriod}</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">14) Applying for Honorarium:</dt><dd class="col-sm-7 preview-value">${data.honorariumPosition} (st/nd/rd/th)</dd>`;
   html += '</dl>';
 
   // --- Dynamic Previous Training Details Preview ---
@@ -931,19 +990,33 @@ function renderPreview(data) {
     html += '</tbody></table></div>';
   }
 
+  if (data.midTermAppeared) {
+    html += '<h6 class="text-muted fw-bold mt-2">Mid-Term Exam Information</h6>';
+    html += '<dl class="row">';
+    html +=
+      `<dt class="col-sm-5 preview-label">Session:</dt><dd class="col-sm-7 preview-value">${data.midTermExamSession || 'N/A' }</dd>`;
+    html +=
+      `<dt class="col-sm-5 preview-label">Year:</dt><dd class="col-sm-7 preview-value">${data.midTermExamYear || 'N/A'}</dd>`;
+    html +=
+      `<dt class="col-sm-5 preview-label">Result:</dt><dd class="col-sm-7 preview-value">${data.midTermExamResult || 'N/A'}</dd>`;
+    html +=
+      `<dt class="col-sm-5 preview-label">Roll No.:</dt><dd class="col-sm-7 preview-value">${data.midTermExamRollNo || 'N/A'}</dd>`;
+    html += '</dl>';
+  }
+
   // --- Bank Information Preview (Section C) ---
   html += '<h5 class="text-primary mt-4">C) Applicants Personal Bank Information</h5>';
   html += '<dl class="row">';
   html +=
     `<dt class="col-sm-5 preview-label">15) Name (Online & Personal):</dt><dd class="col-sm-7 preview-value"><?=esc($applicantInfo['name'])?></dd>`;
   html +=
-    `<dt class="col-sm-5 preview-label">16) Name of the Bank:</dt><dd class="col-sm-7 preview-value">${bankList[data.bankName]}</dd>`;
+    `<dt class="col-sm-5 preview-label">16) Name of the Bank:</dt><dd class="col-sm-7 preview-value">${bankList[data.bankName]? bankList[data.bankName]: '<?=esc($applicantInfo['bank_name'])?>'}</dd>`;
   html +=
-    `<dt class="col-sm-5 preview-label">17) Name of the Branch:</dt><dd class="col-sm-7 preview-value">${data.branchName || 'N/A'}</dd>`;
+    `<dt class="col-sm-5 preview-label">17) Name of the Branch:</dt><dd class="col-sm-7 preview-value">${data.branchName}</dd>`;
   html +=
-    `<dt class="col-sm-5 preview-label">18) Account Number:</dt><dd class="col-sm-7 preview-value">${data.accountNumber || 'N/A'}</dd>`;
+    `<dt class="col-sm-5 preview-label">18) Account Number:</dt><dd class="col-sm-7 preview-value">${data.accountNumber}</dd>`;
   html +=
-    `<dt class="col-sm-5 preview-label">19) Routing Number:</dt><dd class="col-sm-7 preview-value">${data.routingNumber || 'N/A'}</dd>`;
+    `<dt class="col-sm-5 preview-label">19) Routing Number:</dt><dd class="col-sm-7 preview-value">${data.routingNumber}</dd>`;
   html += '</dl>';
 
   // --- Enclosures Preview (Section D) ---
