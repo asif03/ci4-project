@@ -25,9 +25,9 @@ class HonorariumPreviousTrainingModel extends Model
     public function getPreviousTrainingsByApplicationId($applicationId)
     {
         $builder = $this->db->table('honorarium_information hi');
-        $builder->select('hi.id, hi.applicant_id, pt.training_institute_id, ti.name AS training_institute_name, pt.speciality_id, sp.name AS department_name,
+        $builder->select('pt.id, hi.applicant_id, pt.honorarium_id, pt.slot_sl_no, pt.training_institute_id, ti.name AS training_institute_name, pt.speciality_id, sp.name AS department_name,
                             pt.training_from, pt.training_to, pt.training_category_id, tc.training_category_title, pt.honorarium_taken');
-        $builder->join('honorarium_previous_trainings pt', 'hi.id = pt.honorarium_id', 'left');
+        $builder->join('honorarium_previous_trainings pt', 'hi.id = pt.honorarium_id');
         $builder->join('institute ti', 'pt.training_institute_id = ti.institute_id', 'left');
         $builder->join('speciality sp', 'pt.speciality_id = sp.speciality_id', 'left');
         $builder->join('training_categories tc', 'pt.training_category_id = tc.id', 'left');

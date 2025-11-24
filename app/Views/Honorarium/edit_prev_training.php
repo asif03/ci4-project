@@ -1,3 +1,5 @@
+<?php print_r($honorarium); ?>
+
 <style>
 .table>tbody>tr>td {
   padding: 2px 2px !important;
@@ -71,19 +73,13 @@
         </label>
         <div class="col-sm-3">
           <select name="previousTrainingPeriod" id="previousTrainingPeriod" class="form-select" required>
-            <option value="">Select Please</option>
-            <?php for ($cnt = 1; $cnt <= 10; $cnt++) {?>
-            <option value="<?php echo $cnt; ?>"
-              <?php if ($honorarium['previous_training_inmonth'] == $cnt) {echo 'selected';}?>>
-              <?php echo $cnt ?><?php if ($cnt == 1) {
-        echo 'st';
-    } elseif ($cnt == 2) {
-        echo 'nd';
-    } elseif ($cnt == 3) {
-        echo 'rd';
-    } else {
-    echo 'th';
-}?></option>
+            <option value="" disabled selected>Select</option>
+            <?php for ($cnt = 0; $cnt <= 54; $cnt = $cnt + 6) {?>
+            <option value="<?php echo $cnt; ?>"<?php if ($honorarium['previous_training_inmonth'] == $cnt) {
+        echo 'selected';
+}
+    ?>>
+              <?php echo $cnt; ?></option>
             <?php
                 }
             ?>
@@ -173,8 +169,8 @@
                   <div class="form-check form-check-inline">
                     <select name="prevTrainingHonorariumTaken[]" class="form-select" required>
                       <option value="" disabled selected>Select Slot</option>
-                      <option value="0" <?php if ($training['honorarium_taken'] == 0) {echo 'selected';}?>>No</option>
-                      <option value="1" <?php if ($training['honorarium_taken'] == 1) {echo 'selected';}?>>
+                      <option value="0"                                        <?php if ($training['honorarium_taken'] == 0) {echo 'selected';}?>>No</option>
+                      <option value="1"                                        <?php if ($training['honorarium_taken'] == 1) {echo 'selected';}?>>
                         Yes
                       </option>
                     </select>

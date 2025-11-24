@@ -11,7 +11,7 @@ class ApplicantInformationModel extends Model
 
     protected $allowedFields = ['name', 'father_spouse_name', 'mother_name', 'date_of_birth', 'nataionality', 'religion', 'nid',
         'address', 'mobile', 'telephone', 'email', 'permanent_address', 'fcps_reg_no', 'fcps_roll', 'mbbs_bds_year', 'mbbs_institute_id', 'mbbs_bds_institute',
-        'bmdc_validity', 'mid_term_session', 'mid_term_year', 'mid_term_result', 'mid_term_roll',
+        'bmdc_reg_no', 'bmdc_validity', 'fcps_year', 'fcps_month', 'pen_no', 'speciality_id', 'mid_term_session', 'mid_term_year', 'mid_term_result', 'mid_term_roll',
         'bank_id', 'branch_name', 'account_no', 'routing_number', 'updated_at', 'updated_by'];
 
     public function getStatistics()

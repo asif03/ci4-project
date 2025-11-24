@@ -113,9 +113,23 @@
           Month):
         </label>
         <div class="col-sm-3">
+          <select name="previousTrainingPeriod" id="previousTrainingPeriod" class="form-select" required>
+            <option value="" disabled selected>Select</option>
+            <?php for ($cnt = 0; $cnt <= 54; $cnt = $cnt + 6) {?>
+            <option value="<?php echo $cnt; ?>"<?php if ($honorarium['previous_training_inmonth'] == $cnt) {
+        echo 'selected';
+}
+    ?>>
+              <?php echo $cnt; ?></option>
+            <?php
+                }
+            ?>
+          </select>
+
+          <!--
           <input type="text" class="form-control" name="previousTrainingPeriod" id="previousTrainingPeriod"
-            value="<?php echo $honorarium['previous_training_inmonth']; ?>" placeholder="Total number of months"
-            required />
+            value="<?php //echo $honorarium['previous_training_inmonth']; ?>" placeholder="Total number of months"
+            required /> -->
         </div>
       </div>
       <div class="row mb-1">

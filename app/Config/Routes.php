@@ -96,7 +96,7 @@ $routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static 
     $routes->put('update-honorarium-training/(:num)', 'Honorarium::updateHonorariumTrainingInfo/$1', ['as' => 'bills.training.update']);
 
     //$routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
-    $routes->get('fetch-honorarium-trainings/(:num)', 'Honorarium::getHonorariumTrainings/$1');
+    //$routes->get('fetch-honorarium-trainings/(:num)', 'Honorarium::getHonorariumTrainings/$1');
 
     /*$routes->get('/users', 'Admin::users', ['as' => 'admin.users']);
 $routes->get('/users/(:num)', 'Admin::user/$1', ['as' => 'admin.user']);
@@ -107,6 +107,7 @@ $routes->get('/permissions/(:num)', 'Admin::permission/$1', ['as' => 'admin.perm
 });
 $routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user,user'], static function ($routes) {
     $routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
+    $routes->get('fetch-honorarium-trainings/(:num)', 'Honorarium::getHonorariumTrainings/$1');
 });
 
 $routes->group('reports', static function ($routes) {

@@ -238,8 +238,8 @@
                   </div>
                   <div class="col-md-6">
                     <label for="religion" class="form-label">Religion</label>
-                    <select id="religion"
-                      class="form-select <?=$validation->hasError('gender') ? 'border-danger' : ''?>" required>
+                    <select id="religion" name="religion"
+                      class="form-select <?=$validation->hasError('religion') ? 'border-danger' : ''?>" required>
                       <option value="">Select Religion</option>
                       <option value="Islam">Islam</option>
                       <option value="Hinduism">Hinduism</option>

@@ -70,13 +70,24 @@
               <td class="p-2">
                 <?=esc($value['department_name_new'] == '' ? $value['department_name'] : $value['department_name_new'])?>
               </td>
-              <td class="p-2">
+              <td class="p-2 text-center">
                 <?=esc($value['previous_training_inmonth'])?>
               </td>
-              <td class="p-2">
-                <?=esc($value['honorarium_position'])?>
+              <td class="p-2 text-center">
+                <?php if ($value['honorarium_position'] == 1) {
+                        echo '1st';
+                    } elseif ($value['honorarium_position'] == 2) {
+                        echo '2nd';
+                    } elseif ($value['honorarium_position'] == 3) {
+                        echo '3rd';
+                    } else {
+                        echo $value['honorarium_position'] . 'th';
+                }?>
               </td>
               <td class="p-2 d-flex justify-content-center">
+                <button class="btn btn-info btn-sm mx-2" onclick="loadTrainingView(<?=esc($value['id'])?>)"
+                  data-bs-toggle="modal" data-bs-target="#viewTrainingModal"><i class="fas fa-list"></i> View
+                  Trainings</button>
                 <a class="btn btn-primary btn-sm"
                   href="<?=base_url('bills/download-honorarium-form')?>/<?=esc($value['id'])?>" target="_blank"><i
                     class="fas fa-download"></i> Download</a>
@@ -88,4 +99,27 @@
       </div>
     </div>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="viewTrainingModal" tabindex="-1" aria-labelledby="viewTrainingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content" id="viewHonorariumTrainingContents"></div>
+    </div>
+  </div>
+  <?php $this->endSection()?>
+
+  <?php $this->section('pageScripts')?>
+  <script>
+  function loadTrainingView(honorariumId) {
+    $.ajax({
+      type: 'GET',
+      url: '<?php echo base_url(); ?>bills/fetch-honorarium-trainings/' + honorariumId,
+      success: function(response) {
+        $('#viewHonorariumTrainingContents').html(response);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+  </script>
   <?php $this->endSection()?>

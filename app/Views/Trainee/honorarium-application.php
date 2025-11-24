@@ -302,7 +302,8 @@
           <!-- Field 13: Total Previous Training with Course (In Month) - Dynamic Section Trigger -->
           <div class="col-md-6">
             <label for="previousTrainingMonths" class="form-label">
-              13) Total Previous Training with Course (In Month) ** Except Current Period of Training
+              13) Total Previous Training (accredited by BCPS) with Course (In Month) [Except Current Period of
+              Training]
             </label>
             <select name="coursePeriod" id="coursePeriod" class="form-select"
               onchange="togglePreviousTrainingDetails(this.value)" required>
@@ -310,7 +311,7 @@
               <?php
                   for ($cnt = 0; $cnt <= 54; $cnt = $cnt + 6) {
                   ?>
-              <option value="<?php echo $cnt; ?>"<?php if (($honorarium->maxHonorariumCnt * 6) == $cnt) {
+              <option value="<?php echo $cnt; ?>"<?php if ((count($totalTrainings) * 6) == $cnt) {
             echo 'selected';
     }
     ?>>
@@ -602,6 +603,10 @@ $(document).ready(function() {
     autoclose: true,
     todayHighlight: true
   });
+
+  <?php if (count($totalTrainings) > 0) {?>
+  togglePreviousTrainingDetails(<?=count($totalTrainings) * 6?>);
+  <?php }?>
 });
 
 // Helper function to initialize existing datepickers
@@ -699,13 +704,16 @@ function setDynamicFieldsRequired(isRequired) {
 
 function createTrainingRowHTML(id) {
 
+  const rowId = id - 1;
+  const prevHonorariumTrainings = <?=json_encode($totalTrainings)?>;
+
   return `
             <tr data-row-id="${id}">
                 <td class="p-2">
                     <select name="prevTrainingSlot[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Slot</option>
                         <?php for ($cnt = 1; $cnt <= 10; $cnt++) {?>
-                        <option value="<?php echo $cnt; ?>">
+                        <option value="<?php echo $cnt; ?>" ${prevHonorariumTrainings[rowId]?.slot_sl_no ==<?php echo $cnt; ?> ? 'selected' : ''}>
                           <?php echo $cnt ?><?php if ($cnt == 1) {
         echo 'st';
     } elseif ($cnt == 2) {
@@ -720,17 +728,18 @@ function createTrainingRowHTML(id) {
                     </select>
                 </td>
                 <td class="p-2">
-                    <input type="text" name="prevTrainingFromDt[${id}]" class="form-control text-center datepicker" required />
+                    <input type="text" name="prevTrainingFromDt[${id}]" class="form-control text-center datepicker" value="${prevHonorariumTrainings[rowId]?.training_from ?? ''}" required />
                 </td>
                 <td class="p-2">
-                    <input type="text" name="prevTrainingToDt[${id}]" class="form-control text-center datepicker" required />
+                    <input type="text" name="prevTrainingToDt[${id}]" class="form-control text-center datepicker" value="${prevHonorariumTrainings[rowId]?.training_to ?? ''}" required />
                 </td>
                 <td class="p-2">
                     <select name="prevTrainingDepartment[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Department</option>
                         <?php foreach ($specialities as $speciality) {?>
-                        <option value="<?php echo $speciality['speciality_id']; ?>">
-                          <?php echo $speciality['name']; ?></option>
+                        <option value="<?php echo $speciality['speciality_id']; ?>" ${prevHonorariumTrainings[rowId]?.speciality_id ==<?php echo $speciality['speciality_id']; ?> ? 'selected' : ''}>
+                          <?php echo $speciality['name']; ?>
+                        </option>
                         <?php }?>
                     </select>
                 </td>
@@ -738,7 +747,7 @@ function createTrainingRowHTML(id) {
                     <select name="prevTrainingInstitute[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Institute</option>
                         <?php foreach ($prevTrainingInstitutes as $prevTrainingInstitute) {?>
-                        <option value="<?php echo $prevTrainingInstitute['institute_id']; ?>"><?php echo $prevTrainingInstitute['name']; ?></option>
+                        <option value="<?php echo $prevTrainingInstitute['institute_id']; ?>" ${prevHonorariumTrainings[rowId]?.training_institute_id ==<?php echo $prevTrainingInstitute['institute_id']; ?> ? 'selected' : ''}><?php echo $prevTrainingInstitute['name']; ?></option>
                         <?php }?>
                     </select>
                 </td>
@@ -746,13 +755,13 @@ function createTrainingRowHTML(id) {
                     <select name="prevTrainingCategory[${id}]" class="form-select" required>
                         <option value="" disabled selected>Select Training Category</option>
                         <?php foreach ($trainingCategories as $category) {?>
-                        <option value="<?php echo $category['id']; ?>"><?php echo $category['training_category_title']; ?></option>
+                        <option value="<?php echo $category['id']; ?>" ${prevHonorariumTrainings[rowId]?.training_category_id ==<?php echo $category['id']; ?> ? 'selected' : ''}><?php echo $category['training_category_title']; ?></option>
                         <?php }?>
                     </select>
                 </td>
                 <td class="p-2 d-flex justify-content-center">
                     <div class="form-check form-check-inline text-center">
-                        <input type="checkbox" name="prevTrainingHonorariumTaken[${id}]" value="1" class="form-check-input">
+                        <input type="checkbox" name="prevTrainingHonorariumTaken[${id}]" class="form-check-input" ${prevHonorariumTrainings[rowId]?.honorarium_taken == 1 ? 'checked' : ''} />
                         <label class="form-check-label">Yes</label>
                     </div>
                 </td>
@@ -885,7 +894,7 @@ handlePreview = function() {
  */
 function renderPreview(data) {
 
-  console.log('Rendering preview with data:', data);
+  //console.log('Rendering preview with data:', data);
 
   const previewDiv = document.getElementById('previewData');
   let html = '';

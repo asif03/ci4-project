@@ -237,21 +237,49 @@ class TraineeController extends BaseController
 
     public function checkApplicationConstraints($regNo)
     {
+        $data = [
+            'isError'     => false,
+            'message'     => '',
+            'application' => null,
+        ];
+
+        //Training application opens
+        $trainingApplicationStatus = env('training.applicaion', 'close');
+        if ($trainingApplicationStatus == 'close') {
+            $data = [
+                'isError'     => true,
+                'message'     => 'Training application is not open right now!',
+                'application' => null,
+            ];
+
+            return $data;
+        }
+
         //Application already exists or not
         $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($regNo);
         if ($checkTrainingApplication) {
-            $data['isError'] = true;
-            $data['message'] = "You have already applied.";
+
+            $applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($regNo);
+            $data      = [
+                'isError'     => true,
+                'message'     => 'You have already applied for training.',
+                'application' => $applicant,
+            ];
+
             return $data;
         }
 
         $fcpsPartOneInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo($regNo);
-        //dd($fcpsPartOneInfo);
 
         //Applicant is passed before 2020
         if ($fcpsPartOneInfo['fcps_part_one_year'] < 2020) {
-            $data['isError'] = true;
-            $data['message'] = 'You are not eligible for application due to the completion of your FCPS Part-I before 2020.';
+
+            $data = [
+                'isError'     => true,
+                'message'     => 'You are not eligible for application due to the completion of your FCPS Part-I before 2020.',
+                'application' => null,
+            ];
+
             return $data;
         }
 
@@ -266,17 +294,18 @@ class TraineeController extends BaseController
                 ->countAllResults();
 
             if ($specialityCheck > 0) {
-                $data['isError'] = true;
-                $data['message'] = 'You are not eligible here for application. Go to e-Logbook for application.';
+
+                $data = [
+                    'isError'     => true,
+                    'message'     => 'You are not eligible here for application. Go to <a href="https://eportal.bcps.edu.bd/" target="_blank"><u>e-Logbook</u></a> for application.',
+                    'application' => null,
+                ];
             }
 
             return $data;
         }
 
-        $data['isError'] = false;
-        $data['message'] = "";
         return $data;
-
     }
 
     public function trainingApplication()
@@ -289,39 +318,48 @@ class TraineeController extends BaseController
             return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
         }
 
-        helper('form');
+        $applicantInfos = $this->checkApplicationConstraints(auth()->user()->username);
 
-        $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
-        $data['trainingInstitutes'] = $trainingInstitutes;
+        //dd($billInfos);
 
-        $mbbsInstitutes         = $this->mbbsInstituteModel->where('status', true)->findAll();
-        $data['mbbsInstitutes'] = $mbbsInstitutes;
-
-        $departments          = $this->specialityModel->where('status', true)->findAll();
-        $data['departments']  = $departments;
-        $data['specialities'] = $departments;
-        $designations         = $this->designationModel->where('status', true)->findAll();
-        $data['designations'] = $designations;
-
-        $banks         = $this->bankModel->where('status', true)->findAll();
-        $data['banks'] = $banks;
-
-        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
-
-        /*dd(auth()->user());
-        echo auth()->user()->reg_no;
-        dd($generalInfo);*/
-
-        $res = $this->checkApplicationConstraints($generalInfo['reg_no']);
-
-        if (!$res['isError']) {
-            $data['response']    = $res;
-            $data['generalInfo'] = $generalInfo;
+        if ($applicantInfos['isError']) {
+            return view('Trainee/application-status', $applicantInfos);
         } else {
-            $data['response'] = $res;
-        }
 
-        return view('Trainee/training-application', $data);
+            helper('form');
+
+            $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
+            $data['trainingInstitutes'] = $trainingInstitutes;
+
+            $mbbsInstitutes         = $this->mbbsInstituteModel->where('status', true)->findAll();
+            $data['mbbsInstitutes'] = $mbbsInstitutes;
+
+            $departments          = $this->specialityModel->where('status', true)->findAll();
+            $data['departments']  = $departments;
+            $data['specialities'] = $departments;
+            $designations         = $this->designationModel->where('status', true)->findAll();
+            $data['designations'] = $designations;
+
+            $banks         = $this->bankModel->where('status', true)->findAll();
+            $data['banks'] = $banks;
+
+            $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
+
+            /*dd(auth()->user());
+            echo auth()->user()->reg_no;
+            dd($generalInfo);*/
+
+            $res = $this->checkApplicationConstraints($generalInfo['reg_no']);
+
+            if (!$res['isError']) {
+                $data['response']    = $res;
+                $data['generalInfo'] = $generalInfo;
+            } else {
+                $data['response'] = $res;
+            }
+
+            return view('Trainee/training-application', $data);
+        }
     }
 
     public function storeTrainingApplication()
@@ -357,6 +395,7 @@ class TraineeController extends BaseController
             ],
             'mobile'      => 'required',
             'email'       => 'required',
+            '',
 
             /*'trainees'              => 'required|is_natural',
         'facultyMembers'        => 'required|is_natural',
@@ -378,38 +417,59 @@ class TraineeController extends BaseController
             return $this->trainingApplication();
         }
 
+        //dd($data);
+
         // If you want to get the validated data.
         $validData = $this->validator->getValidated();
 
         //dd($validData);
 
-        $successId = 1;
-        /*$successId = $model->insert([
-        'reg_no'                   => $reg_no,
-        'training_institute_id'    => $validData['instituteName'],
-        'department_id'            => $validData['departmentName'],
-        'no_of_beds'               => $validData['beds'],
-        'no_of_trainees'           => $validData['trainees'],
-        'no_of_faculty_mem'        => $validData['facultyMembers'],
+        //$successId = 1;
 
-        'training_start_date'      => $validData['fromDate'],
-        'training_end_date'        => $validData['toDate'],
-        'countable_duration_month' => 6,
+        //echo $this->request->getPost('religion');
+        //die;
 
-        'supervisor_id'            => $supervisorId,
-        //'supervisor_name'          => $validData['supervisorName'],
-        //'designation_id'           => $validData['supervisorDesignation'],
-        //'subject_id'               => $validData['supervisorSubject'],
-        //'supervisor_mobile_no'     => $validData['supervisorMobile'],
+        $bcpsRegNo   = auth()->user()->username;
+        $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo($bcpsRegNo);
 
-        'attendance'               => $validData['attendance'],
-        'knowledge'                => $validData['knowledge'],
-        'skill'                    => $validData['skill'],
-        'attitude'                 => $validData['attitude'],
-        ]);*/
+        //dd($generalInfo);
+
+        $inputData = [
+            'name'               => $generalInfo['applicant_name'],
+            'father_spouse_name' => $generalInfo['father_name'],
+            'mother_name'        => $generalInfo['mother_name'],
+            'date_of_birth'      => $validData['dob'],
+            'nataionality'       => $validData['nationality'],
+            'religion'           => $this->request->getPost('religion'),
+            'nid'                => $validData['nationalID'],
+            'gander'             => $validData['gender'],
+            'address'            => $this->request->getPost('communicationAddress'),
+            'mobile'             => $validData['mobile'],
+            'telephone'          => $this->request->getPost('residenceTel'),
+            'email'              => $validData['email'],
+            'permanent_address'  => $this->request->getPost('permanentAddress'),
+
+            'bmdc_reg_type'      => $this->request->getPost('bmdcType'),
+            'bmdc_reg_no'        => $this->request->getPost('bmdcRegNo'),
+            //'bmdc_validity'      => $this->request->getPost('communicationAddress'),
+            'speciality_id'      => $generalInfo['subject_id'],
+            'fcps_roll'          => $this->request->getPost('fcpsRollNo'),
+            'fcps_year'          => $generalInfo['fcps_part_one_year'],
+            'fcps_month'         => $generalInfo['fcps_part_one_session'],
+            'fcps_reg_no'        => $bcpsRegNo,
+            'pen_no'             => $generalInfo['pen_number'],
+            'account_name'       => $generalInfo['applicant_name'],
+            //'bank_id'=>
+            //'branch_name'=>
+            //'account_no'=>
+            //'routing_number'
+        ];
+
+        //dd($inputData);
+
+        $successId = $this->applicantInformationModel->insert($inputData);
 
         if ($successId) {
-
             return redirect()->back()->with('success', 'Data saved successfully.');
         } else {
             return redirect()->back()->with('error', 'Ohh! Something went wrong...!');
@@ -498,6 +558,8 @@ class TraineeController extends BaseController
 
         $billInfos = $this->checkHonorariumRestrictions(auth()->user()->username);
 
+        //dd($billInfos);
+
         if ($billInfos['isError']) {
             return view('Trainee/honorarium-status', $billInfos);
         } else {
@@ -560,37 +622,72 @@ class TraineeController extends BaseController
                 $lastHonorariumData = $this->honorariumInformationModel->getBillInfos($whereLastHonorarium);
                 $prevTrainingData   = $this->honorariumPreviousTrainingModel->getPreviousTrainingsByApplicationId($applicant['applicant_id']);
 
-                foreach ($prevTrainingData as $prevTraining) {
-                    $training[] = [
-                        'id'                      => $prevTraining['id'],
-                        'slot_sl_no'              => $prevTraining['slot_sl_no'],
-                        'training_institute_name' => $prevTraining['training_institute_name'],
-                        'department_name'         => $prevTraining['department_name'],
-                        'training_from'           => $prevTraining['training_from'],
-                        'training_to'             => $prevTraining['training_to'],
-                        'training_category_title' => $prevTraining['training_category_title'],
-                        'honorarium_taken'        => $prevTraining['honorarium_taken'],
-                    ];
+                //dd($prevTrainingData);
+
+                if ($prevTrainingData) {
+                    foreach ($prevTrainingData as $prevTraining) {
+                        $trainings[] = [
+                            'id'                      => $prevTraining['id'],
+                            'honorarium_id'           => $prevTraining['honorarium_id'],
+                            'slot_sl_no'              => $prevTraining['slot_sl_no'],
+                            'training_from'           => $prevTraining['training_from'],
+                            'training_to'             => $prevTraining['training_to'],
+                            'training_institute_id'   => $prevTraining['training_institute_id'],
+                            'training_institute_name' => $prevTraining['training_institute_name'],
+                            'speciality_id'           => $prevTraining['speciality_id'],
+                            'department_name'         => $prevTraining['department_name'],
+                            'training_category_id'    => $prevTraining['training_category_id'],
+                            'training_category_title' => $prevTraining['training_category_title'],
+                            'honorarium_taken'        => $prevTraining['honorarium_taken'],
+                        ];
+                    }
+                } else {
+                    $trainings = [];
                 }
 
-                dd($training);
+                //dd($trainings);
+                //echo count($trainings);
+
+                $lastHonorariumData = [];
 
                 if (count($lastHonorariumData) > 0) {
-                    $prevTrainingData = array_merge($prevTrainingData, [
-                        'id' => null,
 
-                    ]);
+                    if ($lastHonorariumData[0]['honorarium_slot_id'] == 1) {
+                        $trainingFromDt = $lastHonorariumData[0]['honorarium_year'] . '-01-01';
+                        $trainingToDt   = $lastHonorariumData[0]['honorarium_year'] . '-06-30';
+                    } elseif ($lastHonorariumData[0]['honorarium_slot_id'] == 2) {
+                        $trainingFromDt = $lastHonorariumData[0]['honorarium_year'] . '-07-01';
+                        $trainingToDt   = $lastHonorariumData[0]['honorarium_year'] . '-12-31';
+                    }
 
+                    $lastTrainingData = [
+                        'id'                      => null,
+                        'honorarium_id'           => $lastHonorariumData[0]['id'],
+                        'slot_sl_no'              => count($trainings) + 1,
+                        'training_from'           => $trainingFromDt,
+                        'training_to'             => $trainingToDt,
+                        'training_institute_id'   => $lastHonorariumData[0]['training_institute_id'],
+                        'training_institute_name' => $lastHonorariumData[0]['training_institute_name'],
+                        'speciality_id'           => $lastHonorariumData[0]['department_id'],
+                        'department_name'         => $lastHonorariumData[0]['department_name'],
+                        'training_category_id'    => null,
+                        'training_category_title' => null,
+                        'honorarium_taken'        => true,
+                    ];
+
+                    $trainings[count($trainings) > 0 ? count($trainings) : 0] = $lastTrainingData;
+
+                    $data['totalTrainings'] = $trainings;
                 } else {
-                    $data['lastHonorarium'] = null;
+                    $data['totalTrainings'] = [];
                 }
-
-                dd($prevTrainingData);
 
                 if ($data['honorarium']->maxHonorariumCnt == null) {
                     $data['honorarium']->maxHonorariumCnt = 0;
                 }
             }
+
+            //dd($data);
 
             return view('Trainee/honorarium-application', $data);
         }
@@ -796,7 +893,8 @@ class TraineeController extends BaseController
             $builder->where('honorarium_year', $data['honorariumYear']);
             $query            = $builder->get();
             $maxBillSerialRow = $query->getRowArray();
-            $maxBillSerial    = $maxBillSerialRow['bill_sl_no'] + 1 ?? 751; // default 0 if null
+
+            $maxBillSerial = $maxBillSerialRow['bill_sl_no'] ?? env('bill.startSlNo', 1); // default 1 if null
 
             $department = $this->specialityModel->find($data['currentDepartment']);
 
@@ -811,12 +909,13 @@ class TraineeController extends BaseController
                 'honorarium_year'           => $data['honorariumYear'],
                 'previous_training_inmonth' => $data['coursePeriod'],
                 'honorarium_position'       => $data['honorariumPosition'],
-                'bill_sl_no'                => $maxBillSerial,
+                'bill_sl_no'                => $maxBillSerial + 1,
             ];
 
             $newHonorariumId = $this->honorariumInformationModel->insert($savedData);
 
             if ($newHonorariumId) {
+
                 //Update applicant info
                 $updatedData = [
                     'date_of_birth' => $data['dob'],
@@ -841,7 +940,7 @@ class TraineeController extends BaseController
                 $approvedHonorariums = $this->honorariumInformationModel->getApprovedHonorariumByApplicantId($applicant['applicant_id']);
 
                 if ($approvedHonorariums) {
-                    if (count($approvedHonorariums) > 0) {
+                    if (count($approvedHonorariums) == 0) {
                         $updatedData = array_merge($updatedData, [
                             'bank_id'        => $data['bank'],
                             'branch_name'    => $data['branchName'],
@@ -852,6 +951,11 @@ class TraineeController extends BaseController
                 }
 
                 $this->applicantInformationModel->update($applicant['applicant_id'], $updatedData);
+
+                //print_r($approvedHonorariums);
+                //  print_r($data);
+                //print_r($updatedData);
+                //dd($data);
 
                 //Inser previous training details
                 if ($data['coursePeriod'] > 0) {
@@ -905,30 +1009,5 @@ class TraineeController extends BaseController
                 'message' => 'A server error occurred during data saving.',
             ])->setStatusCode(500);
         }
-
-        /*$data = $request->getPost('formData');
-
-    // Check if data was successfully received
-    if (empty($data)) {
-    return $this->response->setJSON([
-    'status'  => 'error',
-    'message' => 'No form data received or data structure is incorrect.',
-    ])->setStatusCode(400); // HTTP 400 Bad Request
     }
-
-    $nidNo        = $data['nidNo'];
-    $bmdcValidity = $data['bmdcValidity'];
-    // ... retrieve all other fields you need ...
-
-    // --- Step 1: Server-Side Validation ---
-    // You should perform model or service validation here using CI4's Validation library
-    if ($bmdcValidity < date('Y-m-d')) {
-    return $this->response->setJSON([
-    'status'  => 'error',
-    'message' => 'BMDC Validity date is expired.',
-    ]);
-    }*/
-
-    }
-
 }
