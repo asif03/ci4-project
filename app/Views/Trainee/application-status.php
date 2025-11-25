@@ -46,7 +46,7 @@
         <table class="table table-bordered table-striped align-middle">
           <thead class="table-warning">
             <tr>
-              <th class="text-nowrap">BMDC Reg. No.</th>
+              <th>BMDC Reg. No.</th>
               <th class="text-nowrap">BMDC Validity</th>
               <th class="text-nowrap">BCPS Online Reg. No.</th>
               <th class="text-nowrap">Part-I Passed Session</th>
@@ -55,31 +55,21 @@
             </tr>
           </thead>
           <tbody>
-            <?php
-                if (isset($application) && count($application) > 0) {
-                foreach ($application as $value) {?>
+            <?php if (isset($application) && count($application) > 0) {?>
             <tr>
+              <td><?=esc($application['bmdc_reg_no'])?></td>
+              <td><?=esc($application['bmdc_validity'])?></td>
+              <td class="p-2"><?=esc($application['fcps_reg_no'])?></td>
+              <td class="p-2"><?=esc($application['fcps_month'])?>, <?=esc($application['fcps_year'])?></td>
+              <td class="p-2"><?=esc($application['fcps_specility_name'])?></td>
               <td class="p-2">
-
-              </td>
-              <td class="p-2">
-
-              </td>
-              <td class="p-2">
-
-              </td>
-              <td class="p-2">
-
-              </td>
-              <td class="p-2 text-center">
-
-              </td>
-              <td class="p-2 text-center">
-
+                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#viewApplicationModal"
+                  onclick="loadApplicationView(<?=esc($application['applicant_id'])?>)"><i class="fa fa-eye"
+                    aria-hidden="true"></i></button>
               </td>
             </tr>
-            <?php }
-            } else {?>
+            <?php } else {?>
             <tr>
               <td class="p-2 text-center" colspan="7">No Record Found.</td>
             </tr>
@@ -90,4 +80,34 @@
     </div>
   </div>
 </div>
+<!-- Modal For View Applicant -->
+<div class="modal fade" id="viewApplicationModal" tabindex="-1" aria-labelledby="applicationModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="applicationModalLabel">Applicant Info</h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="viewApplicantContents"></div>
+    </div>
+  </div>
+</div>
+<?php $this->endSection()?>
+
+<?php $this->section('pageScripts')?>
+<script>
+function loadApplicationView(applicantId) {
+  $.ajax({
+    type: 'GET',
+    url: '<?php echo base_url(); ?>applications/fetch-application/' + applicantId,
+    success: function(response) {
+      $('#viewApplicantContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
+</script>
 <?php $this->endSection()?>

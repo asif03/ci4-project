@@ -320,7 +320,7 @@ class TraineeController extends BaseController
 
         $applicantInfos = $this->checkApplicationConstraints(auth()->user()->username);
 
-        //dd($billInfos);
+        //dd($applicantInfos);
 
         if ($applicantInfos['isError']) {
             return view('Trainee/application-status', $applicantInfos);
@@ -340,7 +340,7 @@ class TraineeController extends BaseController
             $designations         = $this->designationModel->where('status', true)->findAll();
             $data['designations'] = $designations;
 
-            $banks         = $this->bankModel->where('status', true)->findAll();
+            $banks         = $this->bankModel->where('status', true)->orderBy('bank_name', 'ASC')->findAll();
             $data['banks'] = $banks;
 
             $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
@@ -378,24 +378,28 @@ class TraineeController extends BaseController
         //dd($this->request->getPost());
 
         $rules = [
-            'dob'         => [
+            'dob'           => [
                 'rules'  => 'required',
                 'errors' => [
                     'required' => 'Date of birth can\'t be blank.',
                 ],
             ],
-            'nationality' => [
+            'nationality'   => [
                 'label' => 'Nationality',
                 'rules' => 'required',
             ],
-            'gender'      => 'required',
-            'nationalID'  => [
+            'gender'        => 'required',
+            'nationalID'    => [
                 'label' => 'National ID',
                 'rules' => 'required',
             ],
-            'mobile'      => 'required',
-            'email'       => 'required',
-            '',
+            'mobile'        => 'required',
+            'email'         => 'required',
+
+            'bankName'      => 'required',
+            'bankBranch'    => 'required',
+            'accountNumber' => 'required',
+            'routingNumber' => 'required',
 
             /*'trainees'              => 'required|is_natural',
         'facultyMembers'        => 'required|is_natural',
@@ -435,34 +439,40 @@ class TraineeController extends BaseController
         //dd($generalInfo);
 
         $inputData = [
-            'name'               => $generalInfo['applicant_name'],
-            'father_spouse_name' => $generalInfo['father_name'],
-            'mother_name'        => $generalInfo['mother_name'],
-            'date_of_birth'      => $validData['dob'],
-            'nataionality'       => $validData['nationality'],
-            'religion'           => $this->request->getPost('religion'),
-            'nid'                => $validData['nationalID'],
-            'gander'             => $validData['gender'],
-            'address'            => $this->request->getPost('communicationAddress'),
-            'mobile'             => $validData['mobile'],
-            'telephone'          => $this->request->getPost('residenceTel'),
-            'email'              => $validData['email'],
-            'permanent_address'  => $this->request->getPost('permanentAddress'),
-
-            'bmdc_reg_type'      => $this->request->getPost('bmdcType'),
-            'bmdc_reg_no'        => $this->request->getPost('bmdcRegNo'),
+            'name'                  => $generalInfo['applicant_name'],
+            'father_spouse_name'    => $generalInfo['father_name'],
+            'mother_name'           => $generalInfo['mother_name'],
+            'date_of_birth'         => $validData['dob'],
+            'nataionality'          => $validData['nationality'],
+            'religion'              => $this->request->getPost('religion'),
+            'nid'                   => $validData['nationalID'],
+            'gander'                => $validData['gender'],
+            'address'               => $this->request->getPost('communicationAddress'),
+            'mobile'                => $validData['mobile'],
+            'telephone'             => $this->request->getPost('residenceTel'),
+            'email'                 => $validData['email'],
+            'permanent_address'     => $this->request->getPost('permanentAddress'),
+            'continuing'            => $this->request->getPost('residencyStatus'),
+            'continuing_start_date' => $this->request->getPost('residencyStartDate'),
+            'continuing_end_date'   => $this->request->getPost('residencyEndDate'),
+            'bmdc_reg_type'         => $this->request->getPost('bmdcType'),
+            'bmdc_reg_no'           => $this->request->getPost('bmdcRegNo'),
             //'bmdc_validity'      => $this->request->getPost('communicationAddress'),
-            'speciality_id'      => $generalInfo['subject_id'],
-            'fcps_roll'          => $this->request->getPost('fcpsRollNo'),
-            'fcps_year'          => $generalInfo['fcps_part_one_year'],
-            'fcps_month'         => $generalInfo['fcps_part_one_session'],
-            'fcps_reg_no'        => $bcpsRegNo,
-            'pen_no'             => $generalInfo['pen_number'],
-            'account_name'       => $generalInfo['applicant_name'],
-            //'bank_id'=>
-            //'branch_name'=>
-            //'account_no'=>
-            //'routing_number'
+            'speciality_id'         => $generalInfo['subject_id'],
+            'fcps_roll'             => $this->request->getPost('fcpsRollNo'),
+            'fcps_year'             => $generalInfo['fcps_part_one_year'],
+            'fcps_month'            => $generalInfo['fcps_part_one_session'],
+            'fcps_reg_no'           => $bcpsRegNo,
+            'pen_no'                => $generalInfo['pen_number'],
+
+            'mbbs_bds_year'         => $this->request->getPost('qualificationYear'),
+            'mbbs_institute_id'     => $this->request->getPost('qualificationInstitute'),
+
+            'account_name'          => $generalInfo['applicant_name'],
+            'bank_id'               => $validData['bankName'],
+            'branch_name'           => $validData['bankBranch'],
+            'account_no'            => $validData['accountNumber'],
+            'routing_number'        => $validData['routingNumber'],
         ];
 
         //dd($inputData);

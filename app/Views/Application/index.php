@@ -179,13 +179,13 @@
   </div>
 </div>
 
-<!-- Modal For Edit Applicant -->
+<!-- Modal For View Applicant -->
 <div class="modal fade" id="viewApplicationModal" tabindex="-1" aria-labelledby="applicationModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="applicationModalLabel">Applicant Info</h5>
+        <!-- <h5 class="modal-title" id="applicationModalLabel">Applicant Info</h5> -->
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="viewApplicantContents"></div>

@@ -1,4 +1,4 @@
-<?php //print_r($data['applicationInfo']); ?>
+<?php print_r($data['applicationInfo']); ?>
 <table width="100%" border="0">
   <tr>
     <td width="500px">
@@ -79,8 +79,8 @@
   </thead>
   <tbody>
     <tr>
-      <td>BMDC Reg. No: </td>
-      <td><?=esc($data['applicationInfo']['bmdc_reg_no'])?></td>
+      <td width="50%">BMDC Reg. No: </td>
+      <td width="50%"><?=esc($data['applicationInfo']['bmdc_reg_no'])?></td>
     </tr>
     <tr>
       <td>BMDC Reg. Validity: </td>
@@ -92,7 +92,14 @@
     </tr>
     <tr>
       <td>Institute: </td>
-      <td><?=esc($data['applicationInfo']['mbbs_bds_institute'])?></td>
+      <td>
+        <?php if ($data['applicationInfo']['mbbs_institute_id'] != '') {
+                echo $data['applicationInfo']['mbbs_institute_name_new'];
+            } else {
+                echo $data['applicationInfo']['mbbs_bds_institute'];
+            }
+        ?>
+      </td>
     </tr>
   <tbody>
 </table>
@@ -107,18 +114,20 @@
   </thead>
   <tbody>
     <tr>
-      <td>FCPS PART-I Passed Session: </td>
-      <td><?=esc($data['applicationInfo']['fcps_month'])?>, <?=esc($data['applicationInfo']['fcps_year'])?></td>
+      <td width="50%">FCPS PART-I Passed Session: </td>
+      <td width="50%">
+        <?=esc($data['applicationInfo']['fcps_month'])?>, <?=esc($data['applicationInfo']['fcps_year'])?>
+      </td>
     </tr>
     <tr>
-      <td>Specility: </td>
-      <td><?php if ($data['applicationInfo']['speciality_id'] != '') {
-                  echo $data['applicationInfo']['fcps_specility_name'];
-              } else {
-                  echo $data['applicationInfo']['fcps_speciallity'];
-              }
-
-          ?>
+      <td>Specility:</td>
+      <td>
+        <?php if ($data['applicationInfo']['speciality_id'] != '') {
+                echo $data['applicationInfo']['fcps_specility_name'];
+            } else {
+                echo $data['applicationInfo']['fcps_speciallity'];
+            }
+        ?>
       </td>
     </tr>
     <tr>
@@ -132,6 +141,39 @@
     <tr>
       <td>Pen No.: </td>
       <td><?=esc($data['applicationInfo']['pen_no'])?></td>
+    </tr>
+  <tbody>
+</table>
+
+
+<table class="table table-striped-columns table-bordered">
+  <thead>
+    <tr class="table-light">
+      <th colspan="2">
+        <h5 class="text-center">Bank Information</h5>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td width="50%">Name in block letters (as per Bank Account):</td>
+      <td width="50%"><?=esc($data['applicationInfo']['name'])?></td>
+    </tr>
+    <tr>
+      <td>Name of the bank:</td>
+      <td><?=esc($data['applicationInfo']['bank_name'])?></td>
+    </tr>
+    <tr>
+      <td>Name of the branch:</td>
+      <td><?=esc($data['applicationInfo']['branch_name'])?></td>
+    </tr>
+    <tr>
+      <td>Account Number (13 digits or above):</td>
+      <td><?=esc($data['applicationInfo']['account_no'])?></td>
+    </tr>
+    <tr>
+      <td>Routing Number:</td>
+      <td><?=esc($data['applicationInfo']['routing_number'])?></td>
     </tr>
   <tbody>
 </table>

@@ -11,8 +11,9 @@ class ApplicantInformationModel extends Model
 
     protected $allowedFields = ['name', 'father_spouse_name', 'mother_name', 'date_of_birth', 'nataionality', 'religion', 'nid',
         'address', 'mobile', 'telephone', 'email', 'permanent_address', 'fcps_reg_no', 'fcps_roll', 'mbbs_bds_year', 'mbbs_institute_id', 'mbbs_bds_institute',
+        'continuing', 'continuing_start_date', 'continuing_end_date', 'continuing_fcps_traning', 'gander',
         'bmdc_reg_no', 'bmdc_validity', 'fcps_year', 'fcps_month', 'pen_no', 'speciality_id', 'mid_term_session', 'mid_term_year', 'mid_term_result', 'mid_term_roll',
-        'bank_id', 'branch_name', 'account_no', 'routing_number', 'updated_at', 'updated_by'];
+        'account_name', 'bank_id', 'branch_name', 'account_no', 'routing_number', 'updated_at', 'updated_by'];
 
     public function getStatistics()
     {
@@ -71,8 +72,9 @@ class ApplicantInformationModel extends Model
     public function getApplicantById($applicantId)
     {
         $builder = $this->db->table('applicant_information ap');
-        $builder->select('ap.*, sp.name AS fcps_specility_name,bnk.bank_name');
+        $builder->select('ap.*, sp.name AS fcps_specility_name, bnk.bank_name, mbi.name AS mbbs_institute_name_new');
         $builder->join('speciality sp', 'ap.speciality_id = sp.speciality_id', 'left');
+        $builder->join('mbbs_institute mbi', 'ap.mbbs_institute_id = mbi.institute_id', 'left');
         $builder->join('banks bnk', 'ap.bank_id = bnk.id', 'left');
         $builder->where('ap.applicant_id', $applicantId);
 

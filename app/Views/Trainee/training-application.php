@@ -369,11 +369,12 @@
                     style="display: none;">
                     <div class="col-md-6">
                       <label for="residencyStartDate" class="form-label">Start Date</label>
-                      <input type="text" class="form-control" id="residencyStartDate" required>
+                      <input type="text" class="form-control" name="residencyStartDate" id="residencyStartDate"
+                        required>
                     </div>
                     <div class="col-md-6">
                       <label for="residencyEndDate" class="form-label">End Date</label>
-                      <input type="text" class="form-control" id="residencyEndDate" required>
+                      <input type="text" class="form-control" name="residencyEndDate" id="residencyEndDate" required>
                     </div>
                   </div>
 
@@ -394,7 +395,7 @@
 
                   <div class="col-md-6">
                     <label for="qualificationYear" class="form-label">Year of Qualification</label>
-                    <select id="qualificationYear" class="form-select" required>
+                    <select id="qualificationYear" name="qualificationYear" class="form-select" required>
                       <option value="" disabled selected>Select Year</option>
                       <?php
                           $current_year = date('Y');
@@ -408,7 +409,7 @@
 
                   <div class="col-md-6">
                     <label for="qualificationInstitute" class="form-label">Institute of Qualification</label>
-                    <select id="qualificationInstitute" class="form-select" required>
+                    <select id="qualificationInstitute" name="qualificationInstitute" class="form-select" required>
                       <option value="" disabled selected>Select Institute</option>
                       <?php foreach ($mbbsInstitutes as $institute): ?>
                       <option value="<?=esc($institute['institute_id'])?>"
@@ -467,7 +468,46 @@
               <!-- NEW STEP 7: Personal Bank Information (Shifted from old Step 6) -->
               <div class="tab-pane fade" id="tab-step-7" role="tabpanel" aria-labelledby="pills-step-7-tab">
                 <h4 class="section-header text-primary text-center">Applicant's Personal Bank Information</h4>
+                <p class="text-muted small mb-4 text-center">Provide your bank details for official transactions (e.g.,
+                  honorarium, refunds).</p>
+                <div class="row g-3 mb-4">
 
+                  <div class="col-md-6">
+                    <label for="bankName" class="form-label">Name of the Bank</label>
+                    <select id="bankName" name="bankName" class="form-select" required>
+                      <option value="" disabled selected>Select Bank</option>
+                      <?php foreach ($banks as $bank): ?>
+                      <option value="<?=esc($bank['id'])?>">
+                        <?=esc($bank['bank_name'])?>
+                      </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="bankBranch" class="form-label">Name of the Branch</label>
+                    <input type="text" class="form-control" id="bankBranch" name="bankBranch"
+                      placeholder="e.g., Dhaka Central Branch" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="accountNumber" class="form-label">Account Number (13 digits or above)</label>
+                    <input type="text" pattern="[0-9]{13,}" class="form-control" id="accountNumber" name="accountNumber"
+                      placeholder="Minimum 13 digits, numbers only" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="routingNumber" class="form-label">Routing Number</label>
+                    <input type="text" class="form-control" id="routingNumber" name="routingNumber"
+                      placeholder="e.g., 090261019" required>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
               </div>
 
               <!-- NEW STEP 8: Required Document Attachments (Shifted from old Step 7) -->
@@ -514,8 +554,8 @@
   </div>
 </div>
 <?php $this->endSection()?>
-<?php $this->section('pageScripts')?>
 
+<?php $this->section('pageScripts')?>
 <script>
 $(document).ready(function() {
   $('#dob').datepicker({
