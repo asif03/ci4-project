@@ -56,6 +56,7 @@
             </tr>
           </thead>
           <tbody>
+            <?php if (isset($honorarium) && count($honorarium) > 0) {?>
             <?php foreach ($honorarium as $value) {?>
             <tr>
               <td class="p-2">
@@ -92,6 +93,10 @@
                   href="<?=base_url('bills/download-honorarium-form')?>/<?=esc($value['id'])?>" target="_blank"><i
                     class="fas fa-download"></i> Download</a>
               </td>
+            </tr>
+            <?php }} else {?>
+            <tr>
+              <td class="p-2 text-center" colspan="7">No Record Found.</td>
             </tr>
             <?php }?>
           </tbody>

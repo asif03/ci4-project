@@ -387,12 +387,10 @@
                 </div>
               </div>
 
-
               <!-- NEW STEP 3: MBBS/BDS Data (Shifted from old Step 2) -->
               <div class="tab-pane fade" id="tab-step-3" role="tabpanel" aria-labelledby="pills-step-3-tab">
                 <h4 class="section-header text-primary text-center">MBBS/BDS Data (Qualification)</h4>
                 <div class="row g-3 mb-4">
-
                   <div class="col-md-6">
                     <label for="qualificationYear" class="form-label">Year of Qualification</label>
                     <select id="qualificationYear" name="qualificationYear" class="form-select" required>
@@ -449,20 +447,241 @@
               <!-- NEW STEP 4: Current Training (Shifted from old Step 3) -->
               <div class="tab-pane fade" id="tab-step-4" role="tabpanel" aria-labelledby="pills-step-4-tab">
                 <h4 class="section-header text-primary text-center">Current Training Details</h4>
+                <div class="row g-3 mb-4">
+                  <div class="col-md-12 mt-3 d-flex justify-content-center align-items-center">
+                    <label class="form-label mb-2 fw-bold">Are you continuing the FCPS training?</label>
+                    <div class="d-flex align-items-center">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="currentFCPSTrainingStatus"
+                          id="currentFCPSTrainingStatusYes" value="1" onclick="toggleCurrentTraining(true)" required>
+                        <label class="form-check-label" for="currentFCPSTrainingStatusYes">Yes</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="currentFCPSTrainingStatus"
+                          id="currentFCPSTrainingStatusNo" value="0" onclick="toggleCurrentTraining(false)" checked
+                          required>
+                        <label class="form-check-label" for="currentFCPSTrainingStatusNo">No</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Conditional FCPS Training Container -->
+                  <div id="currentFCPSTrainingContainer" class="col-md-12 row mx-3 p-3 border rounded g-3"
+                    style="display: none;">
+                    <div class="col-md-6">
+                      <label for="currentInstitute" class="form-label">Name of the Current Institute</label>
+                      <select id="currentInstitute" name="currentInstitute" class="form-select">
+                        <option value="" disabled selected>Select Institute</option>
+                        <?php foreach ($trainingInstitutes as $institute): ?>
+                        <option value="<?=esc($institute['name'])?>">
+                          <?=esc($institute['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
 
+                    <div class="col-md-6">
+                      <label for="currentDepartment" class="form-label">Name of the Department</label>
+                      <select id="currentDepartment" name="currentDepartment" class="form-select">
+                        <option selected disabled value="">Select a Department...</option>
+                        <?php foreach ($departments as $department): ?>
+                        <option value="<?=esc($department['name'])?>">
+                          <?=esc($department['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="supervisorName" class="form-label">Name of the Supervisor</label>
+                      <input type="text" class="form-control" name="supervisorName" id="supervisorName"
+                        placeholder="Dr. John Doe">
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="supervisorDesignation" class="form-label">Supervisor's Designation</label>
+                      <select id="supervisorDesignation" name="supervisorDesignation" class="form-select">
+                        <option selected disabled value="">Select Designation</option>
+                        <?php foreach ($designations as $designation): ?>
+                        <option value="<?=esc($designation['designation'])?>">
+                          <?=esc($designation['designation'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="startDate" class="form-label">Training Start Date</label>
+                      <input type="text" class="form-control" name="startDate" id="startDate">
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="endDate" class="form-label">Training End Date</label>
+                      <input type="text" class="form-control" name="endDate" id="endDate">
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
               </div>
 
               <!-- NEW STEP 5: Previous FCPS Training (Shifted from old Step 4) -->
               <div class="tab-pane fade" id="tab-step-5" role="tabpanel" aria-labelledby="pills-step-5-tab">
                 <h4 class="section-header text-primary text-center">Previous FCPS Training Records</h4>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" name="hasPreviousTraining" id="hasPreviousTraining"
+                    role="switch">
+                  <label class="form-check-label fw-bold" for="hasPreviousTraining">
+                    Have you obtained FCPS training before?
+                  </label>
+                </div>
 
+                <!-- Container for dynamically added training records -->
+                <div id="previousTrainingContainer" style="display: none;">
+                  <p class="text-muted small mb-3">Please mention here previous completed training of every six month
+                    duration (Date Format: YYYY-MM-DD).</p>
+
+                  <button type="button" class="btn btn-outline-success btn-sm mb-4" id="addTrainingRowBtn">
+                    <i class="fas fa-plus-circle me-2"></i>Add Training Record
+                  </button>
+                  <!-- Dynamic rows are added here by JS -->
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
 
               </div>
 
               <!-- NEW STEP 6: Future Training Choices (Shifted from old Step 5) -->
               <div class="tab-pane fade" id="tab-step-6" role="tabpanel" aria-labelledby="pills-step-6-tab">
                 <h4 class="section-header text-primary text-center">Future Fellowship Training Choices</h4>
+                <p class="text-muted small mb-4 text-center">[Mention the name of the institutes with department
+                  recognized by BCPS according to your choice where you want to obtain the fellowship training: (Please
+                  schedule the rest of training Including FCPS course and excluding current duration)]</p>
 
+                <!-- Choice 1 -->
+                <div class="p-3 mb-4 border border-info rounded-3 bg-light">
+                  <h6 class="mb-4 text-info">Choice #1 (Highest Priority)</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="futureInstitute1" class="form-label small">Name of the Institutes</label>
+                      <select id="futureInstitute1" name="futureInstitute[]" class="form-select" required>
+                        <option value="" disabled selected>Select Institute</option>
+                        <?php foreach ($trainingInstitutes as $institute): ?>
+                        <option value="<?=esc($institute['name'])?>">
+                          <?=esc($institute['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureDepartment1" class="form-label small">Name of the Department</label>
+                      <select id="futureDepartment1" name="futureDepartment[]" class="form-select" required>
+                        <option selected disabled value="">Select a Department</option>
+                        <?php foreach ($departments as $department): ?>
+                        <option value="<?=esc($department['name'])?>">
+                          <?=esc($department['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureStartDate1" class="form-label small">Start Date</label>
+                      <input type="text" id="futureStartDate1" name="futureStartDate[]" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureEndDate1" class="form-label small">End Date</label>
+                      <input type="text" id="futureEndDate1" name="futureEndDate[]" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Choice 2 -->
+                <div class="p-3 mb-4 border border-secondary rounded-3 bg-light">
+                  <h6 class="mb-4 text-secondary">Choice #2 (Medium Priority)</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="futureInstitute2" class="form-label small">Name of the Institutes</label>
+                      <select id="futureInstitute2" name="futureInstitute[]" class="form-select" required>
+                        <option value="" disabled selected>Select Institute</option>
+                        <?php foreach ($trainingInstitutes as $institute): ?>
+                        <option value="<?=esc($institute['name'])?>">
+                          <?=esc($institute['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureDepartment2" class="form-label small">Name of the Department</label>
+                      <select id="futureDepartment2" name="futureDepartment[]" class="form-select" required>
+                        <option selected disabled value="">Select a Department</option>
+                        <?php foreach ($departments as $department): ?>
+                        <option value="<?=esc($department['name'])?>">
+                          <?=esc($department['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureStartDate2" class="form-label small">Start Date</label>
+                      <input type="text" id="futureStartDate2" name="futureStartDate[]" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureEndDate2" class="form-label small">End Date</label>
+                      <input type="text" id="futureEndDate2" name="futureEndDate[]" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Choice 3 -->
+                <div class="p-3 mb-4 border border-secondary rounded-3 bg-light">
+                  <h6 class="mb-4 text-secondary">Choice #3 (Lowest Priority)</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="futureInstitute3" class="form-label small">Name of the Institutes</label>
+                      <select id="futureInstitute3" name="futureInstitute[]" class="form-select" required>
+                        <option value="" disabled selected>Select Institute</option>
+                        <?php foreach ($trainingInstitutes as $institute): ?>
+                        <option value="<?=esc($institute['name'])?>">
+                          <?=esc($institute['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureDepartment3" class="form-label small">Name of the Department</label>
+                      <select id="futureDepartment3" name="futureDepartment[]" class="form-select" required>
+                        <option selected disabled value="">Select a Department</option>
+                        <?php foreach ($departments as $department): ?>
+                        <option value="<?=esc($department['name'])?>">
+                          <?=esc($department['name'])?>
+                        </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureStartDate3" class="form-label small">Start Date</label>
+                      <input type="text" id="futureStartDate3" name="futureStartDate[]" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="futureEndDate3" class="form-label small">End Date</label>
+                      <input type="text" id="futureEndDate3" name="futureEndDate[]" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
               </div>
 
               <!-- NEW STEP 7: Personal Bank Information (Shifted from old Step 6) -->
@@ -512,13 +731,86 @@
 
               <!-- NEW STEP 8: Required Document Attachments (Shifted from old Step 7) -->
               <div class="tab-pane fade" id="tab-step-8" role="tabpanel" aria-labelledby="pills-step-8-tab">
-                <h4 class="section-header text-primary">VIII. Required Document Attachments</h4>
+                <h4 class="section-header text-primary text-center">Required Document Attachments</h4>
+                <p class="text-muted small mb-4 text-center">(Please upload copies of the required documents. File size
+                  must be below 300 kb for all image files.)</p>
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <label for="signatureFile" class="form-label">1. Applicant’s Signature with Date (File)</label>
+                    <input type="file" class="form-control" id="signatureFile" name="signatureFile" accept="image/*"
+                      required>
+                    <div class="file-constraint">Resolution: **300x80 pixels**, Size: **&lt;300 kb** (Image file)</div>
+                  </div>
 
+                  <div class="col-md-6">
+                    <label for="photoFile" class="form-label">2. Recent Passport Size Color Photograph</label>
+                    <input type="file" class="form-control" id="photoFile" name="photoFile" accept="image/*" required>
+                    <div class="file-constraint">Resolution: **300x300 pixels**, Size: **&lt;300 kb** (Image file)</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="fcpsPartIFile" class="form-label">3. Congratulation letter of FCPS Part-I/ FCPS Part-I
+                      passed document:</label>
+                    <input type="file" class="form-control" id="fcpsPartIFile" name="fcpsPartIFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="mbbsCertFile" class="form-label">4. Certificate of MBBS/BDS</label>
+                    <input type="file" class="form-control" id="mbbsCertFile" name="mbbsCertFile" accept=".pdf,image/*"
+                      required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="bmdcRegCertFile" class="form-label">5. Permanent registration certificate of
+                      BMDC</label>
+                    <input type="file" class="form-control" id="bmdcRegCertFile" name="bmdcRegCertFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="trainingCertFile" class="form-label">6. Training Certificates (if applicable)</label>
+                    <input type="file" class="form-control" id="trainingCertFile" name="trainingCertFile"
+                      accept=".pdf,image/*">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="chequeBookFile" class="form-label">7. A page of the Bank Cheque book of the
+                      applicant</label>
+                    <input type="file" class="form-control" id="chequeBookFile" name="chequeBookFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="nidFile" class="form-label">8. National ID Card</label>
+                    <input type="file" class="form-control" id="nidFile" name="nidFile" accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="joiningLetterFile" class="form-label">9. Joining Letter/Testimonial</label>
+                    <input type="file" class="form-control" id="joiningLetterFile" name="joiningLetterFile"
+                      accept=".pdf,image/*" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="otherDocsFile" class="form-label">10. Other Necessary Documents</label>
+                    <input type="file" class="form-control" id="otherDocsFile" name="otherDocsFile"
+                      accept=".pdf,image/*" multiple>
+                    <div class="file-constraint">You may upload multiple other documents.</div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary prev-tab"><i
+                      class="fas fa-arrow-left me-2"></i> Previous Step</button>
+                  <button type="button" class="btn btn-primary next-tab">Next Step <i
+                      class="fas fa-arrow-right ms-2"></i></button>
+                </div>
               </div>
 
               <!-- NEW STEP 9: Applicant's Declaration (Undertaking) (Shifted from old Step 8) -->
               <div class="tab-pane fade" id="tab-step-9" role="tabpanel" aria-labelledby="pills-step-9-tab">
-                <h4 class="section-header text-primary">IX. Applicant's Declaration (Undertaking)</h4>
+                <h4 class="section-header text-primary text-center">Applicant's Declaration (Undertaking)</h4>
 
                 <div class="declaration-box mb-4">
                   <div class="form-check">
@@ -558,6 +850,21 @@
 <?php $this->section('pageScripts')?>
 <script>
 $(document).ready(function() {
+  // Initialize any existing datepickers on page load
+  initDatepicker();
+
+  // When new rows are added dynamically
+  $(document).on('focus', '.datepicker', function() {
+    if (!$(this).hasClass('hasDatepicker')) {
+      $(this).datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true,
+        orientation: 'bottom'
+      }).addClass('hasDatepicker');
+    }
+  });
+
   $('#dob').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
@@ -588,8 +895,52 @@ $(document).ready(function() {
     todayHighlight: true
   });
 
+  $('#futureStartDate1').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
+
+  $('#futureEndDate1').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
+
+  $('#futureStartDate2').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
+
+  $('#futureEndDate2').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
+
+  $('#futureStartDate3').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
+
+  $('#futureEndDate3').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
 });
 
+// Helper function to initialize existing datepickers
+function initDatepicker() {
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    orientation: 'bottom'
+  });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const registrationForm = document.getElementById('registrationForm');
@@ -634,6 +985,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  const currentFCPSTrainingContainer = document.getElementById('currentFCPSTrainingContainer');
+  // Toggle visibility and required status of residency dates (Step 2)
+  window.toggleCurrentTraining = function(isVisible) {
+    if (isVisible) {
+      currentFCPSTrainingContainer.style.display = 'flex';
+      document.getElementById('currentInstitute').required = true;
+      document.getElementById('currentDepartment').required = true;
+      document.getElementById('supervisorName').required = true;
+      document.getElementById('supervisorDesignation').required = true;
+      document.getElementById('startDate').required = true;
+      document.getElementById('endDate').required = true;
+    } else {
+      currentFCPSTrainingContainer.style.display = 'none';
+      document.getElementById('currentInstitute').required = false;
+      document.getElementById('currentDepartment').required = false;
+      document.getElementById('supervisorName').required = false;
+      document.getElementById('supervisorDesignation').required = false;
+      document.getElementById('startDate').required = false;
+      document.getElementById('endDate').required = false;
+      // Clear values when hiding
+      document.getElementById('currentInstitute').value = '';
+      document.getElementById('currentDepartment').value = '';
+      document.getElementById('supervisorName').value = '';
+      document.getElementById('supervisorDesignation').value = '';
+      document.getElementById('startDate').value = '';
+      document.getElementById('endDate').value = '';
+    }
+  }
+
+
   function generateYearOptions(selectElement) {
     const currentYear = new Date().getFullYear();
     let options = '<option value="" disabled selected>Select Year</option>';
@@ -663,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <select name="prevInstitute[]" class="form-select" required>
                               <option value="" disabled selected>Select Institute</option>
                               <?php foreach ($trainingInstitutes as $institute): ?>
-                              <option value="<?=esc($institute['institute_id'])?>">
+                              <option value="<?=esc($institute['name'])?>">
                                 <?=esc($institute['name'])?>
                               </option>
                               <?php endforeach; ?>
@@ -673,9 +1054,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="col-md-6">
                             <label class="form-label small">Name of the Department</label>
                             <select name="prevDepartment[]" class="form-select" required>
-                              <option selected disabled value="">Select a Department...</option>
+                              <option selected disabled value="">Select a Department</option>
                               <?php foreach ($departments as $department): ?>
-                              <option value="<?=esc($department['speciality_id'])?>">
+                              <option value="<?=esc($department['name'])?>">
                                 <?=esc($department['name'])?>
                               </option>
                               <?php endforeach; ?>
@@ -690,8 +1071,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="col-md-6">
                             <label class="form-label small">Designation</label>
                             <select name="prevDesignation[]" class="form-select" required>
+                              <option selected disabled value="">Select Designation</option>
                               <?php foreach ($designations as $designation): ?>
-                              <option value="<?=esc($designation['id'])?>">
+                              <option value="<?=esc($designation['designation'])?>">
                                 <?=esc($designation['designation'])?>
                               </option>
                               <?php endforeach; ?>
@@ -700,12 +1082,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         <div class="col-md-6">
                             <label class="form-label small">Start Date</label>
-                            <input type="date" name="prevStartDate[]" class="form-control" required title="Format: YYYY-MM-DD">
+                            <input type="text" name="prevStartDate[]" class="form-control datepicker" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label small">End Date</label>
-                            <input type="date" name="prevEndDate[]" class="form-control" required title="Format: YYYY-MM-DD">
+                            <input type="text" name="prevEndDate[]" class="form-control datepicker" required>
                         </div>
                     </div>
                 </div>
@@ -905,8 +1287,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentStep === 8 && validateCurrentTab()) {
       console.log("Form is valid and submitted! All required data and files are being processed.");
 
+      registrationForm.submit();
+
       // Show a simple success message
-      const submitButton = this.querySelector('button[type="submit"]');
+      /*const submitButton = this.querySelector('button[type="submit"]');
       submitButton.textContent = 'Submission Complete!';
       submitButton.classList.remove('btn-success');
       submitButton.classList.add('btn-primary');
@@ -915,7 +1299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.innerHTML = '<i class="fas fa-check-circle me-2"></i> Submit Registration';
         submitButton.classList.add('btn-success');
         submitButton.classList.remove('btn-primary');
-      }, 3000);
+      }, 3000);*/
     } else if (currentStep !== 8) {
       // If submit is hit before the last step, navigate to the next incomplete step
       for (let i = 0; i < tabs.length; i++) {

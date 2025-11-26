@@ -439,40 +439,39 @@ class TraineeController extends BaseController
         //dd($generalInfo);
 
         $inputData = [
-            'name'                  => $generalInfo['applicant_name'],
-            'father_spouse_name'    => $generalInfo['father_name'],
-            'mother_name'           => $generalInfo['mother_name'],
-            'date_of_birth'         => $validData['dob'],
-            'nataionality'          => $validData['nationality'],
-            'religion'              => $this->request->getPost('religion'),
-            'nid'                   => $validData['nationalID'],
-            'gander'                => $validData['gender'],
-            'address'               => $this->request->getPost('communicationAddress'),
-            'mobile'                => $validData['mobile'],
-            'telephone'             => $this->request->getPost('residenceTel'),
-            'email'                 => $validData['email'],
-            'permanent_address'     => $this->request->getPost('permanentAddress'),
-            'continuing'            => $this->request->getPost('residencyStatus'),
-            'continuing_start_date' => $this->request->getPost('residencyStartDate'),
-            'continuing_end_date'   => $this->request->getPost('residencyEndDate'),
-            'bmdc_reg_type'         => $this->request->getPost('bmdcType'),
-            'bmdc_reg_no'           => $this->request->getPost('bmdcRegNo'),
+            'name'                    => $generalInfo['applicant_name'],
+            'father_spouse_name'      => $generalInfo['father_name'],
+            'mother_name'             => $generalInfo['mother_name'],
+            'date_of_birth'           => $validData['dob'],
+            'nataionality'            => $validData['nationality'],
+            'religion'                => $this->request->getPost('religion'),
+            'nid'                     => $validData['nationalID'],
+            'gander'                  => $validData['gender'],
+            'address'                 => $this->request->getPost('communicationAddress'),
+            'mobile'                  => $validData['mobile'],
+            'telephone'               => $this->request->getPost('residenceTel'),
+            'email'                   => $validData['email'],
+            'permanent_address'       => $this->request->getPost('permanentAddress'),
+            'continuing'              => $this->request->getPost('residencyStatus'),
+            'continuing_start_date'   => $this->request->getPost('residencyStartDate'),
+            'continuing_end_date'     => $this->request->getPost('residencyEndDate'),
+            'continuing_fcps_traning' => $this->request->getPost('currentFCPSTrainingStatus'),
+            'bmdc_reg_type'           => $this->request->getPost('bmdcType'),
+            'bmdc_reg_no'             => $this->request->getPost('bmdcRegNo'),
             //'bmdc_validity'      => $this->request->getPost('communicationAddress'),
-            'speciality_id'         => $generalInfo['subject_id'],
-            'fcps_roll'             => $this->request->getPost('fcpsRollNo'),
-            'fcps_year'             => $generalInfo['fcps_part_one_year'],
-            'fcps_month'            => $generalInfo['fcps_part_one_session'],
-            'fcps_reg_no'           => $bcpsRegNo,
-            'pen_no'                => $generalInfo['pen_number'],
-
-            'mbbs_bds_year'         => $this->request->getPost('qualificationYear'),
-            'mbbs_institute_id'     => $this->request->getPost('qualificationInstitute'),
-
-            'account_name'          => $generalInfo['applicant_name'],
-            'bank_id'               => $validData['bankName'],
-            'branch_name'           => $validData['bankBranch'],
-            'account_no'            => $validData['accountNumber'],
-            'routing_number'        => $validData['routingNumber'],
+            'speciality_id'           => $generalInfo['subject_id'],
+            'fcps_roll'               => $this->request->getPost('fcpsRollNo'),
+            'fcps_year'               => $generalInfo['fcps_part_one_year'],
+            'fcps_month'              => $generalInfo['fcps_part_one_session'],
+            'fcps_reg_no'             => $bcpsRegNo,
+            'pen_no'                  => $generalInfo['pen_number'],
+            'mbbs_bds_year'           => $this->request->getPost('qualificationYear'),
+            'mbbs_institute_id'       => $this->request->getPost('qualificationInstitute'),
+            'account_name'            => $generalInfo['applicant_name'],
+            'bank_id'                 => $validData['bankName'],
+            'branch_name'             => $validData['bankBranch'],
+            'account_no'              => $validData['accountNumber'],
+            'routing_number'          => $validData['routingNumber'],
         ];
 
         //dd($inputData);
@@ -480,6 +479,179 @@ class TraineeController extends BaseController
         $successId = $this->applicantInformationModel->insert($inputData);
 
         if ($successId) {
+
+            if ($this->request->getPost('currentFCPSTrainingStatus')) {
+                $this->db->table('fcps_traning')->insert([
+                    'applicant_id'    => $successId,
+                    'institute_name'  => $this->request->getPost('currentInstitute'),
+                    'department'      => $this->request->getPost('currentDepartment'),
+                    'supervisor_name' => $this->request->getPost('supervisorName'),
+                    'designation'     => $this->request->getPost('supervisorDesignation'),
+                    'start_date'      => $this->request->getPost('startDate'),
+                    'end_date'        => $this->request->getPost('endDate'),
+                ]);
+            }
+
+            // --- STEP 2: HANDLE FILE UPLOADS ---
+            $uploadedFiles  = $this->request->getFiles();
+            $savedFileNames = [];
+            $uploadPath     = WRITEPATH . 'uploads/applications/';
+
+            //dd($uploadedFiles);
+
+            // Ensure the upload directory exists
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+
+            // Loop through the expected file fields (enclosure1, enclosure2, etc.)
+            foreach ($uploadedFiles as $fieldName => $file) {
+
+                // Check if the file is a valid upload and the upload was successful
+                if ($file->isValid() && !$file->hasMoved()) {
+                    // Generate a secure, unique name for the file to prevent conflicts
+                    $newName = $file->getRandomName();
+
+                    // Move the file from temp storage to your desired folder
+                    $file->move($uploadPath, $newName);
+
+                    if ($fieldName == 'signatureFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'signature',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'photoFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'photograph',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'fcpsPartIFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'letter',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'mbbsCertFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'certificate',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'bmdcRegCertFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'registration',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'trainingCertFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'training_certificate',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'chequeBookFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'cheque',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'nidFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'nid_card',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'joiningLetterFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'other_document1',
+                            'fileName' => $newName,
+                        ];
+                    } elseif ($fieldName == 'otherDocsFile') {
+                        $savedFileNames[] = [
+                            'fileType' => 'other_document2',
+                            'fileName' => $newName,
+                        ];
+                    }
+
+                    //
+                    if (!empty($savedFileNames)) {
+
+                        $inputFileData = [];
+                        foreach ($savedFileNames as $fileData) {
+                            $inputFileData[] = [
+                                'applicant_id' => $successId,
+                                'file_name'    => $fileData['fileName'],
+                                'type'         => $fileData['fileType'],
+                                'status'       => 1,
+                            ];
+                        }
+
+                        $this->applicantFileModel->insertBatch($inputFileData);
+                    }
+
+                    if (isset($newName)) {
+                        // Reset for the next file
+                        unset($newName);
+                    }
+                } else if ($file->getError() !== UPLOAD_ERR_NO_FILE) {
+                    // Handle actual upload errors (e.g., file size, type)
+                    return $this->response->setJSON([
+                        'status'  => 'error',
+                        'message' => "File upload failed for {$fieldName}: " . $file->getErrorString(),
+                    ])->setStatusCode(400);
+                }
+            }
+
+            if ($this->request->getPost('hasPreviousTraining') == 'on') {
+                $previousInstitutes[]   = $this->request->getPost('prevInstitute');
+                $previousDepartments[]  = $this->request->getPost('prevDepartment');
+                $previousSupervisors[]  = $this->request->getPost('prevSupervisorName');
+                $previousDesignations[] = $this->request->getPost('prevDesignation');
+                $previousFromDates[]    = $this->request->getPost('prevStartDate');
+                $previousToDates[]      = $this->request->getPost('prevEndDate');
+
+                $inputPreviousTrainingData = [];
+                for ($i = 0; $i < count($previousInstitutes); $i++) {
+                    $inputPreviousTrainingData[] = [
+                        'applicant_id'    => $successId,
+                        'institute_name'  => $previousInstitutes[$i],
+                        'department'      => $previousDepartments[$i],
+                        'supervisor_name' => $previousSupervisors[$i],
+                        'designation'     => $previousDesignations[$i],
+                        'start_date'      => $previousFromDates[$i],
+                        'end_date'        => $previousToDates[$i],
+                    ];
+                }
+
+                //dd($inputPreviousTrainingData);
+
+                if (!empty($inputPreviousTrainingData)) {
+                    $this->db->table('fcps_training_before')->insertBatch($inputPreviousTrainingData);
+                }
+            }
+
+            //dd($this->request->getPost('hasPreviousTraining'));
+
+            if (!empty($this->request->getPost('futureInstitute'))) {
+                $futureInstitutes[]  = $this->request->getPost('futureInstitute');
+                $futureDepartments[] = $this->request->getPost('futureDepartment');
+                $futureFromDates[]   = $this->request->getPost('futureStartDate');
+                $futureToDates[]     = $this->request->getPost('futureEndDate');
+
+                $inputFutureTrainingData = [];
+                for ($i = 0; $i < count($futureInstitutes); $i++) {
+                    $inputFutureTrainingData[] = [
+                        'applicant_id'   => $successId,
+                        'institute_name' => $futureInstitutes[$i],
+                        'department'     => $futureDepartments[$i],
+                        'start_date'     => $futureFromDates[$i],
+                        'end_date'       => $futureToDates[$i],
+                    ];
+                }
+
+                //dd($inputFutureTrainingData);
+                if (!empty($inputFutureTrainingData)) {
+
+                    //dd($inputFutureTrainingData);
+                    $this->db->table('choice_institute')->insertBatch($inputFutureTrainingData);
+                }
+
+            }
+
             return redirect()->back()->with('success', 'Data saved successfully.');
         } else {
             return redirect()->back()->with('error', 'Ohh! Something went wrong...!');
@@ -528,7 +700,18 @@ class TraineeController extends BaseController
             return $data;
         }
 
-        $applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
+        $applicant                = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
+        $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($bcpsRegNo);
+
+        if (!$checkTrainingApplication) {
+
+            $data = [
+                'isError'    => true,
+                'message'    => 'Training application not found! Please apply before submit the bill form. For apply <a class="text-success" href="' . base_url("trainings/training-application") . '"><u>Click Here</u></a>',
+                'honorarium' => null,
+            ];
+            return $data;
+        }
 
         $where = [
             'hi.applicant_id'       => $applicant['applicant_id'],
@@ -557,18 +740,18 @@ class TraineeController extends BaseController
 
     public function honorariumBillApplication()
     {
-        // Check if the authenticated user has the 'trainee.honorarium.application' permission
+// Check if the authenticated user has the 'trainee.honorarium.application' permission
         if (!auth()->user()->can('trainee.honorarium.application')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-            //return redirect()->to('/403');
-            //return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
+// User does not have permission, so deny access.
+//return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+//return redirect()->to('/403');
+//return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
             return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to create bills.']);
         }
 
         $billInfos = $this->checkHonorariumRestrictions(auth()->user()->username);
 
-        //dd($billInfos);
+//dd($billInfos);
 
         if ($billInfos['isError']) {
             return view('Trainee/honorarium-status', $billInfos);
@@ -577,14 +760,6 @@ class TraineeController extends BaseController
             helper('form');
 
             $generalInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
-
-            $checkTrainingApplication = $this->applicantInformationModel->checkBcpsRegiAlreadyUsed($generalInfo['reg_no']);
-
-            if (!$checkTrainingApplication) {
-                $data['applicationExists'] = false;
-            } else {
-                $data['applicationExists'] = true;
-            }
 
             $trainingInstitutes = $this->trainingInstituteModel
                 ->where('honorarium_status', true)
@@ -618,8 +793,7 @@ class TraineeController extends BaseController
             );
 
             if ($applicant) {
-                $sqlHonorarium = "select MAX(honorarium_position) AS maxHonorariumCnt
-                    from honorarium_information where eligible_status='Y' AND bmdc_reg_no='" . $applicant['bmdc_reg_no'] . "' AND applicant_id=" . $applicant['applicant_id'];
+                $sqlHonorarium = "select MAX(honorarium_position) AS maxHonorariumCnt from honorarium_information where eligible_status='Y' AND bmdc_reg_no='" . $applicant['bmdc_reg_no'] . "' AND applicant_id=" . $applicant['applicant_id'];
 
                 $query              = $this->db->query($sqlHonorarium);
                 $data['honorarium'] = $query->getRow();
@@ -630,9 +804,10 @@ class TraineeController extends BaseController
                 ];
 
                 $lastHonorariumData = $this->honorariumInformationModel->getBillInfos($whereLastHonorarium);
-                $prevTrainingData   = $this->honorariumPreviousTrainingModel->getPreviousTrainingsByApplicationId($applicant['applicant_id']);
+                $prevTrainingData   =
+                $this->honorariumPreviousTrainingModel->getPreviousTrainingsByApplicationId($applicant['applicant_id']);
 
-                //dd($prevTrainingData);
+//dd($prevTrainingData);
 
                 if ($prevTrainingData) {
                     foreach ($prevTrainingData as $prevTraining) {
@@ -655,8 +830,8 @@ class TraineeController extends BaseController
                     $trainings = [];
                 }
 
-                //dd($trainings);
-                //echo count($trainings);
+//dd($trainings);
+//echo count($trainings);
 
                 $lastHonorariumData = [];
 
@@ -697,7 +872,7 @@ class TraineeController extends BaseController
                 }
             }
 
-            //dd($data);
+//dd($data);
 
             return view('Trainee/honorarium-application', $data);
         }
@@ -705,17 +880,17 @@ class TraineeController extends BaseController
 
     public function storeBillApplication()
     {
-        // Check if the authenticated user has the 'trainee.honorarium.application' permission
+// Check if the authenticated user has the 'trainee.honorarium.application' permission
         if (!auth()->user()->can('trainee.honorarium.application')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-            //return redirect()->to('/403');
+// User does not have permission, so deny access.
+//return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+//return redirect()->to('/403');
             return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
         }
 
         $request = service('request');
 
-        // --- STEP 1: RETRIEVE NON-FILE DATA ---
+// --- STEP 1: RETRIEVE NON-FILE DATA ---
         $collectedDataJson = $request->getPost('collectedDataJson');
         if (empty($collectedDataJson)) {
             return $this->response->setJSON([
@@ -724,7 +899,7 @@ class TraineeController extends BaseController
             ])->setStatusCode(400);
         }
 
-        // Decode the JSON string back into a PHP array
+// Decode the JSON string back into a PHP array
         $data = json_decode($collectedDataJson, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -744,21 +919,17 @@ class TraineeController extends BaseController
         $applicantId = $applicant['applicant_id'];
         $bmdcRegNo   = $applicant['bmdc_reg_no'];
 
-        // --- Step 1: Server-Side Validation ---
-        // You should perform model or service validation here using CI4's Validation library
-        if ($bmdcValidity < date('Y-m-d')) {
-            return $this->response->setJSON([
-                'status'  => 'error',
-                'message' => 'BMDC Validity date is expired.',
-            ]);
-        }
+// --- Step 1: Server-Side Validation ---
+// You should perform model or service validation here using CI4's Validation library
+        if ($bmdcValidity < date('Y-m-d')) {return $this->response->setJSON([
+            'status'  => 'error',
+            'message' => 'BMDC Validity date is expired.',
+        ]);}
 
-        if ($trainingType == 'Advance' && $data['coursePeriod'] < 24) {
-            return $this->response->setJSON([
-                'status'  => 'error',
-                'message' => 'For Advance training, previous training period must be at least 24 months.',
-            ]);
-        }
+        if ($trainingType == 'Advance' && $data['coursePeriod'] < 24) {return $this->response->setJSON([
+            'status'  => 'error',
+            'message' => 'For Advance training, previous training period must be at least 24 months.',
+        ]);}
 
         //print_r($data);
         //dd($data);
@@ -782,16 +953,16 @@ class TraineeController extends BaseController
         //Check mid-term result
         $query = $this->db->query('SELECT *
                                     FROM (
-                                        SELECT
-                                            `midterm_session`,
-                                            `midterm_year`,
-                                            `bmdc_reg_no`,
-                                            `exam_result`,
-                                            DENSE_RANK() OVER (
-                                                PARTITION BY `bmdc_reg_no`
-                                                ORDER BY `midterm_year` DESC, `midterm_session` DESC
-                                            ) AS ranking
-                                        FROM fcps_mid_term_applicants
+                                    SELECT
+                                    `midterm_session`,
+                                    `midterm_year`,
+                                    `bmdc_reg_no`,
+                                    `exam_result`,
+                                    DENSE_RANK() OVER (
+                                    PARTITION BY `bmdc_reg_no`
+                                    ORDER BY `midterm_year` DESC, `midterm_session` DESC
+                                    ) AS ranking
+                                    FROM fcps_mid_term_applicants
                                     ) AS ranked
                                     WHERE ranked.ranking = 1 AND ranked.bmdc_reg_no = "' . $bmdcRegNo . '"');
 
@@ -812,24 +983,18 @@ class TraineeController extends BaseController
                     'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
                 ]);
             }
-        } elseif ($honorariumPosition > 4 && $honorariumPosition < 7) {
+        } elseif ($honorariumPosition > 4 && $honorariumPosition < 7) {if ($midTermResult) {if (count($midTermResult) < 1) {return $this->response->setJSON([
+            'status'  => 'error',
+            'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
+        ]);}} else {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
+            ]);
+        }}
 
-            if ($midTermResult) {
-                if (count($midTermResult) < 1) {
-                    return $this->response->setJSON([
-                        'status'  => 'error',
-                        'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
-                    ]);
-                }
-            } else {
-                return $this->response->setJSON([
-                    'status'  => 'error',
-                    'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
-                ]);
-            }
-        }
-
-        /*echo '<pre>';
+        /*echo '
+        <pre>';
         print_r($midTermResult);
         echo '</pre>';
         dd($midTermResult);*/
@@ -963,7 +1128,7 @@ class TraineeController extends BaseController
                 $this->applicantInformationModel->update($applicant['applicant_id'], $updatedData);
 
                 //print_r($approvedHonorariums);
-                //  print_r($data);
+                // print_r($data);
                 //print_r($updatedData);
                 //dd($data);
 

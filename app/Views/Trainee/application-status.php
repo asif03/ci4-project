@@ -34,6 +34,18 @@
   <div class="card p-4 rounded-3 shadow-sm">
     <h3 class="main-title text-center">APPLICATION FOR TRAINING</h3>
     <p class="sub-title text-center">(Training allowances for the FCPS Part-II honorary trainees)</p>
+
+    <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success" role="alert">
+      <?=session()->getFlashdata('success')?>
+    </div>
+    <?php endif; ?>
+    <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger" role="alert">
+      <?=session()->getFlashdata('error')?>
+    </div>
+    <?php endif; ?>
+
     <div class="alert alert-danger text-center text-danger" role="alert">
       <h5><?=$message?></h5>
     </div>

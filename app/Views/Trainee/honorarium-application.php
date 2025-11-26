@@ -87,14 +87,6 @@
     </div>
     <?php endif; ?>
 
-    <?php
-        $applicationExists = true;
-    if (!$applicationExists): ?>
-    <div class="alert alert-danger fw-bold" role="alert">
-      <span class="text-danger"> Training application not found! Please apply before submit the bill form. For apply
-      </span><a class="text-success" href="<?=base_url('trainings/training-application')?>">Click Here</a>
-    </div>
-    <?php else: ?>
     <form action="#" method="post" id="honorariumForm" novalidate onsubmit="return false;">
       <!-- ========================================================= -->
       <!-- FORM ENTRY SECTION (Visible by default) -->
@@ -568,7 +560,6 @@
       </div>
       <div id="submissionMessage" class="mt-3 text-center" style="display: none;"></div>
     </div>
-    <?php endif; ?>
   </div>
 </div>
 <?php $this->endSection()?>
