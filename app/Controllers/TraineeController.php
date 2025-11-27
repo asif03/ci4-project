@@ -597,26 +597,30 @@ class TraineeController extends BaseController
             }
 
             if ($this->request->getPost('hasPreviousTraining') == 'on') {
-                $previousInstitutes[]   = $this->request->getPost('prevInstitute');
-                $previousDepartments[]  = $this->request->getPost('prevDepartment');
-                $previousSupervisors[]  = $this->request->getPost('prevSupervisorName');
-                $previousDesignations[] = $this->request->getPost('prevDesignation');
-                $previousFromDates[]    = $this->request->getPost('prevStartDate');
-                $previousToDates[]      = $this->request->getPost('prevEndDate');
+
+                $previousInstitutes   = $this->request->getPost('prevInstitute');
+                $previousDepartments  = $this->request->getPost('prevDepartment');
+                $previousSupervisors  = $this->request->getPost('prevSupervisorName');
+                $previousDesignations = $this->request->getPost('prevDesignation');
+                $previousFromDates    = $this->request->getPost('prevStartDate');
+                $previousToDates      = $this->request->getPost('prevEndDate');
 
                 $inputPreviousTrainingData = [];
-                for ($i = 0; $i < count($previousInstitutes); $i++) {
-                    $inputPreviousTrainingData[] = [
-                        'applicant_id'    => $successId,
-                        'institute_name'  => $previousInstitutes[$i],
-                        'department'      => $previousDepartments[$i],
-                        'supervisor_name' => $previousSupervisors[$i],
-                        'designation'     => $previousDesignations[$i],
-                        'start_date'      => $previousFromDates[$i],
-                        'end_date'        => $previousToDates[$i],
-                    ];
-                }
 
+                foreach ($previousInstitutes as $index => $institute) {
+
+                    if (!empty($institute)) {
+                        $inputPreviousTrainingData[] = [
+                            'applicant_id'    => $successId,
+                            'inistitute_name' => $institute,
+                            'department'      => $previousDepartments[$index],
+                            'supervisor_name' => $previousSupervisors[$index],
+                            'designation'     => $previousDesignations[$index],
+                            'start_date'      => $previousFromDates[$index],
+                            'end_date'        => $previousToDates[$index],
+                        ];
+                    }
+                }
                 //dd($inputPreviousTrainingData);
 
                 if (!empty($inputPreviousTrainingData)) {
@@ -627,29 +631,31 @@ class TraineeController extends BaseController
             //dd($this->request->getPost('hasPreviousTraining'));
 
             if (!empty($this->request->getPost('futureInstitute'))) {
-                $futureInstitutes[]  = $this->request->getPost('futureInstitute');
-                $futureDepartments[] = $this->request->getPost('futureDepartment');
-                $futureFromDates[]   = $this->request->getPost('futureStartDate');
-                $futureToDates[]     = $this->request->getPost('futureEndDate');
+
+                $futureInstitutes  = $this->request->getPost('futureInstitute');
+                $futureDepartments = $this->request->getPost('futureDepartment');
+                $futureFromDates   = $this->request->getPost('futureStartDate');
+                $futureToDates     = $this->request->getPost('futureEndDate');
 
                 $inputFutureTrainingData = [];
-                for ($i = 0; $i < count($futureInstitutes); $i++) {
-                    $inputFutureTrainingData[] = [
-                        'applicant_id'   => $successId,
-                        'institute_name' => $futureInstitutes[$i],
-                        'department'     => $futureDepartments[$i],
-                        'start_date'     => $futureFromDates[$i],
-                        'end_date'       => $futureToDates[$i],
-                    ];
+
+                foreach ($futureInstitutes as $i => $institute) {
+
+                    if (!empty($institute)) { // ignore empty rows
+                        $inputFutureTrainingData[] = [
+                            'applicant_id'   => $successId,
+                            'institute_name' => $institute,
+                            'department'     => $futureDepartments[$i],
+                            'start_date'     => $futureFromDates[$i],
+                            'end_date'       => $futureToDates[$i],
+                        ];
+                    }
                 }
-
                 //dd($inputFutureTrainingData);
-                if (!empty($inputFutureTrainingData)) {
 
-                    //dd($inputFutureTrainingData);
+                if (!empty($inputFutureTrainingData)) {
                     $this->db->table('choice_institute')->insertBatch($inputFutureTrainingData);
                 }
-
             }
 
             return redirect()->back()->with('success', 'Data saved successfully.');
