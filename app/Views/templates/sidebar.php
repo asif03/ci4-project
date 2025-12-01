@@ -69,13 +69,14 @@
             <p>Basic Information</p>
           </a>
         </li>
+        <?php if ($user && $user->inGroup('superadmin')) {?>
         <li class="nav-item <?=set_active('trainings/progress-reports')?>">
           <a href="<?=base_url('trainings/progress-reports')?>">
             <i class="fa fa-clipboard" aria-hidden="true"></i>
             <p>Progress Report</p>
           </a>
         </li>
-        <?php }}?>
+        <?php }}}?>
 
         <?php if ($user && $user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user', 'user')) {?>
         <li class="nav-section">

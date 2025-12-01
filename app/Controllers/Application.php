@@ -79,21 +79,30 @@ class Application extends BaseController
     {
         $photographTypes = ['photograph', 'signature'];
 
+        $applicationInfo = $this->applicationModel->getApplicantById($id);
+
+        if ($applicationInfo) {
+            $currentTraininngInfo = $this->applicationModel->getCurrentTrainingInfoByApplicantId($id);
+            $beforeTraininngInfo  = $this->applicationModel->getBeforeTrainingInfoByApplicantId($id);
+            $choiceTraininngInfo  = $this->applicationModel->getChoiceTrainingInfoByApplicantId($id);
+        }
+
         $applicantInfo = [
             'title'                  => 'Application',
-            'applicationInfo'        => $this->applicationModel->getApplicantById($id),
-            'trainingInfo'           => 'Training Information',
+            'applicationInfo'        => $applicationInfo,
+            'currentTraininngInfo'   => $currentTraininngInfo,
+            'beforeTraininngInfo'    => $beforeTraininngInfo,
+            'choiceTraininngInfo'    => $choiceTraininngInfo,
             'applicationAttachments' => $this->applicationAttachmentModel
                 ->where('applicant_id', $id)
                 ->whereIn('type', $photographTypes)
                 ->findAll(),
-
         ];
 
         /*echo '<pre>';
         print_r($applicantInfo);
-        echo '</pre>';*/
-        //die;
+        echo '</pre>';
+        die;*/
 
         return view('Application/view', ['data' => $applicantInfo]);
     }
@@ -422,17 +431,53 @@ class Application extends BaseController
     {
         $photographTypes = ['photograph', 'signature'];
 
-        $applicantInfo = [
-            'application'            => $this->applicationModel->getApplicantById($applicationId),
-            'trainingInfo'           => 'Training Information',
-            'applicationAttachments' => $this->applicationAttachmentModel
-                ->where('applicant_id', $applicationId)
-                ->whereIn('type', $photographTypes)
-                ->findAll(),
+        $applicantBasicInfo = $this->applicationModel->getApplicantById($applicationId);
 
+        if ($applicantBasicInfo) {
+            $currentTraininngInfo = $this->applicationModel->getCurrentTrainingInfoByApplicantId($applicationId);
+            $beforeTraininngInfo  = $this->applicationModel->getBeforeTrainingInfoByApplicantId($applicationId);
+            $choiceTraininngInfo  = $this->applicationModel->getChoiceTrainingInfoByApplicantId($applicationId);
+        }
+
+        $photo = $signature = null;
+
+        $applicantAttachments = $this->applicationAttachmentModel
+            ->where('applicant_id', $applicationId)
+            ->whereIn('type', $photographTypes)
+            ->findAll();
+
+        if (!empty($applicantAttachments)) {
+            foreach ($applicantAttachments as $file) {
+                if ($file['type'] === 'photograph') {
+                    $photo = $file['file_name'];
+                }
+                if ($file['type'] === 'signature') {
+                    $signature = $file['file_name'];
+                }
+            }
+
+            $attachments = [
+                'photograph' => $photo,
+                'signature'  => $signature,
+            ];
+        } else {
+            $attachments = [
+                'photograph' => null,
+                'signature'  => null,
+            ];
+        }
+
+        $applicantInfo = [
+            'application'            => $applicantBasicInfo,
+            'currentTraininngInfo'   => $currentTraininngInfo,
+            'beforeTraininngInfo'    => $beforeTraininngInfo,
+            'choiceTraininngInfo'    => $choiceTraininngInfo,
+            'applicationAttachments' => $attachments,
         ];
 
-        //return view('Application/pdf_form', $applicantInfo);
+        //dd($applicantInfo);
+
+        return view('Application/pdf_form', $applicantInfo);
 
         if ($applicantInfo) {
             $dompdf = new Dompdf();

@@ -10,6 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('/registration-no-sms', 'Home::registrationNoSms');
 $routes->get('/contact-us', 'Home::contactUs');
+$routes->get('/honorariums', 'Home::honorariums');
 
 $routes->get('/send-sms', function () {
     $smsService = new \App\Services\SmsService();
@@ -65,10 +66,10 @@ $routes->group('trainings', static function ($routes) {
 
 });
 
-$routes->group('applications', static function ($routes) {
+$routes->group('applications', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static function ($routes) {
     $routes->get('/', 'Application::index', ['as' => 'applications.index']);
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants', ['as' => 'applications.get']);
-    $routes->get('fetch-application/(:num)', 'Application::getApplication/$1', ['as' => 'applications.show']);
+
     $routes->get('edit/(:num)', 'Application::edit/$1', ['as' => 'applications.edit']);
     $routes->put('update-basic', 'Application::updateBasicInfo', ['as' => 'applications.basic.update']);
     $routes->put('update-fcps', 'Application::updateFcpsInfo', ['as' => 'applications.fcps.update']);
@@ -78,7 +79,10 @@ $routes->group('applications', static function ($routes) {
     $routes->post('fetch-files', 'Application::getFilesInfo');
     $routes->post('approve-applicant', 'Application::approveApplicant', ['as' => 'applications.approve']);
     $routes->post('reject-applicant', 'Application::rejectApplicant', ['as' => 'applications.reject']);
+});
 
+$routes->group('applications', ['filter' => 'groups:admin,rtm-admin,rtm-user,user'], static function ($routes) {
+    $routes->get('fetch-application/(:num)', 'Application::getApplication/$1', ['as' => 'applications.show']);
     $routes->get('download-application-form/(:num)', 'Application::downloadApplicationForm/$1');
 });
 

@@ -25,6 +25,11 @@ class Home extends BaseController
         return view('registration_no_sms');
     }
 
+    public function honorariums(): string
+    {
+        return view('honorariums');
+    }
+
     public function sendOtp()
     {
         $penNo        = $this->request->getPost('penNo');

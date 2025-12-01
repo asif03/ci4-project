@@ -81,6 +81,33 @@ class ApplicantInformationModel extends Model
         return $builder->get()->getRowArray();
     }
 
+    public function getCurrentTrainingInfoByApplicantId($applicantId)
+    {
+        $builder = $this->db->table('fcps_traning');
+        $builder->select('*');
+        $builder->where('applicant_id', $applicantId);
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getBeforeTrainingInfoByApplicantId($applicantId)
+    {
+        $builder = $this->db->table('fcps_training_before');
+        $builder->select('*');
+        $builder->where('applicant_id', $applicantId);
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getChoiceTrainingInfoByApplicantId($applicantId)
+    {
+        $builder = $this->db->table('choice_institute');
+        $builder->select('*');
+        $builder->where('applicant_id', $applicantId);
+
+        return $builder->get()->getResultArray();
+    }
+
     public function getApplicantInfoByRegNo($bcpsRegNo)
     {
         $builder = $this->db->table('applicant_information ap');

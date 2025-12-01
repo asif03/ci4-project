@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\FcpsPartOneModel;
+use App\Models\HonorariumInformationModel;
 use App\Models\InstituteModel;
 use App\Models\ProgressReportModel;
 
@@ -11,12 +12,14 @@ class Dashboard extends BaseController
     protected $trainingInstituteModel;
     protected $fcpsPartOneModel;
     protected $progressReportModel;
+    protected $honorariumInformationModel;
 
     public function __construct()
     {
-        $this->trainingInstituteModel = new InstituteModel();
-        $this->progressReportModel    = new ProgressReportModel();
-        $this->fcpsPartOneModel       = new FcpsPartOneModel();
+        $this->trainingInstituteModel     = new InstituteModel();
+        $this->progressReportModel        = new ProgressReportModel();
+        $this->fcpsPartOneModel           = new FcpsPartOneModel();
+        $this->honorariumInformationModel = new HonorariumInformationModel();
     }
 
     public function index(): string
@@ -28,6 +31,12 @@ class Dashboard extends BaseController
         //$progressReports = $this->progressReportModel->where('reg_no', $user->username)->where('status', true)->findAll();
 
         $progressReports = $this->progressReportModel->getProgressReportByRegNo($user->username);
+        $honorariumWhere = [
+            'ap.fcps_reg_no' => $user->username,
+        ];
+        $honorariumData = $this->honorariumInformationModel->getBillInfos($honorariumWhere);
+
+        //dd($honorariumData);
 
         $prgresScale = [
             'Poor'         => 1,
@@ -66,6 +75,7 @@ class Dashboard extends BaseController
             'userInfo'        => $user,
             'progressReports' => $progressReports,
             'progressCharts'  => $percentageOfProgress,
+            'honorariums'     => $honorariumData,
         ];
 
         // Check if the user is in the 'admin' group

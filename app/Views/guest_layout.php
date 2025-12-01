@@ -18,6 +18,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Font Awesome for a wide range of icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- DataTables CSS for Bootstrap 5 Integration -->
+  <link href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.css" rel="stylesheet">
   <style>
   body {
     font-family: 'Inter', sans-serif;
@@ -99,9 +102,16 @@
   <!-- Footer -->
   <?=$this->include('templates/guest_footer')?>
 
+  <!-- jQuery is required for DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
   <!-- Bootstrap 5 JS and Popper.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+  <!-- DataTables JS and Bootstrap 5 Integration -->
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
   <?php $this->renderSection('pageScripts')?>
 </body>
 

@@ -57,22 +57,6 @@ class TraineeController extends BaseController
         $this->db                              = \Config\Database::connect();
     }
 
-    public function trainees()
-    {
-        // Check if the authenticated user has the 'posts.edit' permission
-        if (!auth()->user()->can('training.basic.get')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-
-            $data['name'] = 'You are not authorized to edit posts.';
-        } else {
-            $data['name'] = 'Asif';
-        }
-
-        return view('Trainee/index', $data);
-
-    }
-
     public function traineeBasicInfo()
     {
         // Check if the authenticated user has the 'trainee.basic.info' permission
@@ -84,6 +68,8 @@ class TraineeController extends BaseController
         }
 
         $data['basicInfo'] = $this->fcpsPartOneModel->getPartOneTraineeByRegNo(auth()->user()->username);
+
+        //dd($data);
 
         return view('Trainee/basic-info', $data);
 
@@ -495,7 +481,8 @@ class TraineeController extends BaseController
             // --- STEP 2: HANDLE FILE UPLOADS ---
             $uploadedFiles  = $this->request->getFiles();
             $savedFileNames = [];
-            $uploadPath     = WRITEPATH . 'uploads/applications/';
+            //$uploadPath     = WRITEPATH . 'uploads/applications/';
+            $uploadPath = FCPATH . 'uploads/applications/';
 
             //dd($uploadedFiles);
 

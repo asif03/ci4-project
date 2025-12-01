@@ -72,7 +72,7 @@
 </header>
 <!-- Summary Cards Section -->
 <section class="row g-4 mb-4">
-  <div class="col-12 col-md-6 col-lg-3">
+  <!-- <div class="col-12 col-md-6 col-lg-3">
     <div class="card p-4 rounded-3 shadow-sm summary-card h-80">
       <div class="card-body p-0">
         <div class="d-flex align-items-center">
@@ -86,26 +86,36 @@
         </div>
       </div>
     </div>
+  </div> -->
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card p-4 rounded-3 shadow-sm summary-card h-80">
+      <div class="card-body p-0">
+        <div class="d-flex align-items-center">
+          <div class="p-3 rounded-circle bg-primary-subtle text-primary me-3">
+            <i class="fas fa-money-bill-alt card-icon"></i>
+          </div>
+          <div>
+            <div class="text-muted small fw-semibold">Honorarium Submitted</div>
+            <div class="fs-2 fw-bold text-dark"><?=esc(count($honorariums))?></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 <section class="row g-4 mb-4">
   <!-- Progress Chart Panel -->
-  <div class="col-lg-12">
+  <!-- <div class="col-lg-6">
     <div class="card p-4 rounded-3 shadow-sm h-100">
       <h5 class="fw-bold text-dark mb-4">My Progress</h5>
-      <!-- Flex container for the graph and scale -->
       <div class="d-flex align-items-start">
-        <!-- Progress Bars -->
-
         <?php if ($progressCharts !== []): ?>
         <div class="progress-bar-container w-75" style="justify-content:start !important;">
           <?php foreach ($progressCharts as $index => $barChart): ?>
-
           <div class="progress-bar-stack" style="height: <?=esc($barChart)?>%;">
             <div class="progress-bar-fill" style="height: 100%;"></div>
             <span class="progress-bar-label"><?=esc($index + 1)?> Report (<?=esc($barChart)?>%)</span>
           </div>
-
           <?php endforeach?>
         </div>
         <?php else: ?>
@@ -113,8 +123,6 @@
           No record found!
         </div>
         <?php endif?>
-
-        <!-- Progress Scale Legend -->
         <div class="ms-4">
           <h6 class="fw-semibold text-dark mb-2">Progress Scale:</h6>
           <ul class="list-group list-group-flush">
@@ -138,10 +146,62 @@
         </div>
       </div>
     </div>
+  </div> -->
+  <!-- Recent Announcements Panel -->
+  <div class="col-lg-12">
+    <div class="card p-4 rounded-3 shadow-sm">
+      <h5 class="fw-bold text-dark mb-4">Honorarium Records</h5>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="bg-light rounded-top-2">
+            <tr>
+              <th scope="col" class="py-3 px-4 rounded-start">Sl.</th>
+              <th scope="col" class="py-3 px-4">Session</th>
+              <th scope="col" class="py-3 px-4">Taining Type</th>
+              <th scope="col" class="py-3 px-4">Training Institute</th>
+              <th scope="col" class="py-3 px-4">Department</th>
+              <th scope="col" class="py-3 px-4">Honorarium Position</th>
+              <th scope="col" class="py-3 px-4 rounded-end">Status</th>
+            </tr>
+          </thead>
+          <tbody id="portfolioTableBody">
+            <?php if (count($honorariums) > 0): ?>
+            <?php foreach ($honorariums as $index => $honorarium): ?>
+            <tr class="bg-white border-bottom" data-record-id="1">
+              <th scope="row" class="py-4 px-4 fw-normal text-dark"><?=esc($index + 1)?></th>
+              <td class="py-4 px-4"><?=esc($honorarium['slot_name'] . ', ' . $honorarium['honorarium_year'])?></td>
+              <td class="py-4 px-4"><?=esc($honorarium['training_type'])?></td>
+              <td class="py-4 px-4"><?=esc($honorarium['training_institute_name'])?></td>
+              <td class="py-4 px-4">
+                <?=esc($honorarium['department_name_new'] == '' ? $honorarium['department_name'] : $honorarium['department_name_new'])?>
+              </td>
+              <td class="py-4 px-4">
+                <?php if ($honorarium['honorarium_position'] == 1) {
+                        echo '1st';
+                    } elseif ($honorarium['honorarium_position'] == 2) {
+                        echo '2nd';
+                    } elseif ($honorarium['honorarium_position'] == 3) {
+                        echo '3rd';
+                    } else {
+                        echo $honorarium['honorarium_position'] . 'th';
+                }?>
+              </td>
+              <td class="py-4 px-4"><span class="badge rounded-pill text-bg-success py-1 px-2">Completed</span></td>
+            </tr>
+            <?php endforeach?>
+            <?php else: ?>
+            <tr class="bg-white border-bottom">
+              <th scope="row" class="py-4 px-4 fw-normal text-dark text-center" colspan="8">No record found!</th>
+            </tr>
+            <?php endif?>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </section>
 <!-- Personal Records Table Panel -->
-<section class="mb-4">
+<!-- <section class="mb-4">
   <div class="card p-4 rounded-3 shadow-sm">
     <h5 class="fw-bold text-dark mb-4">Academic Records</h5>
     <div class="table-responsive">
@@ -224,22 +284,22 @@
     </div>
   </div>
 
-  <!-- Details Modal -->
-  <div class="modal fade" id="viewTrainingModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content rounded-3">
-        <div class="modal-header">
-          <h5 class="modal-title fw-bold" id="detailsModalLabel">Training Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4" id="viewProgressReportContents"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
-        </div>
+
+<div class="modal fade" id="viewTrainingModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-3">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="detailsModalLabel">Training Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body px-4" id="viewProgressReportContents"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
-</section>
+</div>
+</section> -->
 <?php $this->endSection()?>
 <?php $this->section('pageScripts')?>
 <script>

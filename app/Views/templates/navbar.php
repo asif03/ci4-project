@@ -18,6 +18,9 @@
         <li class="nav-item <?=($current == base_url('/') ? 'active' : 'text-muted')?>">
           <a class="nav-link" href="<?=base_url()?>">Home</a>
         </li>
+        <li class="nav-item <?=($current == base_url('honorariums') ? 'active' : 'text-muted')?>">
+          <a class="nav-link" href="<?=base_url('honorariums')?>">Honorarium</a>
+        </li>
         <li class="nav-item <?=($current == base_url('contact-us') ? 'active' : 'text-muted')?>">
           <a class="nav-link" href="<?=base_url('contact-us')?>">Contact Us</a>
         </li>

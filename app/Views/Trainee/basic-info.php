@@ -115,74 +115,13 @@
             <div class="fw-semibold text-muted">Online Reg. No./Reg. No. (after passing FCPS Part-I)</div>
             <div class="text-dark"><?=esc($basicInfo['reg_no'])?></div>
           </li>
-        </ul>
-      </div>
-    </div>
-
-
-    <div class="col-lg-6">
-      <div class="card info-card p-4 h-100">
-        <h5 class="fw-bold text-dark mb-4">Academic Details (MBBS)</h5>
-        <ul class="list-group list-group-flush info-list">
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Program</div>
-            <div class="text-dark">Medical Trainee Program</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Specialty</div>
-            <div class="text-dark">Cardiology</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Enrollment Date</div>
-            <div class="text-dark">Sep 1, 2022</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Total Courses Completed</div>
-            <div class="text-dark">15</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Current GPA</div>
-            <div class="text-dark">3.85</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Training Status</div>
-            <div class="badge bg-success py-2 px-3">Active</div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card info-card p-4">
-        <h5 class="fw-bold text-dark mb-4">Academic Details</h5>
-        <ul class="list-group list-group-flush info-list">
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Program</div>
-            <div class="text-dark">Medical Trainee Program</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Specialty</div>
-            <div class="text-dark">Cardiology</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Enrollment Date</div>
-            <div class="text-dark">Sep 1, 2022</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Total Courses Completed</div>
-            <div class="text-dark">15</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Current GPA</div>
-            <div class="text-dark">3.85</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div class="fw-semibold text-muted">Training Status</div>
-            <div class="badge bg-success py-2 px-3">Active</div>
+            <div class="fw-semibold text-muted">Registration No.</div>
+            <div class="text-dark"><?=esc($basicInfo['pen_number'])?></div>
           </li>
         </ul>
       </div>
     </div>
   </div>
-  <?php endif; ?>
 </div>
 <?php $this->endSection()?>

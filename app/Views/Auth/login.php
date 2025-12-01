@@ -54,7 +54,8 @@
       </button>
     </div>
     <div class="text-center">
-      <a href="#" class="text-green text-decoration-none fw-bold">Forgot Password?</a>
+      <a href="<?=base_url('registration-no-sms')?>" class="text-green text-decoration-none fw-bold">Forgot
+        Password?</a>
     </div>
     <hr class="my-4">
     <div class="text-center">

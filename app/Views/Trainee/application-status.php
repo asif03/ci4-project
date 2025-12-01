@@ -74,11 +74,14 @@
               <td class="p-2"><?=esc($application['fcps_reg_no'])?></td>
               <td class="p-2"><?=esc($application['fcps_month'])?>, <?=esc($application['fcps_year'])?></td>
               <td class="p-2"><?=esc($application['fcps_specility_name'])?></td>
-              <td class="p-2">
+              <td class="p-2 d-flex gap-2 justify-content-center">
                 <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal"
                   data-bs-target="#viewApplicationModal"
                   onclick="loadApplicationView(<?=esc($application['applicant_id'])?>)"><i class="fa fa-eye"
                     aria-hidden="true"></i></button>
+                <a class="btn btn-outline-info btn-sm"
+                  href="<?=base_url('applications/download-application-form')?>/<?=esc($application['applicant_id'])?>"
+                  target="_blank"><i class="fas fa-download"></i></a>
               </td>
             </tr>
             <?php } else {?>

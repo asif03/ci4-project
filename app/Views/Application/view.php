@@ -1,4 +1,3 @@
-<?php print_r($data['applicationInfo']); ?>
 <table width="100%" border="0">
   <tr>
     <td width="500px">
@@ -145,6 +144,103 @@
   <tbody>
 </table>
 
+<table class="table table-striped-row table-bordered">
+  <thead>
+    <tr class="table-light">
+      <th colspan="5">
+        <h5 class="text-center">Current Training Database (During application)</h5>
+      </th>
+    </tr>
+    <tr>
+      <th width="18%">Training Period</th>
+      <th width="35%">Institute Name</th>
+      <th>Department</th>
+      <th>Supervisor Name</th>
+      <th>Designation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if (!empty($data['currentTraininngInfo'])): ?>
+    <?php foreach ($data['currentTraininngInfo'] as $currentTraining): ?>
+    <tr>
+      <td><?=esc($currentTraining['start_date'])?> to <?=esc($currentTraining['end_date'])?></td>
+      <td><?=esc($currentTraining['institute_name'])?></td>
+      <td><?=esc($currentTraining['department'])?></td>
+      <td><?=esc($currentTraining['supervisor_name'])?></td>
+      <td><?=esc($currentTraining['designation'])?></td>
+    </tr>
+    <?php endforeach; ?>
+    <?php else: ?>
+    <tr>
+      <td colspan="5" class="text-center">No training information found.</td>
+    </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
+
+<table class="table table-striped-row table-bordered">
+  <thead>
+    <tr class="table-light">
+      <th colspan="5">
+        <h5 class="text-center">FCPS Training Before</h5>
+      </th>
+    </tr>
+    <tr>
+      <th width="18%">Training Period</th>
+      <th width="35%">Institute Name</th>
+      <th>Department</th>
+      <th>Supervisor Name</th>
+      <th>Designation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if (!empty($data['beforeTraininngInfo'])): ?>
+    <?php foreach ($data['beforeTraininngInfo'] as $beforeTraining): ?>
+    <tr>
+      <td><?=esc($beforeTraining['start_date'])?> to <?=esc($beforeTraining['end_date'])?></td>
+      <td><?=esc($beforeTraining['inistitute_name'])?></td>
+      <td><?=esc($beforeTraining['department'])?></td>
+      <td><?=esc($beforeTraining['supervisor_name'])?></td>
+      <td><?=esc($beforeTraining['designation'])?></td>
+    </tr>
+    <?php endforeach; ?>
+    <?php else: ?>
+    <tr>
+      <td colspan="5" class="text-center">No training information found.</td>
+    </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
+
+<table class="table table-striped-row table-bordered">
+  <thead>
+    <tr class="table-light">
+      <th colspan="5">
+        <h5 class="text-center">FCPS Training (Future Choice)</h5>
+      </th>
+    </tr>
+    <tr>
+      <th>Training Period</th>
+      <th>Institute Name</th>
+      <th>Department</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if (!empty($data['choiceTraininngInfo'])): ?>
+    <?php foreach ($data['choiceTraininngInfo'] as $choiceTraining): ?>
+    <tr>
+      <td><?=esc($choiceTraining['start_date'])?> to <?=esc($choiceTraining['end_date'])?></td>
+      <td><?=esc($choiceTraining['institute_name'])?></td>
+      <td><?=esc($choiceTraining['department'])?></td>
+    </tr>
+    <?php endforeach; ?>
+    <?php else: ?>
+    <tr>
+      <td colspan="5" class="text-center">No training information found.</td>
+    </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
 
 <table class="table table-striped-columns table-bordered">
   <thead>

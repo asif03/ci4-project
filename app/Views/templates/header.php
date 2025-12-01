@@ -265,7 +265,7 @@
                 <div class="u-text">
                   <h4><?=esc($user->full_name)?></h4>
                   <p class="text-muted"><?=esc($user->email)?></p>
-                  <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                  <!-- <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a> -->
                 </div>
               </div>
             </li>
