@@ -477,7 +477,7 @@ class Application extends BaseController
 
         //dd($applicantInfo);
 
-        return view('Application/pdf_form', $applicantInfo);
+        //return view('Application/pdf_form', $applicantInfo);
 
         if ($applicantInfo) {
             $dompdf = new Dompdf();

@@ -185,6 +185,7 @@ class HonorariumInformationModel extends Model
         $builder->join('honorarium_slot hs', 'hi.honorarium_slot_id = hs.id', 'left');
         $builder->where('hi.honorarium_year', $honorariumYear);
         $builder->where('hi.honorarium_slot_id', $honorariumSession);
+        $builder->orderBy('hi.bill_sl_no', 'ASC');
 
         return $builder->get()->getResultArray();
     }

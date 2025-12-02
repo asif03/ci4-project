@@ -18,12 +18,18 @@
   margin-bottom: 10px;
 }
 
-.form-title {
-  color: #007bff;
-  /* Primary color */
+.main-title {
+  color: #004c99;
   font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.sub-title {
+  color: #6c757d;
+  font-weight: 400;
+  font-size: 1rem;
   margin-bottom: 25px;
-  border-bottom: 2px solid #e9ecef;
+  border-bottom: 1px solid #dee2e6;
   padding-bottom: 15px;
 }
 
@@ -113,10 +119,9 @@
 
 <div class="page-content">
   <div class="card p-4 rounded-3 shadow-sm">
-    <h5 class="fw-bold text-dark mb-2">Apply for Training (9 Steps)</h5>
-    <p class="text-muted mb-2">
-      (Training allowances for the FCPS Part-II honorary trainees)
-    </p>
+    <h3 class="main-title text-center">APPLICATION FORM</h3>
+    <p class="sub-title text-center">(Training allowances for the FCPS Part-II honorary trainees)</p>
+
     <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success" role="alert">
       <?=session()->getFlashdata('success')?>
@@ -127,7 +132,15 @@
       <?=session()->getFlashdata('error')?>
     </div>
     <?php endif; ?>
-    <?=$validation->listErrors('my_list')?>
+
+    <?php if (session('errors')): ?>
+    <div class="alert alert-danger">
+      <?php foreach (session('errors') as $err): ?>
+      <div class="text-danger"><?=esc($err)?></div>
+      <?php endforeach?>
+    </div>
+    <?php endif; ?>
+
     <?php
     if ($response['isError']): ?>
     <div class="alert alert-danger fw-bold text-center" role="alert">
@@ -210,28 +223,28 @@
 
                   <div class="col-md-6">
                     <label for="dob" class="form-label">Date of Birth</label>
-                    <input type="text" class="form-control <?=$validation->hasError('dob') ? 'border-danger' : ''?>"
-                      id="dob" name="dob" value="<?=esc($generalInfo['date_of_birth'])?>" required>
+                    <input type="text" class="form-control <?=session('errors.dob') ? 'border-danger' : ''?>" id="dob"
+                      name="dob" value="<?=old('dob', $generalInfo['date_of_birth'] ?? '')?>">
                   </div>
 
                   <div class="col-md-6">
                     <label for="nationality" class="form-label">Nationality</label>
-                    <input type="text"
-                      class="form-control <?=$validation->hasError('nationality') ? 'border-danger' : ''?>"
-                      id="nationality" name="nationality" value="<?=set_value('nationality')?>" required>
+                    <input type="text" class="form-control <?=session('errors.nationality') ? 'border-danger' : ''?>"
+                      id="nationality" name="nationality" value="<?=old('dob', $generalInfo['nationality'] ?? '')?>">
                   </div>
 
                   <div class="col-md-6">
                     <label class="form-label">Gender</label>
                     <div class="d-flex align-items-center">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input <?=$validation->hasError('gender') ? 'border-danger' : ''?>"
-                          type="radio" name="gender" id="genderMale" value="Male" required>
+                        <input class="form-check-input <?=session('errors.gender') ? 'border-danger' : ''?>"
+                          type="radio" name="gender" id="genderMale" value="Male"
+                          <?=old('gender') == 'Male' ? 'checked' : ''?> required>
                         <label class="form-check-label" for="genderMale">Male</label>
                       </div>
                       <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Female"
-                          required>
+                          <?=old('gender') == 'Female' ? 'checked' : ''?> required>
                         <label class="form-check-label" for="genderFemale">Female</label>
                       </div>
                     </div>
@@ -239,27 +252,27 @@
                   <div class="col-md-6">
                     <label for="religion" class="form-label">Religion</label>
                     <select id="religion" name="religion"
-                      class="form-select <?=$validation->hasError('religion') ? 'border-danger' : ''?>" required>
+                      class="form-select <?=session('errors.religion') ? 'border-danger' : ''?>" required>
                       <option value="">Select Religion</option>
-                      <option value="Islam">Islam</option>
-                      <option value="Hinduism">Hinduism</option>
-                      <option value="Buddhism">Buddhism</option>
-                      <option value="Christianity">Christianity</option>
-                      <option value="Other">Other</option>
+                      <option value="Islam" <?=old('religion') == 'Islam' ? 'selected' : ''?>>Islam</option>
+                      <option value="Hinduism" <?=old('religion') == 'Hinduism' ? 'selected' : ''?>>Hinduism</option>
+                      <option value="Buddhism" <?=old('religion') == 'Buddhism' ? 'selected' : ''?>>Buddhism</option>
+                      <option value="Christianity" <?=old('religion') == 'Christianity' ? 'selected' : ''?>>Christianity
+                      </option>
+                      <option value="Other" <?=old('religion') == 'Other' ? 'selected' : ''?>>Other</option>
                     </select>
                   </div>
                   <div class="col-md-6">
                     <label for="nationalID" class="form-label">National ID No</label>
-                    <input type="text"
-                      class="form-control <?=$validation->hasError('nationalID') ? 'border-danger' : ''?>"
-                      id="nationalID" name="nationalID" value="<?=esc($generalInfo['national_id'])?>"
+                    <input type="text" class="form-control <?=session('errors.nationalID') ? 'border-danger' : ''?>"
+                      id="nationalID" name="nationalID" value="<?=old('dob', $generalInfo['national_id'] ?? '')?>"
                       placeholder="e.g., 19901234567890123" required>
                   </div>
                   <div class="col-md-6">
                     <label for="mobile" class="form-label">Mobile</label>
                     <input type="tel" class="form-control <?=$validation->hasError('mobile') ? 'border-danger' : ''?>"
-                      id="mobile" name="mobile" value="<?=esc($generalInfo['cell'])?>" placeholder="e.g., 01XXXXXXXXX"
-                      pattern="[0-9]{11}" required>
+                      id="mobile" name="mobile" value="<?=old('mobile', $generalInfo['cell'] ?? '')?>"
+                      placeholder="e.g., 01XXXXXXXXX" pattern="[0-9]{11}" required>
                   </div>
 
                   <div class="col-md-6">
@@ -420,20 +433,20 @@
 
                   <div class="col-md-6">
                     <label for="bmdcType" class="form-label">BMDC Registration Type</label>
-                    <select id="bmdcType" name="bmdcType" class="form-select" required>
+                    <select id="bmdcType" name="bmdcType" class="form-select">
                       <option value="" disabled selected>Select Session</option>
-                      <option value="MBBS">
+                      <option value="MBBS" <?=old('bmdcType') == 'MBBS' ? 'selected' : ''?>>
                         MBBS
                       </option>
-                      <option value="BDS">
+                      <option value="BDS" <?=old('bmdcType') == 'BDS' ? 'selected' : ''?>>
                         BDS</option>
                     </select>
                   </div>
 
                   <div class="col-md-6">
                     <label for="bmdcRegNo" class="form-label">BMDC Registration Number (Number Only)</label>
-                    <input type="number" class="form-control" id="bmdcRegNo" name="bmdcRegNo" placeholder="e.g., 12345"
-                      required>
+                    <input type="number" class="form-control" id="bmdcRegNo" name="bmdcRegNo"
+                      value="<?=old('bmdcRegNo')?>" placeholder="e.g., 12345">
                   </div>
                 </div>
                 <div class="d-flex justify-content-between mt-4">

@@ -3,16 +3,19 @@
 namespace App\Controllers;
 
 use App\Models\FcpsPartOneModel;
+use App\Models\HonorariumInformationModel;
 use App\Services\EmailService;
 use App\Services\SmsService;
 
 class Home extends BaseController
 {
     protected $fcpsPartOneModel;
+    protected $honorariumModel;
 
     public function __construct()
     {
         $this->fcpsPartOneModel = new FcpsPartOneModel();
+        $this->honorariumModel  = new HonorariumInformationModel();
     }
 
     public function index(): string
@@ -27,7 +30,11 @@ class Home extends BaseController
 
     public function honorariums(): string
     {
-        return view('honorariums');
+        $honorariumYear    = env('bill.currentYear', date('Y'));
+        $honorariumSession = env('bill.currentSlot', '1');
+        $bills             = $this->honorariumModel->exportBillInformation($honorariumYear, $honorariumSession);
+
+        return view('honorariums', ['bills' => $bills]);
     }
 
     public function sendOtp()

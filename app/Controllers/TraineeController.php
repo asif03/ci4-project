@@ -344,6 +344,8 @@ class TraineeController extends BaseController
                 $data['response'] = $res;
             }
 
+            //$data['validation'] = $this->validator;
+
             return view('Trainee/training-application', $data);
         }
     }
@@ -381,11 +383,23 @@ class TraineeController extends BaseController
             ],
             'mobile'        => 'required',
             'email'         => 'required',
-
             'bankName'      => 'required',
             'bankBranch'    => 'required',
             'accountNumber' => 'required',
             'routingNumber' => 'required',
+            'bmdcType'      => [
+                'label' => 'BMDC Reg. Type',
+                'rules' => 'required',
+            ],
+            'bmdcRegNo'     => [
+                // Rule format: composite_unique[table_name.first_column,second_column,third_column,...]
+                // We are checking if the combination of 'unique_id' AND 'user_type_id' is unique in the 'users' table.
+                'rules'  => 'required|composite_unique[applicant_information.bmdc_reg_type,bmdc_reg_no]',
+                'errors' => [
+                    'composite_unique' => 'The provided BMDC Reg. No. is already in use. Please check and try again.',
+                    'required'         => 'The BMDC Reg. No. is required.',
+                ],
+            ],
 
             /*'trainees'              => 'required|is_natural',
         'facultyMembers'        => 'required|is_natural',
@@ -404,7 +418,9 @@ class TraineeController extends BaseController
         $data = $this->request->getPost(array_keys($rules));
 
         if (!$this->validateData($data, $rules)) {
-            return $this->trainingApplication();
+            //return $this->trainingApplication();
+            //dd($this->validator->getErrors());
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         //dd($data);
@@ -928,13 +944,11 @@ class TraineeController extends BaseController
         //dd($data);
 
         //Already applied check
-        {
-            $billInfos = $this->honorariumInformationModel->getBillInfos([
-                'hi.applicant_id'       => $applicantId,
-                'hi.honorarium_slot_id' => $data['honorariumPeriod'],
-                'hi.honorarium_year'    => $data['honorariumYear'],
-            ]);
-        }
+        $billInfos = $this->honorariumInformationModel->getBillInfos([
+            'hi.applicant_id'       => $applicantId,
+            'hi.honorarium_slot_id' => $data['honorariumPeriod'],
+            'hi.honorarium_year'    => $data['honorariumYear'],
+        ]);
 
         if (count($billInfos) > 0) {
             return $this->response->setJSON([

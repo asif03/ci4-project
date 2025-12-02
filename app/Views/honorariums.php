@@ -1,6 +1,14 @@
 <?php $this->extend('guest_layout')?>
 <?php $this->section('pageStyles')?>
 <style>
+:root {
+  --primary-color: #2a6135;
+  /* Deep blue for BCPS branding */
+  --secondary-color: #007bff;
+  --success-color: #198754;
+  --light-bg: #f8f9fa;
+}
+
 /* Adjust DataTables elements */
 .dataTables_wrapper .row:first-child,
 .dataTables_wrapper .row:last-child {
@@ -8,7 +16,7 @@
 }
 
 .table thead th {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color) !important;
   color: white;
   border-bottom: 2px solid #0056b3;
   cursor: pointer;
@@ -78,154 +86,57 @@
 <?php $this->endSection()?>
 <?php $this->section('main')?>
 <div class="container">
-  <h3 class="text-center">Honorarium Application</h3>
   <div class="row">
     <!-- APPLICATION LIST VIEW (Main Content) -->
     <div class="col-lg-8">
       <div class="card p-4 mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="card-title mb-0">My Honorarium Claims</h4>
-          <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#applicationModal">
-            <i class="fas fa-plus-circle me-2"></i> New Application
-          </button>
+          <h4 class="card-title mb-0">List of Honorarium Bill Submitted</h4>
+          <a href="<?=base_url('login')?>" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus-circle me-2"></i> Apply for Bill
+          </a>
         </div>
-
         <div class="table-responsive">
           <table class="table table-striped table-hover align-middle" id="honorariumTable">
             <thead>
               <tr>
-                <th>#ID</th>
-                <th>Date Submitted</th>
-                <th>Training Type</th>
-                <th>Period/Year</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>Sl.</th>
+                <th>BMDC Reg. NO.</th>
+                <th>Name</th>
+                <th>Father's Name</th>
+                <th>Department</th>
               </tr>
             </thead>
             <tbody>
-              <!-- Mock Data Rows for Pagination/Search Testing -->
+              <?php foreach ($bills as $key => $bill) {?>
               <tr>
-                <td>HBL-00124</td>
-                <td>2024-10-15</td>
-                <td>Core</td>
-                <td>2025/Period 2</td>
-                <td><span class="badge bg-success status-badge">Approved</span></td>
-                <td><button class="btn btn-sm btn-outline-primary" disabled><i class="fas fa-eye"></i> View</button>
-                </td>
+                <th><?=esc(++$key)?>.</th>
+                <td><?php echo $bill['bmdc_reg_no']; ?></td>
+                <td><?php echo $bill['name']; ?></td>
+                <td><?php echo strtoupper($bill['father_spouse_name']); ?></td>
+                <td><?php echo $bill['department_name']; ?></td>
               </tr>
-              <tr>
-                <td>HBL-00125</td>
-                <td>2024-11-01</td>
-                <td>Non-Core</td>
-                <td>2024/Period 1</td>
-                <td><span class="badge bg-warning text-dark status-badge">Pending Review</span></td>
-                <td><button class="btn btn-sm btn-outline-info"><i class="fas fa-edit"></i> Edit</button></td>
-              </tr>
-              <tr>
-                <td>HBL-00126</td>
-                <td>2024-11-20</td>
-                <td>Core</td>
-                <td>2025/Period 1</td>
-                <td><span class="badge bg-danger status-badge">Rejected</span></td>
-                <td><button class="btn btn-sm btn-outline-danger"><i class="fas fa-redo-alt"></i> Re-submit</button>
-                </td>
-              </tr>
-              <tr>
-                <td>HBL-00127</td>
-                <td>2024-11-25</td>
-                <td>Core</td>
-                <td>2025/Period 2</td>
-                <td><span class="badge bg-info text-dark status-badge">Submitted</span></td>
-                <td><button class="btn btn-sm btn-outline-info"><i class="fas fa-edit"></i> Edit</button></td>
-              </tr>
-              <tr>
-                <td>HBL-00128</td>
-                <td>2024-09-10</td>
-                <td>Non-Core</td>
-                <td>2024/Period 2</td>
-                <td><span class="badge bg-success status-badge">Approved</span></td>
-                <td><button class="btn btn-sm btn-outline-primary" disabled><i class="fas fa-eye"></i> View</button>
-                </td>
-              </tr>
-              <tr>
-                <td>HBL-00129</td>
-                <td>2024-08-05</td>
-                <td>Core</td>
-                <td>2024/Period 1</td>
-                <td><span class="badge bg-warning text-dark status-badge">Pending Review</span></td>
-                <td><button class="btn btn-sm btn-outline-info"><i class="fas fa-edit"></i> Edit</button></td>
-              </tr>
-              <tr>
-                <td>HBL-00130</td>
-                <td>2024-07-28</td>
-                <td>Core</td>
-                <td>2024/Period 1</td>
-                <td><span class="badge bg-success status-badge">Approved</span></td>
-                <td><button class="btn btn-sm btn-outline-primary" disabled><i class="fas fa-eye"></i> View</button>
-                </td>
-              </tr>
-              <tr>
-                <td>HBL-00131</td>
-                <td>2024-06-12</td>
-                <td>Non-Core</td>
-                <td>2023/Period 4</td>
-                <td><span class="badge bg-danger status-badge">Rejected</span></td>
-                <td><button class="btn btn-sm btn-outline-danger"><i class="fas fa-redo-alt"></i> Re-submit</button>
-                </td>
-              </tr>
-              <tr>
-                <td>HBL-00132</td>
-                <td>2024-05-01</td>
-                <td>Core</td>
-                <td>2023/Period 4</td>
-                <td><span class="badge bg-info text-dark status-badge">Submitted</span></td>
-                <td><button class="btn btn-sm btn-outline-info"><i class="fas fa-edit"></i> Edit</button></td>
-              </tr>
-              <tr>
-                <td>HBL-00133</td>
-                <td>2024-04-22</td>
-                <td>Non-Core</td>
-                <td>2023/Period 3</td>
-                <td><span class="badge bg-success status-badge">Approved</span></td>
-                <td><button class="btn btn-sm btn-outline-primary" disabled><i class="fas fa-eye"></i> View</button>
-                </td>
-              </tr>
-              <tr>
-                <td>HBL-00134</td>
-                <td>2024-03-18</td>
-                <td>Core</td>
-                <td>2023/Period 3</td>
-                <td><span class="badge bg-warning text-dark status-badge">Pending Review</span></td>
-                <td><button class="btn btn-sm btn-outline-info"><i class="fas fa-edit"></i> Edit</button></td>
-              </tr>
-              <tr>
-                <td>HBL-00135</td>
-                <td>2024-02-05</td>
-                <td>Core</td>
-                <td>2023/Period 2</td>
-                <td><span class="badge bg-success status-badge">Approved</span></td>
-                <td><button class="btn btn-sm btn-outline-primary" disabled><i class="fas fa-eye"></i> View</button>
-                </td>
-              </tr>
+              <?php }?>
             </tbody>
           </table>
         </div>
-
-
       </div>
     </div>
     <!-- INSTRUCTIONS & GUIDELINES -->
     <div class="col-lg-4">
       <div class="card p-4 instruction-card">
-        <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i> Honorarium Form Submission Guide</h5>
+        <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i> Honorarium Bill Form Submission Guide</h5>
         <p class="text-muted small">Follow these steps to ensure your application is processed without delay.</p>
 
         <div class="instruction-step">
           <div class="step-icon">1</div>
           <div>
-            <strong>Personal & Training Data</strong>
-            <p class="mb-0 small text-muted">Verify your NID, BMDC Validity Date (must be current), and contact details
-              (Mobile/Email).</p>
+            <strong>Login to the portal</strong>
+            <p class="mb-0 small text-muted">Use your 10-digit Registration Number & Password to log in.
+              <a href="<?=base_url('login')?>">Click here</a> for login. If forgot Registration Number & Password,
+              <a href="<?=base_url('registration-no-sms')?>">Click here</a> for recovery. After successful login, follow
+              the remaining steps.
+            </p>
           </div>
         </div>
 
@@ -233,8 +144,9 @@
           <div class="step-icon">2</div>
           <div>
             <strong>Honorarium Details</strong>
-            <p class="mb-0 small text-muted">Select the correct <strong>Training Type</strong> (Core/Non-Core),
-              <strong>Honorarium Period</strong>, and <strong>Department</strong> relevant to the claim.
+            <p class="mb-0 small text-muted">Select the correct <strong>Training Type</strong> (Core/Advance),
+              <strong>Honorarium Period</strong>, <strong>Institute</strong> and <strong>Department</strong> relevant to
+              the claim.
             </p>
           </div>
         </div>
@@ -254,12 +166,12 @@
           <div class="step-icon">4</div>
           <div>
             <strong>Upload Required Enclosures</strong>
-            <p class="mb-0 small text-muted">Upload all files (e.g., Joining Letter, Completion Certificate, Bank
-              Statement). Ensure files are clear and under the maximum size limit.</p>
+            <p class="mb-0 small text-muted">Upload all files (e.g., Provisional training certificate, NID, Bank Cheque
+              book). Ensure files are clear and under the maximum size limit.</p>
             <ul>
-              <li class="small text-muted">Enclosure 1: NID/Passport (Max 2MB, PDF/JPG)</li>
-              <li class="small text-muted">Enclosure 2: BMDC Certificate (Max 2MB, PDF/JPG)</li>
-              <li class="small text-muted">Enclosure 3: Training Completion Proof (Max 5MB, PDF)</li>
+              <li class="small text-muted">Enclosure 1: Provisional training certificate (Max 300KB, PDF/JPG)</li>
+              <li class="small text-muted">Enclosure 2: Bank Cheque book/Bank Statement (Max 300KB, PDF/JPG)</li>
+              <li class="small text-muted">Enclosure 3: National Identity Card (Max 300KB, PDF/JPG)</li>
             </ul>
           </div>
         </div>
@@ -281,7 +193,6 @@
   <?php $this->section('pageScripts')?>
   <script>
   $(document).ready(function() {
-    alert('This is a demo version of the Honorarium Application system. Submissions will not be processed.');
     // DataTables Initialization
     $('#honorariumTable').DataTable({
       // Configuration options
@@ -301,10 +212,9 @@
       },
       // Initial sort by Date Submitted (column index 1) in descending order
       order: [
-        [1, 'desc']
+        [0, 'asc']
       ]
     });
-    console.log('Honorarium Dashboard and DataTables Initialized.');
   });
   </script>
   <?php $this->endSection()?>
