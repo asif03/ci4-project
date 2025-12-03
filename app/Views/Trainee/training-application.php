@@ -116,7 +116,6 @@
 }
 </style>
 <?php $this->endSection()?>
-
 <div class="page-content">
   <div class="card p-4 rounded-3 shadow-sm">
     <h3 class="main-title text-center">APPLICATION FORM</h3>
@@ -230,7 +229,8 @@
                   <div class="col-md-6">
                     <label for="nationality" class="form-label">Nationality</label>
                     <input type="text" class="form-control <?=session('errors.nationality') ? 'border-danger' : ''?>"
-                      id="nationality" name="nationality" value="<?=old('dob', $generalInfo['nationality'] ?? '')?>">
+                      id="nationality" name="nationality"
+                      value="<?=old('nationality', $generalInfo['nationality'] ?? '')?>">
                   </div>
 
                   <div class="col-md-6">
@@ -265,12 +265,13 @@
                   <div class="col-md-6">
                     <label for="nationalID" class="form-label">National ID No</label>
                     <input type="text" class="form-control <?=session('errors.nationalID') ? 'border-danger' : ''?>"
-                      id="nationalID" name="nationalID" value="<?=old('dob', $generalInfo['national_id'] ?? '')?>"
+                      id="nationalID" name="nationalID"
+                      value="<?=old('nationalID', $generalInfo['national_id'] ?? '')?>"
                       placeholder="e.g., 19901234567890123" required>
                   </div>
                   <div class="col-md-6">
                     <label for="mobile" class="form-label">Mobile</label>
-                    <input type="tel" class="form-control <?=$validation->hasError('mobile') ? 'border-danger' : ''?>"
+                    <input type="tel" class="form-control <?=session('errors.mobile') ? 'border-danger' : ''?>"
                       id="mobile" name="mobile" value="<?=old('mobile', $generalInfo['cell'] ?? '')?>"
                       placeholder="e.g., 01XXXXXXXXX" pattern="[0-9]{11}" required>
                   </div>
@@ -283,15 +284,16 @@
 
                   <div class="col-md-12">
                     <label for="email" class="form-label">E-mail</label>
-                    <input type="email" class="form-control <?=$validation->hasError('email') ? 'border-danger' : ''?>"
+                    <input type="email" class="form-control <?=session('errors.email') ? 'border-danger' : ''?>"
                       id="email" name="email" value="<?=esc($generalInfo['email'])?>" placeholder="you@example.com"
                       required>
                   </div>
 
                   <div class="col-md-6">
                     <label for="communicationAddress" class="form-label">Address of Communication</label>
-                    <textarea class="form-control" id="communicationAddress" name="communicationAddress" rows="3"
-                      required><?=esc($generalInfo['mailing_address'])?></textarea>
+                    <textarea class="form-control <?=session('errors.communicationAddress') ? 'border-danger' : ''?>"
+                      id="communicationAddress" name="communicationAddress" rows="3"
+                      required><?=esc(old('communicationAddress', $generalInfo['mailing_address']))?></textarea>
                   </div>
 
                   <div class="col-md-6">
@@ -382,12 +384,13 @@
                     style="display: none;">
                     <div class="col-md-6">
                       <label for="residencyStartDate" class="form-label">Start Date</label>
-                      <input type="text" class="form-control" name="residencyStartDate" id="residencyStartDate"
-                        required>
+                      <input type="text" class="form-control" name="residencyStartDate"
+                        value="<?=old('residencyStartDate')?>" id="residencyStartDate" required>
                     </div>
                     <div class="col-md-6">
                       <label for="residencyEndDate" class="form-label">End Date</label>
-                      <input type="text" class="form-control" name="residencyEndDate" id="residencyEndDate" required>
+                      <input type="text" class="form-control" name="residencyEndDate"
+                        value="<?=old('residencyEndDate')?>" id="residencyEndDate" required>
                     </div>
                   </div>
 
@@ -411,7 +414,8 @@
                       <?php
                           $current_year = date('Y');
                       for ($year = 1990; $year <= $current_year; $year++) {?>
-                      <option value="<?=esc($year)?>" <?=($year == $generalInfo['mbbs_year']) ? 'selected' : ''?>>
+                      <option value="<?=esc($year)?>"
+                        <?=($year == old('qualificationYear', $generalInfo['mbbs_year'])) ? 'selected' : ''?>>
                         <?=esc($year)?>
                       </option>
                       <?php }?>
@@ -424,7 +428,7 @@
                       <option value="" disabled selected>Select Institute</option>
                       <?php foreach ($mbbsInstitutes as $institute): ?>
                       <option value="<?=esc($institute['institute_id'])?>"
-                        <?=($institute['institute_id'] === $generalInfo['mbbs_institute_id']) ? 'selected' : ''?>>
+                        <?=($institute['institute_id'] === old('qualificationInstitute', $generalInfo['mbbs_institute_id'])) ? 'selected' : ''?>>
                         <?=esc($institute['name'])?>
                       </option>
                       <?php endforeach; ?>
@@ -433,20 +437,20 @@
 
                   <div class="col-md-6">
                     <label for="bmdcType" class="form-label">BMDC Registration Type</label>
-                    <select id="bmdcType" name="bmdcType" class="form-select">
+                    <select id="bmdcType" name="bmdc_reg_type" class="form-select">
                       <option value="" disabled selected>Select Session</option>
-                      <option value="MBBS" <?=old('bmdcType') == 'MBBS' ? 'selected' : ''?>>
+                      <option value="MBBS" <?=old('bmdc_reg_type') == 'MBBS' ? 'selected' : ''?>>
                         MBBS
                       </option>
-                      <option value="BDS" <?=old('bmdcType') == 'BDS' ? 'selected' : ''?>>
+                      <option value="BDS" <?=old('bmdc_reg_type') == 'BDS' ? 'selected' : ''?>>
                         BDS</option>
                     </select>
                   </div>
 
                   <div class="col-md-6">
                     <label for="bmdcRegNo" class="form-label">BMDC Registration Number (Number Only)</label>
-                    <input type="number" class="form-control" id="bmdcRegNo" name="bmdcRegNo"
-                      value="<?=old('bmdcRegNo')?>" placeholder="e.g., 12345">
+                    <input type="number" class="form-control" id="bmdcRegNo" name="bmdc_reg_no"
+                      value="<?=old('bmdc_reg_no')?>" placeholder="e.g., 12345">
                   </div>
                 </div>
                 <div class="d-flex justify-content-between mt-4">
@@ -587,7 +591,8 @@
                       <select id="futureInstitute1" name="futureInstitute[]" class="form-select" required>
                         <option value="" disabled selected>Select Institute</option>
                         <?php foreach ($trainingInstitutes as $institute): ?>
-                        <option value="<?=esc($institute['name'])?>">
+                        <option value="<?=esc($institute['name'])?>"
+                          <?=(old('futureInstitute')[0] ?? '') == $institute['name'] ? 'selected' : ''?>>
                           <?=esc($institute['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -598,7 +603,8 @@
                       <select id="futureDepartment1" name="futureDepartment[]" class="form-select" required>
                         <option selected disabled value="">Select a Department</option>
                         <?php foreach ($departments as $department): ?>
-                        <option value="<?=esc($department['name'])?>">
+                        <option value="<?=esc($department['name'])?>"
+                          <?=(old('futureDepartment')[0] ?? '') == $department['name'] ? 'selected' : ''?>>
                           <?=esc($department['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -606,11 +612,13 @@
                     </div>
                     <div class="col-md-6">
                       <label for="futureStartDate1" class="form-label small">Start Date</label>
-                      <input type="text" id="futureStartDate1" name="futureStartDate[]" class="form-control" required>
+                      <input type="text" id="futureStartDate1" name="futureStartDate[]"
+                        value="<?=old('futureStartDate')[0] ?? ''?>" class="form-control" required>
                     </div>
                     <div class="col-md-6">
                       <label for="futureEndDate1" class="form-label small">End Date</label>
-                      <input type="text" id="futureEndDate1" name="futureEndDate[]" class="form-control" required>
+                      <input type="text" id="futureEndDate1" name="futureEndDate[]"
+                        value="<?=old('futureEndDate')[0] ?? ''?>" class="form-control" required>
                     </div>
                   </div>
                 </div>
@@ -624,7 +632,8 @@
                       <select id="futureInstitute2" name="futureInstitute[]" class="form-select" required>
                         <option value="" disabled selected>Select Institute</option>
                         <?php foreach ($trainingInstitutes as $institute): ?>
-                        <option value="<?=esc($institute['name'])?>">
+                        <option value="<?=esc($institute['name'])?>"
+                          <?=(old('futureInstitute')[1] ?? '') == $institute['name'] ? 'selected' : ''?>>
                           <?=esc($institute['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -635,7 +644,8 @@
                       <select id="futureDepartment2" name="futureDepartment[]" class="form-select" required>
                         <option selected disabled value="">Select a Department</option>
                         <?php foreach ($departments as $department): ?>
-                        <option value="<?=esc($department['name'])?>">
+                        <option value="<?=esc($department['name'])?>"
+                          <?=(old('futureDepartment')[1] ?? '') == $department['name'] ? 'selected' : ''?>>
                           <?=esc($department['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -643,11 +653,13 @@
                     </div>
                     <div class="col-md-6">
                       <label for="futureStartDate2" class="form-label small">Start Date</label>
-                      <input type="text" id="futureStartDate2" name="futureStartDate[]" class="form-control" required>
+                      <input type="text" id="futureStartDate2" name="futureStartDate[]"
+                        value="<?=old('futureStartDate')[1] ?? ''?>" class="form-control" required>
                     </div>
                     <div class="col-md-6">
                       <label for="futureEndDate2" class="form-label small">End Date</label>
-                      <input type="text" id="futureEndDate2" name="futureEndDate[]" class="form-control" required>
+                      <input type="text" id="futureEndDate2" name="futureEndDate[]"
+                        value="<?=old('futureEndDate')[1] ?? ''?>" class="form-control" required>
                     </div>
                   </div>
                 </div>
@@ -661,7 +673,8 @@
                       <select id="futureInstitute3" name="futureInstitute[]" class="form-select" required>
                         <option value="" disabled selected>Select Institute</option>
                         <?php foreach ($trainingInstitutes as $institute): ?>
-                        <option value="<?=esc($institute['name'])?>">
+                        <option value="<?=esc($institute['name'])?>"
+                          <?=(old('futureInstitute')[2] ?? '') == $institute['name'] ? 'selected' : ''?>>
                           <?=esc($institute['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -672,7 +685,8 @@
                       <select id="futureDepartment3" name="futureDepartment[]" class="form-select" required>
                         <option selected disabled value="">Select a Department</option>
                         <?php foreach ($departments as $department): ?>
-                        <option value="<?=esc($department['name'])?>">
+                        <option value="<?=esc($department['name'])?>"
+                          <?=(old('futureDepartment')[2] ?? '') == $department['name'] ? 'selected' : ''?>>
                           <?=esc($department['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -680,11 +694,13 @@
                     </div>
                     <div class="col-md-6">
                       <label for="futureStartDate3" class="form-label small">Start Date</label>
-                      <input type="text" id="futureStartDate3" name="futureStartDate[]" class="form-control" required>
+                      <input type="text" id="futureStartDate3" name="futureStartDate[]"
+                        value="<?=old('futureStartDate')[2] ?? ''?>" class="form-control" required>
                     </div>
                     <div class="col-md-6">
                       <label for="futureEndDate3" class="form-label small">End Date</label>
-                      <input type="text" id="futureEndDate3" name="futureEndDate[]" class="form-control" required>
+                      <input type="text" id="futureEndDate3" name="futureEndDate[]"
+                        value="<?=old('futureEndDate')[2] ?? ''?>" class="form-control" required>
                     </div>
                   </div>
                 </div>
@@ -706,10 +722,11 @@
 
                   <div class="col-md-6">
                     <label for="bankName" class="form-label">Name of the Bank</label>
-                    <select id="bankName" name="bankName" class="form-select" required>
+                    <select id="bankName" name="bankName"
+                      class="form-select <?=session('errors.bankName') ? 'border-danger' : ''?>" required>
                       <option value="" disabled selected>Select Bank</option>
                       <?php foreach ($banks as $bank): ?>
-                      <option value="<?=esc($bank['id'])?>">
+                      <option value="<?=esc($bank['id'])?>" <?=old('bankName') == $bank['id'] ? 'selected' : ''?>>
                         <?=esc($bank['bank_name'])?>
                       </option>
                       <?php endforeach; ?>
@@ -718,19 +735,23 @@
 
                   <div class="col-md-6">
                     <label for="bankBranch" class="form-label">Name of the Branch</label>
-                    <input type="text" class="form-control" id="bankBranch" name="bankBranch"
+                    <input type="text" class="form-control <?=session('errors.bankBranch') ? 'border-danger' : ''?>"
+                      id="bankBranch" name="bankBranch" value="<?=old('bankBranch')?>"
                       placeholder="e.g., Dhaka Central Branch" required>
                   </div>
 
                   <div class="col-md-6">
                     <label for="accountNumber" class="form-label">Account Number (13 digits or above)</label>
-                    <input type="text" pattern="[0-9]{13,}" class="form-control" id="accountNumber" name="accountNumber"
+                    <input type="text" pattern="[0-9]{13,}"
+                      class="form-control <?=session('errors.accountNumber') ? 'border-danger' : ''?>"
+                      id="accountNumber" name="accountNumber" value="<?=old('accountNumber')?>"
                       placeholder="Minimum 13 digits, numbers only" required>
                   </div>
 
                   <div class="col-md-6">
                     <label for="routingNumber" class="form-label">Routing Number</label>
-                    <input type="text" class="form-control" id="routingNumber" name="routingNumber"
+                    <input type="text" class="form-control <?=session('errors.routingNumber') ? 'border-danger' : ''?>"
+                      id="routingNumber" name="routingNumber" value="<?=old('routingNumber')?>"
                       placeholder="e.g., 090261019" required>
                   </div>
                 </div>

@@ -387,11 +387,11 @@ class TraineeController extends BaseController
             'bankBranch'    => 'required',
             'accountNumber' => 'required',
             'routingNumber' => 'required',
-            'bmdcType'      => [
+            'bmdc_reg_type' => [
                 'label' => 'BMDC Reg. Type',
                 'rules' => 'required',
             ],
-            'bmdcRegNo'     => [
+            'bmdc_reg_no'   => [
                 // Rule format: composite_unique[table_name.first_column,second_column,third_column,...]
                 // We are checking if the combination of 'unique_id' AND 'user_type_id' is unique in the 'users' table.
                 'rules'  => 'required|composite_unique[applicant_information.bmdc_reg_type,bmdc_reg_no]',
@@ -458,8 +458,8 @@ class TraineeController extends BaseController
             'continuing_start_date'   => $this->request->getPost('residencyStartDate'),
             'continuing_end_date'     => $this->request->getPost('residencyEndDate'),
             'continuing_fcps_traning' => $this->request->getPost('currentFCPSTrainingStatus'),
-            'bmdc_reg_type'           => $this->request->getPost('bmdcType'),
-            'bmdc_reg_no'             => $this->request->getPost('bmdcRegNo'),
+            'bmdc_reg_type'           => $this->request->getPost('bmdc_reg_type'),
+            'bmdc_reg_no'             => $this->request->getPost('bmdc_reg_no'),
             //'bmdc_validity'      => $this->request->getPost('communicationAddress'),
             'speciality_id'           => $generalInfo['subject_id'],
             'fcps_roll'               => $this->request->getPost('fcpsRollNo'),

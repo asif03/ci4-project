@@ -19,15 +19,9 @@ class CustomRules
 
         $columnList = explode(',', $params[1]);
 
-        // The first column in $columnList is the name of the column that $str belongs to.
-        $firstColumn = array_shift($columnList);
-
         /** @var ConnectionInterface $db */
         $db      = \Config\Database::connect();
         $builder = $db->table($tableName);
-
-        // Start the query with the value of the field currently being validated ($str)
-        $builder->where($firstColumn, $str);
 
         // Add WHERE clauses for the remaining composite fields
         foreach ($columnList as $columnName) {
@@ -40,8 +34,14 @@ class CustomRules
             $builder->where($columnName, $data[$columnName]);
         }
 
+        // --- TEMPORARY DEBUGGING LINES START ---
+        //$queryString = $builder->getCompiledSelect();
+        //log_message('debug', 'Composite Unique Query: ' . $queryString);
+        //log_message('debug', 'Counted Rows: ' . $builder->countAllResults());
+        // --- TEMPORARY DEBUGGING LINES END ---
+
         // Execute the query
-        $count = $builder->countAllResults();
+        $count = $builder->countAllResults(false);
 
         // If count > 0, the combination already exists, so it's NOT unique (return false)
         return $count === 0;
