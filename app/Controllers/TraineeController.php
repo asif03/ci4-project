@@ -314,16 +314,16 @@ class TraineeController extends BaseController
 
             helper('form');
 
-            $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
+            $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->orderBy('name', 'ASC')->findAll();
             $data['trainingInstitutes'] = $trainingInstitutes;
 
-            $mbbsInstitutes         = $this->mbbsInstituteModel->where('status', true)->findAll();
+            $mbbsInstitutes         = $this->mbbsInstituteModel->where('status', true)->orderBy('name', 'ASC')->findAll();
             $data['mbbsInstitutes'] = $mbbsInstitutes;
 
-            $departments          = $this->specialityModel->where('status', true)->findAll();
+            $departments          = $this->specialityModel->where('status', true)->orderBy('name', 'ASC')->findAll();
             $data['departments']  = $departments;
             $data['specialities'] = $departments;
-            $designations         = $this->designationModel->where('status', true)->findAll();
+            $designations         = $this->designationModel->where('status', true)->orderBy('designation', 'ASC')->findAll();
             $data['designations'] = $designations;
 
             $banks         = $this->bankModel->where('status', true)->orderBy('bank_name', 'ASC')->findAll();
@@ -498,7 +498,7 @@ class TraineeController extends BaseController
             $uploadedFiles  = $this->request->getFiles();
             $savedFileNames = [];
             //$uploadPath     = WRITEPATH . 'uploads/applications/';
-            $uploadPath = FCPATH . 'uploads/applications/';
+            $uploadPath = FCPATH . 'public/uploads/honorariums/';
 
             //dd($uploadedFiles);
 
@@ -930,15 +930,19 @@ class TraineeController extends BaseController
 
 // --- Step 1: Server-Side Validation ---
 // You should perform model or service validation here using CI4's Validation library
-        if ($bmdcValidity < date('Y-m-d')) {return $this->response->setJSON([
-            'status'  => 'error',
-            'message' => 'BMDC Validity date is expired.',
-        ]);}
+        if ($bmdcValidity < date('Y-m-d')) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'BMDC Validity date is expired.',
+            ]);
+        }
 
-        if ($trainingType == 'Advance' && $data['coursePeriod'] < 24) {return $this->response->setJSON([
-            'status'  => 'error',
-            'message' => 'For Advance training, previous training period must be at least 24 months.',
-        ]);}
+        if ($trainingType == 'Advance' && $data['coursePeriod'] < 24) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'For Advance training, previous training period must be at least 24 months.',
+            ]);
+        }
 
         //print_r($data);
         //dd($data);
@@ -990,10 +994,12 @@ class TraineeController extends BaseController
                     'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
                 ]);
             }
-        } elseif ($honorariumPosition > 4 && $honorariumPosition < 7) {if ($midTermResult) {if (count($midTermResult) < 1) {return $this->response->setJSON([
-            'status'  => 'error',
-            'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
-        ]);}} else {
+        } elseif ($honorariumPosition > 4 && $honorariumPosition < 7) {if ($midTermResult) {if (count($midTermResult) < 1) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
+            ]);
+        }} else {
             return $this->response->setJSON([
                 'status'  => 'error',
                 'message' => 'You are not eligible for the honorarium because you did not take the Midterm Exam.',
@@ -1009,7 +1015,7 @@ class TraineeController extends BaseController
         // --- STEP 2: HANDLE FILE UPLOADS ---
         $uploadedFiles  = $this->request->getFiles();
         $savedFileNames = [];
-        $uploadPath     = WRITEPATH . 'uploads/bills/';
+        $uploadPath     = FCPATH . 'public/uploads/honorariums/';
 
         // Ensure the upload directory exists
         if (!is_dir($uploadPath)) {
@@ -1021,6 +1027,34 @@ class TraineeController extends BaseController
 
             // Check if the file is a valid upload and the upload was successful
             if ($file->isValid() && !$file->hasMoved()) {
+
+                // 🔥 CHECK FILE SIZE BEFORE UPLOAD
+                $maxSize = 300 * 1024; // 300 KB
+                if ($file->getSize() > $maxSize) {
+
+                    if ($fieldName == 'enclosure1') {
+                        $fieldName = 'Provisional training certificate';
+                    } elseif ($fieldName == 'enclosure2') {
+                        $fieldName = ' Bank Cheque book';
+                    } elseif ($fieldName == 'enclosure3') {
+                        $fieldName = 'Photograph';
+                    } elseif ($fieldName == 'enclosure4') {
+                        $fieldName = 'Signature';
+                    } elseif ($fieldName == 'enclosure5') {
+                        $fieldName = 'NID/Smart Card';
+                    }
+
+                    return $this->response->setJSON([
+                        'status'  => 'error',
+                        'message' => "{$fieldName} file exceeds 300 KB limit.",
+                    ]);
+
+                    /*return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => "{$fieldName} file exceeds 300 KB limit.",
+                ])->setStatusCode(400);*/
+                }
+
                 // Generate a secure, unique name for the file to prevent conflicts
                 $newName = $file->getRandomName();
 
@@ -1079,11 +1113,15 @@ class TraineeController extends BaseController
             $maxBillSerial = $maxBillSerialRow['bill_sl_no'] ?? env('bill.startSlNo', 1); // default 1 if null
 
             $department = $this->specialityModel->find($data['currentDepartment']);
+            if ($data['coursePeriod'] > 0) {
+                $currentTrainingSlot = count($data['previousTrainingDetails']) > 0 ? count($data['previousTrainingDetails']) + 1 : 1;
+            }
 
             $savedData = [
                 'applicant_id'              => $applicant['applicant_id'],
                 'bmdc_reg_no'               => $applicant['bmdc_reg_no'],
                 'training_type'             => $data['trainingType'],
+                'current_training_slot'     => $currentTrainingSlot,
                 'training_institute_id'     => $data['currentTrainingInstitute'],
                 'department_id'             => $data['currentDepartment'],
                 'department_name'           => $department['name'],

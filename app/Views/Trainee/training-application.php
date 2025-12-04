@@ -359,7 +359,7 @@
                   <div class="col-md-6">
                     <label for="fcpsRollNo" class="form-label">Roll No.</label>
                     <input type="text" class="form-control" id="fcpsRollNo" name="fcpsRollNo"
-                      placeholder="e.g., 123456">
+                      value="<?=old('fcpsRollNo')?>" placeholder="e.g., 123456">
                   </div>
 
                   <div class="col-md-12 border-top pt-3 mt-3">
@@ -470,26 +470,30 @@
                     <div class="d-flex align-items-center">
                       <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="currentFCPSTrainingStatus"
-                          id="currentFCPSTrainingStatusYes" value="1" onclick="toggleCurrentTraining(true)" required>
+                          id="currentFCPSTrainingStatusYes" value="1"
+                          <?=old('currentFCPSTrainingStatus') == '1' ? 'checked' : ''?>
+                          onclick="toggleCurrentTraining(true)" required>
                         <label class="form-check-label" for="currentFCPSTrainingStatusYes">Yes</label>
                       </div>
                       <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="currentFCPSTrainingStatus"
-                          id="currentFCPSTrainingStatusNo" value="0" onclick="toggleCurrentTraining(false)" checked
-                          required>
+                          id="currentFCPSTrainingStatusNo" value="0"
+                          <?=old('currentFCPSTrainingStatus') == '0' ? 'checked' : ''?>
+                          onclick="toggleCurrentTraining(false)" checked required>
                         <label class="form-check-label" for="currentFCPSTrainingStatusNo">No</label>
                       </div>
                     </div>
                   </div>
                   <!-- Conditional FCPS Training Container -->
                   <div id="currentFCPSTrainingContainer" class="col-md-12 row mx-3 p-3 border rounded g-3"
-                    style="display: none;">
+                    style="<?=old('currentFCPSTrainingStatus') == '1' ? 'display: block;' : 'display: none;'?> ">
                     <div class="col-md-6">
                       <label for="currentInstitute" class="form-label">Name of the Current Institute</label>
                       <select id="currentInstitute" name="currentInstitute" class="form-select">
                         <option value="" disabled selected>Select Institute</option>
                         <?php foreach ($trainingInstitutes as $institute): ?>
-                        <option value="<?=esc($institute['name'])?>">
+                        <option value="<?=esc($institute['name'])?>"
+                          <?=old('currentInstitute') == $institute['name'] ? 'selected' : ''?>>
                           <?=esc($institute['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -501,7 +505,8 @@
                       <select id="currentDepartment" name="currentDepartment" class="form-select">
                         <option selected disabled value="">Select a Department...</option>
                         <?php foreach ($departments as $department): ?>
-                        <option value="<?=esc($department['name'])?>">
+                        <option value="<?=esc($department['name'])?>"
+                          <?=old('currentDepartment') == $department['name'] ? 'selected' : ''?>>
                           <?=esc($department['name'])?>
                         </option>
                         <?php endforeach; ?>
@@ -511,7 +516,7 @@
                     <div class="col-md-6">
                       <label for="supervisorName" class="form-label">Name of the Supervisor</label>
                       <input type="text" class="form-control" name="supervisorName" id="supervisorName"
-                        placeholder="Dr. John Doe">
+                        value="<?=old('supervisorName')?>" placeholder="Dr. John Doe">
                     </div>
 
                     <div class="col-md-6">
@@ -519,7 +524,8 @@
                       <select id="supervisorDesignation" name="supervisorDesignation" class="form-select">
                         <option selected disabled value="">Select Designation</option>
                         <?php foreach ($designations as $designation): ?>
-                        <option value="<?=esc($designation['designation'])?>">
+                        <option value="<?=esc($designation['designation'])?>"
+                          <?=old('supervisorDesignation') == $designation['designation'] ? 'selected' : ''?>>
                           <?=esc($designation['designation'])?>
                         </option>
                         <?php endforeach; ?>
@@ -527,12 +533,13 @@
                     </div>
                     <div class="col-md-6">
                       <label for="startDate" class="form-label">Training Start Date</label>
-                      <input type="text" class="form-control" name="startDate" id="startDate">
+                      <input type="text" class="form-control" name="startDate" id="startDate"
+                        value="<?=old('startDate')?>">
                     </div>
 
                     <div class="col-md-6">
                       <label for="endDate" class="form-label">Training End Date</label>
-                      <input type="text" class="form-control" name="endDate" id="endDate">
+                      <input type="text" class="form-control" name="endDate" id="endDate" value="<?=old('endDate')?>">
                     </div>
                   </div>
                 </div>

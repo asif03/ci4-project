@@ -13,6 +13,7 @@ class HonorariumInformationModel extends Model
         'applicant_id',
         'bmdc_reg_no',
         'training_type',
+        'current_training_slot',
         'training_institute_id',
         'department_id',
         'department_name',
