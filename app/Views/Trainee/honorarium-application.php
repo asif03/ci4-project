@@ -480,7 +480,8 @@
           <!-- Document 1: Provisional training certificate -->
           <div class="col-md-12">
             <label for="enclosure1" class="form-label">
-              1) Provisional training certificate Signature and seal of Supervisor and Director (Hospital)/
+              1) Training Certificate/ Provisional training certificate Signature and seal of Supervisor and Director
+              (Hospital)/
               Superintendent (Hospital)/ Principal for Basic Subject:
             </label>
             <input type="file" class="form-control" id="enclosure1" name="enclosure1" accept=".pdf,.jpg,.jpeg,.png"
@@ -491,7 +492,7 @@
           <!-- Document 2: A page of the Bank Cheque book -->
           <div class="col-md-12">
             <label for="enclosure2" class="form-label">
-              2) A page of the **Bank Cheque book** of the applicant:
+              2) Personal Bank MICR cheque / Bank Statement with printed Name & Routing Number:
             </label>
             <input type="file" class="form-control" id="enclosure2" name="enclosure2" accept=".pdf,.jpg,.jpeg,.png"
               required>
@@ -500,21 +501,20 @@
           <!-- Document 3: Recent Passport size color Photograph -->
           <div class="col-md-6">
             <label for="enclosure3" class="form-label">
-              3) Recent Passport size color **Photograph**:
+              3) FCPS Part-I Congratulations Letter:
             </label>
-            <input type="file" class="form-control" id="enclosure3" name="enclosure3" accept="image/jpeg,image/png"
+            <input type="file" class="form-control" id="enclosure3" name="enclosure3" accept=".pdf,.jpg,.jpeg,.png"
               required>
-            <div class="form-text">Resolution: 300x300 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
+            <div class="form-text">Size: below 300 kb. Accepted formats: PDF/JPG/PNG.</div>
           </div>
 
           <!-- Document 4: Applicant’s Signature -->
           <div class="col-md-6">
             <label for="enclosure4" class="form-label">
-              4) Applicant’s **Signature**:
+              4) FCPS Midterm Congratulations Letter (if applicable):
             </label>
-            <input type="file" class="form-control" id="enclosure4" name="enclosure4" accept="image/jpeg,image/png"
-              required>
-            <div class="form-text">Resolution: 300x80 pixels, Size: below 300 kb. Accepted formats: JPG/PNG.</div>
+            <input type="file" class="form-control" id="enclosure4" name="enclosure4" accept=".pdf,.jpg,.jpeg,.png">
+            <div class="form-text">Size: below 300 kb. Accepted formats: PDF/JPG/PNG.</div>
           </div>
 
           <!-- Document 5: National Identity Card (NID/Smart Card) -->
@@ -522,9 +522,9 @@
             <label for="enclosure5" class="form-label">
               5) National Identity Card (**NID/Smart Card**):
             </label>
-            <input type="file" class="form-control" id="enclosure5" name="enclosure5" accept=".pdf,.jpg,.jpeg,.png"
+            <input type="file" class="form-control" id="enclosure5" name="enclosure5" accept="image/jpeg,image/png"
               required multiple>
-            <div class="form-text">Upload front and back if required (use Ctrl/Cmd key). Accepted formats: PDF,
+            <div class="form-text">Upload front and back if required. Accepted formats: PDF,
               JPG/PNG.
             </div>
           </div>

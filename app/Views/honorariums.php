@@ -76,6 +76,16 @@
   transform: translateY(-1px);
 }
 
+/* Custom Link Hover Effect */
+.link-item {
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.link-item:hover {
+  transform: translateX(3px);
+  background-color: var(--bs-light);
+}
+
 /* Mobile adjustments */
 @media (max-width: 991.98px) {
   .instruction-card {
@@ -124,67 +134,125 @@
     </div>
     <!-- INSTRUCTIONS & GUIDELINES -->
     <div class="col-lg-4">
-      <div class="card p-4 instruction-card">
-        <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i> Honorarium Bill Form Submission Guide</h5>
-        <p class="text-muted small">Follow these steps to ensure your application is processed without delay.</p>
+      <div class="row g-2">
+        <div class="card p-4 instruction-card">
 
-        <div class="instruction-step">
-          <div class="step-icon">1</div>
-          <div>
-            <strong>Login to the portal</strong>
-            <p class="mb-0 small text-muted">Use your 10-digit Registration Number & Password to log in.
-              <a href="<?=base_url('login')?>">Click here</a> for login. If forgot Registration Number & Password,
-              <a href="<?=base_url('registration-no-sms')?>">Click here</a> for recovery. After successful login, follow
-              the remaining steps.
-            </p>
+
+          <div class="d-flex align-items-center mb-4">
+            <!-- Lucide Icon for Links -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="me-3 text-primary">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.74 1.74" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
+            <h2 class="h6 card-title fw-bold mb-0">Important Links & Docs</h2>
           </div>
-        </div>
 
-        <div class="instruction-step">
-          <div class="step-icon">2</div>
-          <div>
-            <strong>Honorarium Details</strong>
-            <p class="mb-0 small text-muted">Select the correct <strong>Training Type</strong> (Core/Advance),
-              <strong>Honorarium Period</strong>, <strong>Institute</strong> and <strong>Department</strong> relevant to
-              the claim.
-            </p>
+          <div class="d-grid gap-2">
+            <a href="#link-hr-policy"
+              class="link-item d-flex justify-content-between align-items-center p-2 rounded-3 text-decoration-none border">
+              <span class="text-primary fw-medium small">HR Policy Manual (PDF)</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-primary">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </a>
+
+            <a href="#link-travel-form"
+              class="link-item d-flex justify-content-between align-items-center p-2 rounded-3 text-decoration-none border">
+              <span class="text-primary fw-medium small">Travel Reimbursement Form</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-primary">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </a>
+
+            <a href="#link-expense-guide"
+              class="link-item d-flex justify-content-between align-items-center p-2 rounded-3 text-decoration-none border">
+              <span class="text-primary fw-medium small">Monthly Expense Guide</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-primary">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </a>
           </div>
-        </div>
 
-        <div class="instruction-step">
-          <div class="step-icon">3</div>
-          <div>
-            <strong>Banking Information</strong>
-            <p class="mb-0 small text-muted">Enter the <strong>Bank Name</strong>, <strong>Branch Name</strong>,
-              <strong>Account Number</strong>, and <strong>Routing Number</strong> accurately. Errors here will cause
-              payment failure.
-            </p>
+
+
+        </div>
+        <div class="card p-4 instruction-card">
+          <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i> Honorarium Bill Form Submission Guide</h5>
+          <p class="text-muted small">Follow these steps to ensure your application is processed without delay.</p>
+
+          <div class="instruction-step">
+            <div class="step-icon">1</div>
+            <div>
+              <strong>Login to the portal</strong>
+              <p class="mb-0 small text-muted">Use your 10-digit Registration Number & Password to log in.
+                <a href="<?=base_url('login')?>">Click here</a> for login. If forgot Registration Number & Password,
+                <a href="<?=base_url('registration-no-sms')?>">Click here</a> for recovery. After successful login,
+                follow
+                the remaining steps.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="instruction-step">
-          <div class="step-icon">4</div>
-          <div>
-            <strong>Upload Required Enclosures</strong>
-            <p class="mb-0 small text-muted">Upload all files (e.g., Provisional training certificate, NID, Bank Cheque
-              book). Ensure files are clear and under the maximum size limit.</p>
-            <ul>
-              <li class="small text-muted">Enclosure 1: Provisional training certificate (Max 300KB, PDF/JPG)</li>
-              <li class="small text-muted">Enclosure 2: Bank Cheque book/Bank Statement (Max 300KB, PDF/JPG)</li>
-              <li class="small text-muted">Enclosure 3: National Identity Card (Max 300KB, PDF/JPG)</li>
-            </ul>
+          <div class="instruction-step">
+            <div class="step-icon">2</div>
+            <div>
+              <strong>Honorarium Details</strong>
+              <p class="mb-0 small text-muted">Select the correct <strong>Training Type</strong> (Core/Advance),
+                <strong>Honorarium Period</strong>, <strong>Institute</strong> and <strong>Department</strong> relevant
+                to
+                the claim.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="instruction-step">
-          <div class="step-icon">5</div>
-          <div>
-            <strong>Final Submission</strong>
-            <p class="mb-0 small text-muted">Review the generated preview document thoroughly before clicking the final
-              **Confirm Submission** button.</p>
+          <div class="instruction-step">
+            <div class="step-icon">3</div>
+            <div>
+              <strong>Banking Information</strong>
+              <p class="mb-0 small text-muted">Enter the <strong>Bank Name</strong>, <strong>Branch Name</strong>,
+                <strong>Account Number</strong>, and <strong>Routing Number</strong> accurately. Errors here will cause
+                payment failure.
+              </p>
+            </div>
           </div>
-        </div>
 
+          <div class="instruction-step">
+            <div class="step-icon">4</div>
+            <div>
+              <strong>Upload Required Enclosures</strong>
+              <p class="mb-0 small text-muted">Upload all files (e.g., Provisional training certificate, NID, Bank
+                Cheque
+                book). Ensure files are clear and under the maximum size limit.</p>
+              <ul>
+                <li class="small text-muted">Enclosure 1: Provisional training certificate (Max 300KB, PDF/JPG)</li>
+                <li class="small text-muted">Enclosure 2: Bank Cheque book/Bank Statement (Max 300KB, PDF/JPG)</li>
+                <li class="small text-muted">Enclosure 3: National Identity Card (Max 300KB, PDF/JPG)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="instruction-step">
+            <div class="step-icon">5</div>
+            <div>
+              <strong>Final Submission</strong>
+              <p class="mb-0 small text-muted">Review the generated preview document thoroughly before clicking the
+                final
+                **Confirm Submission** button.</p>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>

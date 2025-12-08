@@ -1035,11 +1035,11 @@ class TraineeController extends BaseController
                     if ($fieldName == 'enclosure1') {
                         $fieldName = 'Provisional training certificate';
                     } elseif ($fieldName == 'enclosure2') {
-                        $fieldName = ' Bank Cheque book';
+                        $fieldName = 'Bank Cheque book';
                     } elseif ($fieldName == 'enclosure3') {
-                        $fieldName = 'Photograph';
+                        $fieldName = 'FCPS Part-I Congratulation Letter';
                     } elseif ($fieldName == 'enclosure4') {
-                        $fieldName = 'Signature';
+                        $fieldName = 'Mid-Term Congratulation Letter';
                     } elseif ($fieldName == 'enclosure5') {
                         $fieldName = 'NID/Smart Card';
                     }
@@ -1048,11 +1048,6 @@ class TraineeController extends BaseController
                         'status'  => 'error',
                         'message' => "{$fieldName} file exceeds 300 KB limit.",
                     ]);
-
-                    /*return $this->response->setJSON([
-                'status'  => 'error',
-                'message' => "{$fieldName} file exceeds 300 KB limit.",
-                ])->setStatusCode(400);*/
                 }
 
                 // Generate a secure, unique name for the file to prevent conflicts
@@ -1075,12 +1070,12 @@ class TraineeController extends BaseController
                     ];
                 } elseif ($fieldName == 'enclosure3') {
                     $savedFileNames[] = [
-                        'fileType' => 'photograph',
+                        'fileType' => 'fcps_congrats',
                         'fileName' => $newName,
                     ];
                 } elseif ($fieldName == 'enclosure4') {
                     $savedFileNames[] = [
-                        'fileType' => 'signature',
+                        'fileType' => 'midterm_congrats',
                         'fileName' => $newName,
                     ];
                 } elseif ($fieldName == 'enclosure5') {
@@ -1110,11 +1105,13 @@ class TraineeController extends BaseController
             $query            = $builder->get();
             $maxBillSerialRow = $query->getRowArray();
 
-            $maxBillSerial = $maxBillSerialRow['bill_sl_no'] ?? env('bill.startSlNo', 1); // default 1 if null
+            $maxBillSerial = $maxBillSerialRow['bill_sl_no'] ?? env('bill.startSlNo', 0); // default 1 if null
 
             $department = $this->specialityModel->find($data['currentDepartment']);
             if ($data['coursePeriod'] > 0) {
                 $currentTrainingSlot = count($data['previousTrainingDetails']) > 0 ? count($data['previousTrainingDetails']) + 1 : 1;
+            } else {
+                $currentTrainingSlot = 1;
             }
 
             $savedData = [
@@ -1173,7 +1170,7 @@ class TraineeController extends BaseController
                 $this->applicantInformationModel->update($applicant['applicant_id'], $updatedData);
 
                 //print_r($approvedHonorariums);
-                // print_r($data);
+                //print_r($data);
                 //print_r($updatedData);
                 //dd($data);
 

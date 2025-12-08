@@ -43,8 +43,8 @@
 
 <body>
   <header style="width: 100%;">
-    <!-- <img src="<?php echo base_url(); ?>public/assets/images/banner.png" alt="Banner"
-      style="width:100%; background-color: #009641;" /> -->
+    <img src="<?php echo base_url(); ?>public/assets/images/banner.png" alt="Banner"
+      style="width:100%; background-color: #009641;" />
   </header>
   <footer>
     <table width="100%" border="0">
@@ -71,7 +71,7 @@
           </th>
           <th>
             <?php if (!empty($applicationAttachments)) {?> <img
-              src="<?php echo base_url('writable/uploads/applications/' . $applicationAttachments['photograph']); ?>"
+              src="<?php echo base_url('public/uploads/honorariums/' . $applicationAttachments['photograph']); ?>"
               width="100px" />
             <?php }?>
           </th>
@@ -358,10 +358,12 @@
           </td>
         </tr>
         <tr>
-          <!-- <td colspan="4">
-          <?php //if (!empty($signature)) {?> <img src="<?php //echo base_url('upload/' . $signature); ?>" width="100px" />
-          <?php //}?>
-        </td> -->
+          <td colspan="4">
+            <?php if (!empty($applicationAttachments)) {?> <img
+              src="<?php echo base_url('public/uploads/honorariums/' . $applicationAttachments['signature']); ?>"
+              width="100" height="80" />
+            <?php }?>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -398,7 +400,6 @@
     </table>
 
   </main>
-
 </body>
 
 </html>

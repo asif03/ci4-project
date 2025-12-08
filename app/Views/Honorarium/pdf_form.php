@@ -79,7 +79,8 @@
             Allowances (Honorarium)
           </h4>
         </td>
-        <td style="width: 20%; font-size: 12px; border: 1px solid #000000;">SL:                                                                                <?php echo $honorarium['bill_sl_no']; ?>
+        <td style="width: 20%; font-size: 12px; border: 1px solid #000000;">SL:
+          <?php echo $honorarium['bill_sl_no']; ?>
         </td>
       </tr>
     </table>
@@ -113,7 +114,16 @@
         <td colspan="2">Department:                                    <?php echo $honorarium['department_name']; ?></td>
       </tr>
       <tr>
-        <td>Current Training Period:<?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>
+        <td>Current Training Session:<?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>,
+          Current Training Slot:                                 <?php if ($honorarium['current_training_slot'] == 1) {
+                                         echo $honorarium['current_training_slot'] . 'st';
+                                     } elseif ($honorarium['current_training_slot'] == 2) {
+                                         echo $honorarium['current_training_slot'] . 'nd';
+                                     } elseif ($honorarium['current_training_slot'] == 3) {
+                                         echo $honorarium['current_training_slot'] . 'rd';
+                                     } else {
+                                         echo $honorarium['current_training_slot'] . 'th';
+                                 }?>
         </td>
         <td>Applying for Honorarium:                                     <?php if ($honorarium['honorarium_position'] == 1) {
                                              echo $honorarium['honorarium_position'] . 'st';
@@ -130,18 +140,18 @@
         <td>Branch Name:                         <?php echo $honorarium['branch_name']; ?></td>
       </tr>
       <tr>
-        <td>Bank Account Number (Online & Personal):                                                     <?php echo $honorarium['account_no']; ?></td>
+        <td>Bank Account Number (Personal-Online):                                                   <?php echo $honorarium['account_no']; ?></td>
         <td>Routing Number:                            <?php echo $honorarium['routing_number']; ?></td>
       </tr>
       <tr>
-        <td colspan="2" style="background-color: #000000; color: #FFFFFF; padding: 5px; text-align: center;">NB:
-          Provisional training
-          certificate, Photocopy of any page of the Personal bank cheque book and photocopy of NID/ Smart Card of
-          trainee must be
-          attached herewith.</td>
+        <td colspan="2" style="background-color: #000000; color: #FFFFFF; padding: 5px; text-align: center;">NB: 1.
+          Attested Training Certificate/ Provisional Training Certificate, 2. Copy of FCPS Part-1 Congratulations Letter
+          3. Copy of FCPS Midterm Congratulations Letter (if applicable) 4. Copy of any page of the Personal bank MICR
+          cheque / Bank Statement with printed Name & Routing Number and 5. Copy of NID/ Smart Card of the trainee must
+          be attached herewith</td>
       </tr>
       <tr>
-        <td colspan="2">I have received 30,000x6=1,80,000/- (In words: One Lakh and Eighty Thousand) as training
+        <td colspan="2">I have received 35,000x6=2,10,000/- (In words: Two lakh and ten thousand) as training
           allowance (Honorarium) for last 6 month period
           <?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>.
         </td>
@@ -155,7 +165,7 @@
             I am Dr. <span style="text-decoration: underline;"><?php echo $honorarium['name']; ?></span> declaring that
             all the information given by me are true. I have completed my last Six(6) months training in the
             <?php echo $honorarium['department_name']; ?>
-            Department of<?php echo $honorarium['training_institute_name']; ?>. Apart from this training, I was not
+            department of<?php echo $honorarium['training_institute_name']; ?>. Apart from this training, I was not
             involved in any
             other job/duty/practice and also
             have not received salary/allowances from any other source.
@@ -233,8 +243,8 @@
         <td colspan="12" style="font-size: 12px; text-align: justify; padding: 5px;">
           Bills submitted for the remuneration of FCPS non-government trainees are payable under the Government
           Allowances Assistance Sector (Code No. 3631102). Accordingly, based on the report from the training institute
-          and RTMD of BCPS, a total of six (6) months of allowances, amounting to Tk. 30,000 per month, total Tk.
-          1,80,000/- (In words: One Lakh and Eighty Thousand), has been sanctioned and disbursed for the period from
+          and RTMD of BCPS, a total of six (6) months of allowances, amounting to Tk. 35,000 per month, total Tk.
+          2,10,000/- (In words: Two lakh and ten thousand), has been sanctioned and disbursed for the period from
           <?php if ($honorarium['honorarium_slot_id'] == 1) {
                   echo 'January to June ' . date('Y');
               } elseif ($honorarium['honorarium_slot_id'] == 2) {
@@ -253,11 +263,11 @@
         </td>
         <td colspan="3" style="font-size: 12px; text-align: center; padding: 5px; font-weight: bold;">
           ____________________________ <br>
-          Additional Director (Finance)
+          Additional Director (Admin)
         </td>
         <td colspan="3" style="font-size: 12px; text-align: right; padding: 5px; font-weight: bold;">
           ___________________________ <br>
-          Additional Director (Admin)
+          Additional Director (Finance)
         </td>
       </tr>
       <tr>
