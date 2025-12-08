@@ -32,7 +32,7 @@ $RECYCLE.BIN/
 
 # dependencies
 node_modules/
-
+public/uploads
 
 # KDE directory preferences
 .directory
