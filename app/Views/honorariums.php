@@ -150,9 +150,9 @@
           </div>
 
           <div class="d-grid gap-2">
-            <a href="#link-hr-policy"
+            <a href="<?=base_url()?>public/Operating_Manual_of_Honorarium_Bill_Summission.pdf" target="_blank"
               class="link-item d-flex justify-content-between align-items-center p-2 rounded-3 text-decoration-none border">
-              <span class="text-primary fw-medium small">HR Policy Manual (PDF)</span>
+              <span class="text-primary fw-medium small">Operating Manual (PDF)</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="text-primary">
@@ -163,18 +163,7 @@
 
             <a href="#link-travel-form"
               class="link-item d-flex justify-content-between align-items-center p-2 rounded-3 text-decoration-none border">
-              <span class="text-primary fw-medium small">Travel Reimbursement Form</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="text-primary">
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </a>
-
-            <a href="#link-expense-guide"
-              class="link-item d-flex justify-content-between align-items-center p-2 rounded-3 text-decoration-none border">
-              <span class="text-primary fw-medium small">Monthly Expense Guide</span>
+              <span class="text-primary fw-medium small">Notice</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="text-primary">
@@ -183,8 +172,6 @@
               </svg>
             </a>
           </div>
-
-
 
         </div>
         <div class="card p-4 instruction-card">
@@ -237,7 +224,10 @@
               <ul>
                 <li class="small text-muted">Enclosure 1: Provisional training certificate (Max 300KB, PDF/JPG)</li>
                 <li class="small text-muted">Enclosure 2: Bank Cheque book/Bank Statement (Max 300KB, PDF/JPG)</li>
-                <li class="small text-muted">Enclosure 3: National Identity Card (Max 300KB, PDF/JPG)</li>
+                <li class="small text-muted">Enclosure 3: FCPS Part-I Congratulations Letter (Max 300KB, PDF/JPG)</li>
+                <li class="small text-muted">Enclosure 4: Congratulations Letter of FCPS Midterm (if applicable) (Max
+                  300KB, PDF/JPG)</li>
+                <li class="small text-muted">Enclosure 5: National Identity Card (Max 300KB, PDF/JPG)</li>
               </ul>
             </div>
           </div>

@@ -346,7 +346,6 @@
                 <i class="fas fa-plus me-1"></i> Add Record
               </button> -->
           </div>
-          <!-- Field 14: Applying for honorarium (Months) -->
           <div class="col-md-6">
             <label for="honorariumPosition" class="form-label">14) Applying for Honorarium</label>
             <select name="honorariumPosition" id="honorariumPosition" class="form-select"
@@ -357,6 +356,31 @@
                   for ($cnt = 1; $cnt <= 10; $cnt++) {
                   ?>
               <option value="<?php echo $cnt; ?>"<?php if ($honorarium->maxHonorariumCnt + 1 == $cnt) {
+            echo 'selected';
+    }
+    ?>>
+                <?php echo $cnt ?><?php if ($cnt == 1) {
+            echo 'st';
+        } elseif ($cnt == 2) {
+            echo 'nd';
+        } elseif ($cnt == 3) {
+            echo 'rd';
+        } else {
+        echo 'th';
+    }?></option>
+              <?php
+                  }
+              ?>
+            </select>
+          </div>
+          <!-- Field 15: Current Training Slot -->
+          <div class="col-md-6">
+            <label for="trainingSlot" class="form-label">15) Current Training Slot</label>
+            <select name="trainingSlot" id="trainingSlot" class="form-select" disabled>
+              <?php
+                  for ($cnt = 1; $cnt <= 10; $cnt++) {
+                  ?>
+              <option value="<?php echo $cnt; ?>"<?php if ($cnt == 1) {
             echo 'selected';
     }
     ?>>
@@ -682,6 +706,9 @@ function togglePreviousTrainingDetails(value) {
       addTrainingRow(true);
     }
   }
+
+  const currentTrainigSlot = count + 1;
+  document.getElementById('trainingSlot').value = currentTrainigSlot;
 }
 
 function setDynamicFieldsRequired(isRequired) {
@@ -964,6 +991,8 @@ function renderPreview(data) {
     `<dt class="col-sm-5 preview-label">13) Total Previous Training (Months):</dt><dd class="col-sm-7 preview-value">${data.coursePeriod}</dd>`;
   html +=
     `<dt class="col-sm-5 preview-label">14) Applying for Honorarium:</dt><dd class="col-sm-7 preview-value">${data.honorariumPosition} (st/nd/rd/th)</dd>`;
+  html +=
+    `<dt class="col-sm-5 preview-label">15) Current Training Slot:</dt><dd class="col-sm-7 preview-value">${data.previousTrainingDetails.length+1} (st/nd/rd/th)</dd>`;
   html += '</dl>';
 
   // --- Dynamic Previous Training Details Preview ---
