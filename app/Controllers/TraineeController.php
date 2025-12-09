@@ -1198,11 +1198,23 @@ class TraineeController extends BaseController
                     ->where('applicant_id', $applicant['applicant_id'])
                     ->findAll();
 
-                foreach ($applicantFiles as $key => $value) {
-                    $applicantFileCategory[] = $value['type'];
-                }
-                foreach ($savedFileNames as $file) {
-                    if (!in_array($file['fileType'], $applicantFileCategory)) {
+                if ($applicantFiles) {
+                    foreach ($applicantFiles as $key => $value) {
+                        $applicantFileCategory[] = $value['type'];
+                    }
+                    foreach ($savedFileNames as $file) {
+                        if (!in_array($file['fileType'], $applicantFileCategory)) {
+                            $fileData = [
+                                'applicant_id' => $applicant['applicant_id'],
+                                'file_name'    => $file['fileName'],
+                                'type'         => $file['fileType'],
+                            ];
+
+                            $this->applicantFileModel->insert($fileData);
+                        }
+                    }
+                } else {
+                    foreach ($savedFileNames as $file) {
                         $fileData = [
                             'applicant_id' => $applicant['applicant_id'],
                             'file_name'    => $file['fileName'],

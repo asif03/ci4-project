@@ -161,7 +161,7 @@
               </svg>
             </a>
 
-            <a href="#link-travel-form"
+            <a href="<?=base_url()?>public/Notice for Training Allowance Bill July to December 2025.pdf" target="_blank"
               class="link-item d-flex justify-content-between align-items-center p-2 rounded-3 text-decoration-none border">
               <span class="text-primary fw-medium small">Notice</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"

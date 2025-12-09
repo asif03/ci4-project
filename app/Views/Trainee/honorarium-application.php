@@ -943,6 +943,8 @@ function renderPreview(data) {
   data.accountNumber = data.accountNumber ? data.accountNumber : '<?=esc($applicantInfo['account_no'])?>';
   data.routingNumber = data.routingNumber ? data.routingNumber : '<?=esc($applicantInfo['routing_number'])?>';
 
+  const prevCount = Array.isArray(data.previousTrainingDetails) ? data.previousTrainingDetails.length : 0;
+
 
   html += '<dl class="row">';
   html +=
@@ -992,7 +994,7 @@ function renderPreview(data) {
   html +=
     `<dt class="col-sm-5 preview-label">14) Applying for Honorarium:</dt><dd class="col-sm-7 preview-value">${data.honorariumPosition} (st/nd/rd/th)</dd>`;
   html +=
-    `<dt class="col-sm-5 preview-label">15) Current Training Slot:</dt><dd class="col-sm-7 preview-value">${data.previousTrainingDetails.length+1} (st/nd/rd/th)</dd>`;
+    `<dt class="col-sm-5 preview-label">15) Current Training Slot:</dt><dd class="col-sm-7 preview-value">${prevCount+1} (st/nd/rd/th)</dd>`;
   html += '</dl>';
 
   // --- Dynamic Previous Training Details Preview ---
