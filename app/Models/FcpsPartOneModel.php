@@ -87,7 +87,11 @@ class FcpsPartOneModel extends Model
             if ($value !== null && $value !== '') {
                 // Automatically add table alias if not included
                 if (!str_contains($key, '.')) {
-                    $key = 'ap.' . $key;
+                    if ($key == 'cell') {
+                        $key = 'LPAD(ap.' . $key . ',11,"0")';
+                    } else {
+                        $key = 'ap.' . $key;
+                    }
                 }
                 $builder->where($key, $value);
             }

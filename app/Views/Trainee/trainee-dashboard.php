@@ -66,7 +66,7 @@
       <div class="text-muted small">Trainee</div>
     </div>
     <img
-      src="https://placehold.co/40x40/22c55e/ffffff?text=<?=esc(implode('', array_map(fn($w) => strtoupper($w[0]), explode(' ', $userInfo->full_name))))?>"
+      src="https://placehold.co/40x40/22c55e/ffffff?text=<?=esc(implode('', array_map(fn($w) => strtoupper($w[0]), explode(' ', trim($userInfo->full_name)))))?>"
       alt="User Profile" class="rounded-circle">
   </div>
 </header>

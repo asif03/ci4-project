@@ -41,7 +41,7 @@
 <div id="profile-page" class="page-content">
   <header class="profile-header mb-4 d-flex flex-column flex-md-row align-items-center justify-content-start">
     <img
-      src="https://placehold.co/120x120/22c55e/ffffff?text=<?=esc(implode('', array_map(fn($w) => strtoupper($w[0]), explode(' ', $basicInfo['applicant_name']))))?>"
+      src="https://placehold.co/120x120/22c55e/ffffff?text=<?=esc(implode('', array_map(fn($w) => strtoupper($w[0]), explode(' ', trim($basicInfo['applicant_name'])))))?>"
       alt="User Profile" class="profile-avatar mb-4 mb-md-0 me-md-4">
     <div>
       <h1 class="h2 fw-bold mb-1"><?=esc($basicInfo['applicant_name'])?></h1>

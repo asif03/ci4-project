@@ -128,8 +128,8 @@
                     <p class="mb-0"><strong>Fax:</strong> 02-222288928</p>
                     <p class="mb-0"><strong>Web:</strong> <a href="http://www.bcps.edu.bd"
                         class="text-green text-decoration-none" target="_blank">www.bcps.edu.bd</a></p>
-                    <p class="mb-0"><strong>Email:</strong> <a href="mailto:bcps@bcps.edu.bd"
-                        class="text-green text-decoration-none">bcps@bcps.edu.bd</a></p>
+                    <p class="mb-0"><strong>Email:</strong> <a href="mailto:rtmd@bcps.edu.bd"
+                        class="text-green text-decoration-none">rtmd@bcps.edu.bd</a></p>
                   </div>
                 </div>
               </div>

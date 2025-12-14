@@ -27,6 +27,8 @@ class Dashboard extends BaseController
         // Get the authenticated user
         $user = auth()->user();
 
+        //dd($user);
+
         //dd($user->inGroup);
         //$progressReports = $this->progressReportModel->where('reg_no', $user->username)->where('status', true)->findAll();
 

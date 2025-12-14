@@ -57,13 +57,14 @@ class Home extends BaseController
         if ($chooseOption === 'both') {
             $params = [
                 'pen_number' => $penNo,
-                'cell'       => $mobileNo,
+                //'cell'       => $mobileNo,
+                'cell'       => str_pad($mobileNo, 11, "0", STR_PAD_LEFT),
                 'email'      => $emailAddress,
             ];
         } elseif ($chooseOption === 'sms') {
             $params = [
                 'pen_number' => $penNo,
-                'cell'       => $mobileNo,
+                'cell'       => str_pad($mobileNo, 11, "0", STR_PAD_LEFT),
             ];
         } elseif ($chooseOption === 'email') {
             $params = [
@@ -78,7 +79,7 @@ class Home extends BaseController
 
             $otp = rand(1000, 9999);
 
-            if ($chooseOption === 'sms' && $trainee['smscounter'] >= 2) {
+            if ($chooseOption === 'sms' && $trainee['smscounter'] >= env('sms.max', 2)) {
                 return $this->response->setJSON([
                     'success'    => false,
                     'message'    => 'You’ve already requested your Registration No. and Password via SMS twice. Please try a different method to continue.',
@@ -86,7 +87,7 @@ class Home extends BaseController
                 ]);
             }
 
-            if ($chooseOption === 'both' && $trainee['smscounter'] >= 2) {
+            if ($chooseOption === 'both' && $trainee['smscounter'] >= env('sms.max', 2)) {
                 $chooseOption === 'email';
             }
 
@@ -273,13 +274,14 @@ class Home extends BaseController
         if ($chooseOption === 'both') {
             $params = [
                 'pen_number' => $penNo,
-                'cell'       => $mobileNo,
+                //'cell'       => $mobileNo,
+                'cell'       => str_pad($mobileNo, 11, "0", STR_PAD_LEFT),
                 'email'      => $emailAddress,
             ];
         } elseif ($chooseOption === 'sms') {
             $params = [
                 'pen_number' => $penNo,
-                'cell'       => $mobileNo,
+                'cell'       => str_pad($mobileNo, 11, "0", STR_PAD_LEFT),
             ];
         } elseif ($chooseOption === 'email') {
             $params = [
@@ -294,7 +296,7 @@ class Home extends BaseController
 
             if (password_verify($otp, $trainee['hashedotp'])) {
 
-                if ($chooseOption === 'both' && $trainee['smscounter'] >= 2) {
+                if ($chooseOption === 'both' && $trainee['smscounter'] >= env('sms.max', 2)) {
                     $chooseOption === 'email';
                 }
 

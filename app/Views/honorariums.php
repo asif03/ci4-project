@@ -101,9 +101,17 @@
     <div class="col-lg-8">
       <div class="card p-4 mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="card-title mb-0">List of Honorarium Bill Submitted</h4>
+          <h6 class="card-title text-danger mb-0">Application for honorarium for FCPS Part-I trainees (Medicine,
+            Surgery, Obstetrics
+            & Gynaecology, Paediatrics, and Allied subjects) who passed from January, 2025 onward</h6>
+          <a href="https://eportal.bcps.edu.bd/login" class="btn btn-danger shadow-sm" target="_blank">
+            <i class="fas fa-plus-circle me-2"></i> Apply for Bill (e-Logbook)
+          </a>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="card-title mb-0">List of Honorarium Bill Submitted (Except e-Logbook)</h4>
           <a href="<?=base_url('login')?>" class="btn btn-primary shadow-sm">
-            <i class="fas fa-plus-circle me-2"></i> Apply for Bill
+            <i class="fas fa-plus-circle me-2"></i> Apply for Bill (Except e-Logbook)
           </a>
         </div>
         <div class="table-responsive">
