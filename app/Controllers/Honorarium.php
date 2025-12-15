@@ -327,8 +327,16 @@ class Honorarium extends BaseController
 
         // Get previous training record IDs
         $prevTrainingRecordIds = $request->getPost('prevTrainingRecordId');
+
+        /*echo '<pre>';
+        print_r($prevTrainingRecordIds);
+        echo '</pre>';
+        die;*/
         //Removed previous training records
-        $this->honorariumPrevTrainingModel->whereNotIn('id', $prevTrainingRecordIds)->delete();
+        $this->honorariumPrevTrainingModel
+            ->where('honorarium_id', $honorariumId)
+            ->whereNotIn('id', $prevTrainingRecordIds)
+            ->delete();
 
         foreach ($prevTrainingRecordIds as $index => $recordId) {
             if ($recordId == '') {

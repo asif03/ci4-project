@@ -1,4 +1,4 @@
-<?php print_r($honorarium); ?>
+<?php //print_r($honorarium); ?>
 
 <style>
 .table>tbody>tr>td {

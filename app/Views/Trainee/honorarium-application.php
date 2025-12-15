@@ -75,7 +75,9 @@
 <div class="page-content">
   <div class="card p-4 rounded-3 shadow-sm">
     <h3 class="main-title text-center">HONORARIUM APPLICATION</h3>
-    <p class="sub-title text-center">(Bill of Non-Governmental Trainees Allowances)</p>
+    <p class="text-center">(Bill of Non-Governmental Trainees Allowances)</p>
+    <p class="sub-title text-center text-danger fw-bold">(For the best experience, please use a desktop or laptop
+      computer)</p>
     <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success" role="alert">
       <?=session()->getFlashdata('success')?>
@@ -109,14 +111,16 @@
             <div class="d-flex align-items-center">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="trainingType" id="coreTraining" value="Core"
-                  onchange="changeTrainingType(this.value)" required />
+                  onchange="changeTrainingType(this.value)" required
+                  <?=($honorarium->maxHonorariumCnt + 1 > 4) ? '' : 'checked'?> />
                 <label class="form-check-label" for="coreTraining">
                   Core
                 </label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="trainingType" id="advanceTraining" value="Advance"
-                  onchange="changeTrainingType(this.value)" required />
+                  onchange="changeTrainingType(this.value)" required
+                  <?=($honorarium->maxHonorariumCnt + 1 > 4) ? 'checked' : ''?> />
                 <label class="form-check-label" for="advanceTraining">
                   Advance
                 </label>
@@ -128,7 +132,7 @@
             <div class="d-flex align-items-center">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" name="midTermAppeared" id="midTermAppeared"
-                  onchange="changeMidTerm()" />
+                  onchange="changeMidTerm()" <?=($honorarium->maxHonorariumCnt + 1 > 4) ? 'checked' : ''?> />
                 <label class="form-check-label" for="midTermAppeared">
                   Yes
                 </label>
@@ -826,16 +830,31 @@ handlePreview = function() {
 
   const form = document.getElementById('honorariumForm');
 
+  //console.log(form.checkValidity());
+
   if (!form.checkValidity()) {
     form.classList.add('was-validated');
+
+    /*const invalidFields = form.querySelectorAll(':invalid');
+    invalidFields.forEach(field => {
+      console.log({
+        name: field.name,
+        value: field.value,
+        error: field.validationMessage
+      });
+    });*/
+
     return;
   }
+
 
   // 1. Collect all non-file form data
   const formData = new FormData(form);
   const data = {};
   // A. Iterate over all form elements explicitly to handle checkboxes
   const formElements = form.elements;
+
+  console.log(formElements);
 
   for (let i = 0; i < formElements.length; i++) {
     const element = formElements[i];
@@ -1058,9 +1077,9 @@ function renderPreview(data) {
   html +=
     `<dt class="col-sm-8 preview-label">2) A page of the Bank Cheque book:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure2Name || 'N/A'}</dd>`;
   html +=
-    `<dt class="col-sm-8 preview-label">3) Recent Passport size Photograph:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure3Name || 'N/A'}</dd>`;
+    `<dt class="col-sm-8 preview-label">3) FCPS Part-I Congratulations Letter:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure3Name || 'N/A'}</dd>`;
   html +=
-    `<dt class="col-sm-8 preview-label">4) Applicant’s Signature:</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure4Name || 'N/A'}</dd>`;
+    `<dt class="col-sm-8 preview-label">4) FCPS Midterm Congratulations Letter (if applicable):</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure4Name || 'N/A'}</dd>`;
   html +=
     `<dt class="col-sm-8 preview-label">5) National Identity Card (NID/Smart Card):</dt><dd class="col-sm-4 preview-value text-break">${data.enclosure5Name || 'N/A'}</dd>`;
   html += '</dl>';

@@ -57,7 +57,13 @@ INSERT INTO `fcps_mid_term_applicants`(`midterm_session`, `midterm_year`, `bmdc_
 SELECT `midterm_session`, `midterm_year`, `bmdc_reg_no`, `bmdc_reg_no_org`, `roll_no`, `pen_no`, `applicant_name`, `speciality_name`, `final_result` FROM `mid_term_excel` WHERE `final_result`!= 'Not Appeared' ORDER BY `exam_log_id` ASC;
 
 INSERT INTO `fcps_mid_term_applicants`(`midterm_session`, `midterm_year`, `bmdc_reg_no`, `bmdc_reg_no_org`, `roll_no`, `reg_no`, `applicant_name`, `speciality`, `exam_result`) 
+SELECT `midterm_session`, `midterm_year`, `bmdc_reg_no`, `bmdc_reg_no_org`, `roll_no`, `pen_no`, `applicant_name`, `speciality_name`, 'Failed' FROM `mid_term_excel` WHERE `final_result`= 'Not Appeared' AND `written_result`!='Absent' ORDER BY `exam_log_id` ASC;
+
+INSERT INTO `fcps_mid_term_applicants`(`midterm_session`, `midterm_year`, `bmdc_reg_no`, `bmdc_reg_no_org`, `roll_no`, `reg_no`, `applicant_name`, `speciality`, `exam_result`) 
 SELECT `midterm_session`, `midterm_year`, `bmdc_reg_no`, `bmdc_reg_no_org`, `roll_no`, `pen_no`, `applicant_name`, `speciality`, `final_result` FROM `mid_all` ORDER BY `midterm_year` ASC, `midterm_session` ASC;
+
+INSERT INTO `fcps_mid_term_applicants`(`midterm_session`, `midterm_year`, `bmdc_reg_no`, `bmdc_reg_no_org`, `roll_no`, `reg_no`, `applicant_name`, `speciality`, `exam_result`) 
+SELECT `midterm_session`, `midterm_year`, `bmdc_reg_no`, `bmdc_reg_no_org`, `roll_no`, `pen_no`, `applicant_name`, `speciality_name`, 'Failed' FROM `mid_term_excel` WHERE `final_result`= 'Not Appeared' AND `written_result`='Absent' AND `bmdc_reg_no_org`='A94144' ORDER BY `exam_log_id` ASC;
 
 DELIMITER $$
 CREATE TRIGGER `trg_update_honorarium_information` BEFORE UPDATE ON `honorarium_information`

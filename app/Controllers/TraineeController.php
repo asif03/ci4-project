@@ -944,6 +944,15 @@ class TraineeController extends BaseController
             ]);
         }
 
+        if ($data['coursePeriod'] > 0) {
+            if (empty($data['previousTrainingDetails'])) {
+                return $this->response->setJSON([
+                    'status'  => 'error',
+                    'message' => 'Please enter the previous training details.',
+                ]);
+            }
+        }
+
         //print_r($data);
         //dd($data);
 
@@ -1198,6 +1207,12 @@ class TraineeController extends BaseController
                     ->where('applicant_id', $applicant['applicant_id'])
                     ->findAll();
 
+                //dd($applicantFiles);
+                /*echo '<pre>';
+                print_r($applicantFiles);
+                echo '</pre>';*/
+                //die;
+
                 if ($applicantFiles) {
                     foreach ($applicantFiles as $key => $value) {
                         $applicantFileCategory[] = $value['type'];
@@ -1211,7 +1226,25 @@ class TraineeController extends BaseController
                             ];
 
                             $this->applicantFileModel->insert($fileData);
-                        }
+                        } /*else {
+                    $fileData = [
+                    'file_name' => $file['fileName'],
+                    'modified'  => date('Y-m-d H:i:s'),
+                    ];
+
+                    echo '<pre>';
+                    print_r($fileData);
+                    echo '</pre>';
+                    die;
+
+                    $this->applicantFileModel
+                    ->where('type', $file['fileType'])
+                    ->where('applicant_id', $file['applicant_id'])
+                    ->update(null, $fileData);
+
+                    //$this->applicantFileModel->update($applicant['fiile_id'], $fileData);
+                    }*/
+
                     }
                 } else {
                     foreach ($savedFileNames as $file) {
