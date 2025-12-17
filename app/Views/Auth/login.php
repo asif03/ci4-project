@@ -55,11 +55,11 @@
     </div>
     <div class="text-center">
       <a href="<?=base_url('registration-no-sms')?>" class="text-green text-decoration-none fw-bold">Forgot
-        Password?</a>
+        Registration No. & Password?</a>
     </div>
     <hr class="my-4">
     <div class="text-center">
-      <p class="text-muted">Don't have username & password? <a href="<?=base_url('registration-no-sms')?>"
+      <p class="text-muted">Don't have Registration No. & Password? <a href="<?=base_url('registration-no-sms')?>"
           class="text-green text-decoration-none fw-bold">Click Here</a></p>
     </div>
   </form>

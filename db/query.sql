@@ -73,3 +73,21 @@ CREATE TRIGGER `trg_update_honorarium_information` BEFORE UPDATE ON `honorarium_
 END
 $$
 DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER `trg_update_applicant_information` BEFORE UPDATE ON `applicant_information`
+ FOR EACH ROW BEGIN
+ 		INSERT INTO `applicant_information_log`(`applicant_id`, `name`, `father_spouse_name`, `mother_name`, `date_of_birth`, `nataionality`, `religion`, `nid`, `address`, `mobile`, `telephone`, `email`, `permanent_address`, `mbbs_bds_year`, `mbbs_institute_id`, `mbbs_bds_institute`, `bmdc_reg_type`, `bmdc_reg_no`, `bmdc_validity`, `speciality_id`, `fcps_speciallity`, `fcps_roll`, `fcps_year`, `fcps_month`, `fcps_reg_no`, `pen_no`, `continuing`, `continuing_start_date`, `continuing_end_date`, `continuing_fcps_traning`, `mid_term_session`, `mid_term_year`, `mid_term_result`, `mid_term_roll`, `account_name`, `bank_id`, `bank_name`, `branch_name`, `account_no`, `routing_number`, `undertaking_confirmation`, `eligible_status`, `eligible_by`, `eligiblity_date`, `reject_reason`, `rejected_by`, `reject_date`, `status`, `gander`, `action_type`)
+        VALUES (OLD.`applicant_id`, OLD.`name`, OLD.`father_spouse_name`, OLD.`mother_name`, OLD.`date_of_birth`, OLD.`nataionality`, OLD.`religion`, OLD.`nid`, OLD.`address`, OLD.`mobile`, OLD.`telephone`, OLD.`email`, OLD.`permanent_address`, OLD.`mbbs_bds_year`, OLD.`mbbs_institute_id`, OLD.`mbbs_bds_institute`, OLD.`bmdc_reg_type`, OLD.`bmdc_reg_no`, OLD.`bmdc_validity`, OLD.`speciality_id`, OLD.`fcps_speciallity`, OLD.`fcps_roll`, OLD.`fcps_year`, OLD.`fcps_month`, OLD.`fcps_reg_no`, OLD.`pen_no`, OLD.`continuing`, OLD.`continuing_start_date`, OLD.`continuing_end_date`, OLD.`continuing_fcps_traning`, OLD.`mid_term_session`, OLD.`mid_term_year`, OLD.`mid_term_result`, OLD.`mid_term_roll`, OLD.`account_name`, OLD.`bank_id`, OLD.`bank_name`, OLD.`branch_name`, OLD.`account_no`, OLD.`routing_number`, OLD.`undertaking_confirmation`, OLD.`eligible_status`, OLD.`eligible_by`, OLD.`eligiblity_date`, OLD.`reject_reason`, OLD.`rejected_by`, OLD.`reject_date`, OLD.`status`, OLD.`gander`, 'UPDATE');
+END
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER `trg_delete_applicant_information` BEFORE DELETE ON `applicant_information`
+ FOR EACH ROW BEGIN
+ 		INSERT INTO `applicant_information_log`(`applicant_id`, `name`, `father_spouse_name`, `mother_name`, `date_of_birth`, `nataionality`, `religion`, `nid`, `address`, `mobile`, `telephone`, `email`, `permanent_address`, `mbbs_bds_year`, `mbbs_institute_id`, `mbbs_bds_institute`, `bmdc_reg_type`, `bmdc_reg_no`, `bmdc_validity`, `speciality_id`, `fcps_speciallity`, `fcps_roll`, `fcps_year`, `fcps_month`, `fcps_reg_no`, `pen_no`, `continuing`, `continuing_start_date`, `continuing_end_date`, `continuing_fcps_traning`, `mid_term_session`, `mid_term_year`, `mid_term_result`, `mid_term_roll`, `account_name`, `bank_id`, `bank_name`, `branch_name`, `account_no`, `routing_number`, `undertaking_confirmation`, `eligible_status`, `eligible_by`, `eligiblity_date`, `reject_reason`, `rejected_by`, `reject_date`, `status`, `gander`, `action_type`)
+        VALUES (OLD.`applicant_id`, OLD.`name`, OLD.`father_spouse_name`, OLD.`mother_name`, OLD.`date_of_birth`, OLD.`nataionality`, OLD.`religion`, OLD.`nid`, OLD.`address`, OLD.`mobile`, OLD.`telephone`, OLD.`email`, OLD.`permanent_address`, OLD.`mbbs_bds_year`, OLD.`mbbs_institute_id`, OLD.`mbbs_bds_institute`, OLD.`bmdc_reg_type`, OLD.`bmdc_reg_no`, OLD.`bmdc_validity`, OLD.`speciality_id`, OLD.`fcps_speciallity`, OLD.`fcps_roll`, OLD.`fcps_year`, OLD.`fcps_month`, OLD.`fcps_reg_no`, OLD.`pen_no`, OLD.`continuing`, OLD.`continuing_start_date`, OLD.`continuing_end_date`, OLD.`continuing_fcps_traning`, OLD.`mid_term_session`, OLD.`mid_term_year`, OLD.`mid_term_result`, OLD.`mid_term_roll`, OLD.`account_name`, OLD.`bank_id`, OLD.`bank_name`, OLD.`branch_name`, OLD.`account_no`, OLD.`routing_number`, OLD.`undertaking_confirmation`, OLD.`eligible_status`, OLD.`eligible_by`, OLD.`eligiblity_date`, OLD.`reject_reason`, OLD.`rejected_by`, OLD.`reject_date`, OLD.`status`, OLD.`gander`, 'DELETE');
+END
+$$
+DELIMITER ;
