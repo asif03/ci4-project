@@ -199,7 +199,18 @@ class Honorarium extends BaseController
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
-            $dompdf->stream('honorarium_' . $honorarium['bmdc_reg_no'] . $honorariumId . '.pdf', ['Attachment' => true]);
+            //$dompdf->stream('honorarium_' . $honorarium['bmdc_reg_no'] . $honorariumId . '.pdf', ['Attachment' => true]);
+
+            $filename = 'honorarium_' . $honorarium['bmdc_reg_no'] . $honorariumId . '.pdf';
+
+            //IMPORTANT HEADERS
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Cache-Control: private, max-age=0, must-revalidate');
+            header('Pragma: public');
+
+            echo $dompdf->output();
+            exit; //VERY IMPORTANT
 
         } else {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Honorarium not found.']);

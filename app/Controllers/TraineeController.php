@@ -678,7 +678,32 @@ class TraineeController extends BaseController
 
         //Honorarium application opens
         $honorariumStatus = env('bill.honorarium', 'close');
+
         if ($honorariumStatus == 'close') {
+
+            $applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
+
+            $where = [
+                'hi.applicant_id'       => $applicant['applicant_id'],
+                'hi.honorarium_slot_id' => env('bill.currentSlot', 0),
+                'hi.honorarium_year'    => env('bill.currentYear', date('Y')),
+            ];
+
+            $billInfos = $this->honorariumInformationModel->getBillInfos($where);
+
+            if (count($billInfos) > 0) {
+
+                $slotYear = env('bill.currentSlot', 0) == 1 ? 'January-June, ' : 'July-December, ' . env('bill.currentYear', date('Y'));
+
+                $data = [
+                    'isError'    => true,
+                    'message'    => 'You have already applied for ' . $slotYear,
+                    'honorarium' => $billInfos,
+                ];
+
+                return $data;
+            }
+
             $data = [
                 'isError'    => true,
                 'message'    => 'Bill application is not open right now!',

@@ -40,6 +40,8 @@ class Dashboard extends BaseController
 
         //dd($honorariumData);
 
+        //dd($honorariumData);
+
         $prgresScale = [
             'Poor'         => 1,
             'Average'      => 2,
