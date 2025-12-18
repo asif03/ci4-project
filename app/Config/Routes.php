@@ -114,7 +114,7 @@ $routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user,user'], st
     $routes->get('fetch-honorarium-trainings/(:num)', 'Honorarium::getHonorariumTrainings/$1');
 });
 
-$routes->group('reports', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static function ($routes) {
+$routes->group('reports', ['filter' => 'groups:superadmin,admin'], static function ($routes) {
     $routes->get('applications', 'Report::applications');
     $routes->get('bills', 'Report::bills');
     $routes->post('get-bills', 'Report::getBillInfo');

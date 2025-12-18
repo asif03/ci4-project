@@ -129,6 +129,10 @@ class AuthGroups extends ShieldAuthGroups
             'admin.*',
             'users.*',
             'training.*',
+            'applications.*',
+            'bills.*',
+            'trainee.*',
+            'reports.*',
         ],
         'admin'      => [
             'admin.access',
@@ -136,6 +140,7 @@ class AuthGroups extends ShieldAuthGroups
             'users.edit',
             'users.delete',
             'partone.list',
+            'reports.*',
         ],
         'rtm-admin'  => [
             'applications.index',
