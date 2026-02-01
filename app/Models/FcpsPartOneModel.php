@@ -100,4 +100,12 @@ class FcpsPartOneModel extends Model
         return $builder->get()->getRowArray(); // ✅ returns single row
     }
 
+    public function checkPaymentInfo($penNumber)
+    {
+        return $this->db->table('fcps_one_pass_applicants ap')
+            ->where('ap.pen_number', $penNumber)
+            ->where('ap.money_receipt_no >', 0)
+            ->countAllResults();
+    }
+
 }

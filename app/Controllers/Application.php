@@ -372,10 +372,11 @@ class Application extends BaseController
             return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Invalid applicant ID.');
         }
 
-        $approvedHonorariums = $this->honorariumModel->getApprovedHonorariumByApplicantId($applicantId);
-        if (count($approvedHonorariums) > 0) {
-            return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Bank Information is not possible to update due to get honorarium before.');
-        }
+        /*$approvedHonorariums = $this->honorariumModel->getApprovedHonorariumByApplicantId($applicantId);
+
+        if (!empty($approvedHonorariums) && count($approvedHonorariums) > 0) {
+        return redirect()->to(base_url('applications/edit/' . $applicantId))->with('error', 'Bank Information is not possible to update due to get honorarium before.');
+        }*/
 
         // Update Bank information
         $data = [

@@ -127,4 +127,9 @@ $routes->group('users', static function ($routes) {
     $routes->get('assign-user-role', 'UserController::assignRoleViewForm');
 });
 
+$routes->group('superadmin', ['filter' => 'groups:superadmin'], static function ($routes) {
+//$routes->group('superadmin', static function ($routes) {
+    $routes->get('db-seed', 'SeedController::index');
+});
+
 service('auth')->routes($routes);

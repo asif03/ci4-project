@@ -12,7 +12,12 @@ class PartTwoApplicantUserSeeder extends Seeder
         $db = \Config\Database::connect();
 
         // Fetch all applicants
-        $applicants = $db->table('fcps_one_pass_applicants')->get()->getResult();
+        $applicants = $db->table('fcps_one_pass_applicants')
+            ->where('id >', 33273)
+            ->get()
+            ->getResult();
+
+        //dd($applicants);
 
         foreach ($applicants as $applicant) {
             // Insert user

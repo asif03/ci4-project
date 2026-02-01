@@ -73,6 +73,16 @@ class Home extends BaseController
             ];
         }
 
+        $checkPayment = $this->fcpsPartOneModel->checkPaymentInfo($params['pen_number'] ?? '');
+
+        if ($checkPayment == 0) {
+            return $this->response->setJSON([
+                'success'    => false,
+                'message'    => 'No payment record found for the provided PEN number. Please complete the payment to proceed.',
+                'csrf_token' => csrf_hash(), // send fresh token
+            ]);
+        }
+
         $trainee = $this->fcpsPartOneModel->getTraineeInfoByParams($params);
 
         if ($trainee) {

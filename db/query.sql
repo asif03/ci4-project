@@ -122,3 +122,54 @@ CREATE TRIGGER `trg_delete_fcps_one_pass_applicants` BEFORE DELETE ON `fcps_one_
 END
 $$
 DELIMITER ;
+
+
+SELECT hi.id, hi.applicant_id, hi.bill_sl_no, hi.training_type, ap.name, ap.mobile, hi.bmdc_reg_no, ap.fcps_reg_no, ap.date_of_birth, ap.nid, ap.fcps_speciallity, ap.fcps_year, ap.fcps_month, ap.gander, hi.training_institute_id, ti.name AS training_institute_name, hi.department_id, sp.name AS department_name, hi.`current_training_slot`, hi.previous_training_inmonth, hi.honorarium_position, bnk.bank_name AS new_bank_name, ap.branch_name, ap.account_no, ap.routing_number, hi.honorarium_year,  hi.honorarium_slot_id, hs.slot_name, hi.eligible_status 
+FROM `honorarium_information` hi, applicant_information ap, honorarium_slot hs, institute ti, speciality sp, banks bnk,
+(SELECT `applicant_id`, `bmdc_reg_no`, `training_institute_id` 
+FROM `honorarium_information` WHERE `honorarium_year`=2025 AND `honorarium_slot_id`=1) AS prv
+WHERE hi.applicant_id=prv.`applicant_id`
+	AND hi.bmdc_reg_no = prv.`bmdc_reg_no`
+    AND hi.applicant_id = ap.applicant_id
+    AND hi.`training_institute_id` = prv.`training_institute_id`
+    AND hi.honorarium_slot_id = hs.id
+    AND hi.department_id = sp.speciality_id
+    AND ap.bank_id = bnk.id
+    AND hi.training_institute_id = ti.institute_id
+	AND hi.`honorarium_year`=2025 
+    AND hi.`honorarium_slot_id`=2
+ORDER BY hi.`bill_sl_no` ASC;
+
+
+SELECT hi.bill_sl_no, hi.training_type, ap.name, ap.mobile, hi.bmdc_reg_no, ap.fcps_reg_no, ap.date_of_birth, ap.nid, ap.fcps_speciallity, ap.fcps_year, ap.fcps_month, ap.gander, ti.name AS training_institute_name, sp.name AS department_name, hi.`current_training_slot`, hi.previous_training_inmonth, hi.honorarium_position, bnk.bank_name AS new_bank_name, ap.branch_name, ap.account_no, ap.routing_number, hi.honorarium_year, hs.slot_name, hi.eligible_status 
+FROM `honorarium_information` hi, `applicant_information` ap, `honorarium_slot` hs, `institute` ti, `speciality` sp, `banks` bnk,
+(SELECT `applicant_id`, `bmdc_reg_no`, `training_institute_id` 
+FROM `honorarium_information` WHERE `honorarium_year`=2025 AND `honorarium_slot_id`=1) AS prv
+WHERE hi.applicant_id=prv.`applicant_id`
+	AND hi.bmdc_reg_no = prv.`bmdc_reg_no`
+    AND hi.applicant_id = ap.applicant_id
+    AND hi.`training_institute_id` = prv.`training_institute_id`
+    AND hi.honorarium_slot_id = hs.id
+    AND hi.department_id = sp.speciality_id
+    AND ap.bank_id = bnk.id
+    AND hi.training_institute_id = ti.institute_id
+	AND hi.`honorarium_year`=2025 
+    AND hi.`honorarium_slot_id`=2
+ORDER BY hi.`bill_sl_no` ASC;
+
+
+SELECT hi.bill_sl_no, hi.training_type, ap.name, ap.mobile, hi.bmdc_reg_no, ap.fcps_reg_no, ap.date_of_birth, ap.nid, ap.fcps_speciallity, ap.fcps_year, ap.fcps_month, ap.gander, ti.name AS training_institute_name, sp.name AS department_name, hi.`current_training_slot`, hi.previous_training_inmonth, hi.honorarium_position, bnk.bank_name, ap.branch_name, ap.account_no, ap.routing_number, hi.honorarium_year, hs.slot_name, hi.eligible_status 
+FROM `honorarium_information` hi, `applicant_information` ap, `honorarium_slot` hs, `institute` ti, `speciality` sp, `banks` bnk,
+(SELECT `applicant_id`, `bmdc_reg_no`, `training_institute_id` 
+FROM `honorarium_information` WHERE `honorarium_year`=2025 AND `honorarium_slot_id`=1) AS prv
+WHERE hi.applicant_id=prv.`applicant_id`
+	AND hi.bmdc_reg_no = prv.`bmdc_reg_no`
+    AND hi.applicant_id = ap.applicant_id
+    AND hi.`training_institute_id` = prv.`training_institute_id`
+    AND hi.honorarium_slot_id = hs.id
+    AND hi.department_id = sp.speciality_id
+    AND ap.bank_id = bnk.id
+    AND hi.training_institute_id = ti.institute_id
+	AND hi.`honorarium_year`=2025 
+    AND hi.`honorarium_slot_id`=2
+ORDER BY hi.`bill_sl_no` ASC;

@@ -175,7 +175,7 @@
             <div class="col-sm-6">
               <select class="form-select" aria-label="Default select example" name="fcpsYear" id="fcpsYear" disabled>
                 <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
-                <option value="<?=$iLoop?>" <?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
+                <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['fcps_year']) {echo 'selected';}?>>
                   <?=$iLoop?></option>
                 <?php }?>
               </select>
@@ -186,9 +186,9 @@
             <div class="col-sm-6">
               <select class="form-select" aria-label="Default select example" name="fcpsSession" id="fcpsSession"
                 disabled>
-                <option value="January" <?php if ('January' == $applicant['fcps_month']) {echo 'selected';}?>>
+                <option value="January"                                        <?php if ('January' == $applicant['fcps_month']) {echo 'selected';}?>>
                   January</option>
-                <option value="July" <?php if ('July' == $applicant['fcps_month']) {echo 'selected';}?>>
+                <option value="July"                                     <?php if ('July' == $applicant['fcps_month']) {echo 'selected';}?>>
                   July</option>
               </select>
             </div>
@@ -239,7 +239,7 @@
             <div class="col-sm-6">
               <select class="form-select" aria-label="Default select example" name="mbbsBdsYear" id="mbbsBdsYear">
                 <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
-                <option value="<?=$iLoop?>" <?php if ($iLoop == $applicant['mbbs_bds_year']) {echo 'selected';}?>>
+                <option value="<?=$iLoop?>"<?php if ($iLoop == $applicant['mbbs_bds_year']) {echo 'selected';}?>>
                   <?=$iLoop?></option>
                 <?php }?>
               </select>
@@ -286,7 +286,7 @@
               <select class="form-select" aria-label="Default select example" name="bankName" id="bankName" required>
                 <option value="">Select Bank</option>
                 <?php foreach ($banks as $bank) {?>
-                <option value="<?=$bank['id']?>" <?php if ($bank['id'] == $applicant['bank_id']) {echo 'selected';}?>>
+                <option value="<?=$bank['id']?>"<?php if ($bank['id'] == $applicant['bank_id']) {echo 'selected';}?>>
                   <?=$bank['bank_name']?></option>
                 <?php }?>
               </select>
@@ -307,7 +307,7 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="routingNumber" class="col-sm-6 col-form-label">Name of the Branch:</label>
+            <label for="routingNumber" class="col-sm-6 col-form-label">Routing No.:</label>
             <div class="col-sm-6">
               <input type="text" class="form-control" name="routingNumber" id="routingNumber" placeholder="012345678912"
                 value="<?=esc($applicant['routing_number'])?>" required />

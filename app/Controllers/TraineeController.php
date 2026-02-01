@@ -679,9 +679,24 @@ class TraineeController extends BaseController
         //Honorarium application opens
         $honorariumStatus = env('bill.honorarium', 'close');
 
+        /*if ($bcpsRegNo == '2023070760') {
+        $honorariumStatus = 'open';
+        }*/
+
         if ($honorariumStatus == 'close') {
 
             $applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
+
+            dd($applicant);
+
+            if (!$applicant) {
+                $data = [
+                    'isError'    => true,
+                    'message'    => 'Training application not found! Please apply before submit the bill form. For apply <a class="text-success" href="' . base_url("trainings/training-application") . '"><u>Click Here</u></a>',
+                    'honorarium' => null,
+                ];
+                return $data;
+            }
 
             $where = [
                 'hi.applicant_id'       => $applicant['applicant_id'],
