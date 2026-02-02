@@ -33,6 +33,8 @@ class Dashboard extends BaseController
         //$progressReports = $this->progressReportModel->where('reg_no', $user->username)->where('status', true)->findAll();
 
         $progressReports = $this->progressReportModel->getProgressReportByRegNo($user->username);
+
+        dd($progressReports);
         $honorariumWhere = [
             'ap.fcps_reg_no' => $user->username,
         ];

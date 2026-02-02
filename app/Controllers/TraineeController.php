@@ -94,13 +94,19 @@ class TraineeController extends BaseController
 
         helper('form');
 
-        $trainingInstitutes         = $this->trainingInstituteModel->where('status', true)->findAll();
+        $trainingInstitutes = $this->trainingInstituteModel
+            ->where('status', true)
+            ->orderBy('name', 'ASC') // or 'DESC'
+            ->findAll();
         $data['trainingInstitutes'] = $trainingInstitutes;
 
         $departments          = $this->specialityModel->where('status', true)->findAll();
         $data['departments']  = $departments;
         $data['specialities'] = $departments;
-        $designations         = $this->designationModel->where('status', true)->findAll();
+        $designations         = $this->designationModel
+            ->where('status', true)
+            ->orderBy('designation', 'ASC') // or 'DESC'
+            ->findAll();
         $data['designations'] = $designations;
 
         return view('Trainee/trainings', $data);
@@ -676,58 +682,6 @@ class TraineeController extends BaseController
             'honorarium' => null,
         ];
 
-        //Honorarium application opens
-        $honorariumStatus = env('bill.honorarium', 'close');
-
-        /*if ($bcpsRegNo == '2023070760') {
-        $honorariumStatus = 'open';
-        }*/
-
-        if ($honorariumStatus == 'close') {
-
-            $applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
-
-            dd($applicant);
-
-            if (!$applicant) {
-                $data = [
-                    'isError'    => true,
-                    'message'    => 'Training application not found! Please apply before submit the bill form. For apply <a class="text-success" href="' . base_url("trainings/training-application") . '"><u>Click Here</u></a>',
-                    'honorarium' => null,
-                ];
-                return $data;
-            }
-
-            $where = [
-                'hi.applicant_id'       => $applicant['applicant_id'],
-                'hi.honorarium_slot_id' => env('bill.currentSlot', 0),
-                'hi.honorarium_year'    => env('bill.currentYear', date('Y')),
-            ];
-
-            $billInfos = $this->honorariumInformationModel->getBillInfos($where);
-
-            if (count($billInfos) > 0) {
-
-                $slotYear = env('bill.currentSlot', 0) == 1 ? 'January-June, ' : 'July-December, ' . env('bill.currentYear', date('Y'));
-
-                $data = [
-                    'isError'    => true,
-                    'message'    => 'You have already applied for ' . $slotYear,
-                    'honorarium' => $billInfos,
-                ];
-
-                return $data;
-            }
-
-            $data = [
-                'isError'    => true,
-                'message'    => 'Bill application is not open right now!',
-                'honorarium' => null,
-            ];
-
-            return $data;
-        }
-
         //Check if the applicant is passed before 2020
         $partOnePassedInfo = $this->fcpsPartOneModel->getPartOneTraineeByRegNo($bcpsRegNo);
         if ($partOnePassedInfo['fcps_part_one_year'] < 2020) {
@@ -746,6 +700,56 @@ class TraineeController extends BaseController
                 'message'    => 'You are not eligible here for application. Go to <a href="https://eportal.bcps.edu.bd/" target="_blank"><u>e-Logbook</u></a> for application.',
                 'honorarium' => null,
             ];
+            return $data;
+        }
+
+        //Honorarium application opens
+        $honorariumStatus = env('bill.honorarium', 'close');
+
+        /*if ($bcpsRegNo == '2023070760') {
+        $honorariumStatus = 'open';
+        }*/
+
+        if ($honorariumStatus == 'close') {
+
+            /*$applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
+
+            if (!$applicant) {
+            $data = [
+            'isError'    => true,
+            'message'    => 'Training application not found! Please apply before submit the bill form. For apply <a class="text-success" href="' . base_url("trainings/training-application") . '"><u>Click Here</u></a>',
+            'honorarium' => null,
+            ];
+            return $data;
+            }
+
+            $where = [
+            'hi.applicant_id'       => $applicant['applicant_id'],
+            'hi.honorarium_slot_id' => env('bill.currentSlot', 0),
+            'hi.honorarium_year'    => env('bill.currentYear', date('Y')),
+            ];
+
+            $billInfos = $this->honorariumInformationModel->getBillInfos($where);
+
+            if (count($billInfos) > 0) {
+
+            $slotYear = env('bill.currentSlot', 0) == 1 ? 'January-June, ' : 'July-December, ' . env('bill.currentYear', date('Y'));
+
+            $data = [
+            'isError'    => true,
+            'message'    => 'You have already applied for ' . $slotYear,
+            'honorarium' => $billInfos,
+            ];
+
+            return $data;
+            }*/
+
+            $data = [
+                'isError'    => true,
+                'message'    => 'Bill application is not open right now!',
+                'honorarium' => null,
+            ];
+
             return $data;
         }
 

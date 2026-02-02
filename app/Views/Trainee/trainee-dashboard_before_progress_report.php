@@ -72,7 +72,7 @@
 </header>
 <!-- Summary Cards Section -->
 <section class="row g-4 mb-4">
-  <div class="col-12 col-md-6 col-lg-3">
+  <!-- <div class="col-12 col-md-6 col-lg-3">
     <div class="card p-4 rounded-3 shadow-sm summary-card h-80">
       <div class="card-body p-0">
         <div class="d-flex align-items-center">
@@ -86,7 +86,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="col-12 col-md-6 col-lg-3">
     <div class="card p-4 rounded-3 shadow-sm summary-card h-80">
       <div class="card-body p-0">
@@ -105,7 +105,7 @@
 </section>
 <section class="row g-4 mb-4">
   <!-- Progress Chart Panel -->
-  <div class="col-lg-6">
+  <!-- <div class="col-lg-6">
     <div class="card p-4 rounded-3 shadow-sm h-100">
       <h5 class="fw-bold text-dark mb-4">My Progress</h5>
       <div class="d-flex align-items-start">
@@ -146,46 +146,7 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-lg-12">
-    <div class="card p-4 rounded-3 shadow-sm">
-      <h5 class="fw-bold text-dark mb-4">My Progress Table</h5>
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead class="bg-light rounded-top-2">
-            <tr>
-              <th scope="col" class="py-3 px-4 rounded-start">Sl.</th>
-              <th scope="col" class="py-3 px-4">Training Institute</th>
-              <th scope="col" class="py-3 px-4">Supervisor Name & Address</th>
-              <th scope="col" class="py-3 px-4">Training Duration</th>
-              <th scope="col" class="py-3 px-4">Status</th>
-              <th scope="col" class="py-3 px-4">Action</th>
-            </tr>
-          </thead>
-          <tbody id="portfolioTableBody">
-            <?php if (count($honorariums) > 0): ?>
-            <?php foreach ($honorariums as $index => $honorarium): ?>
-            <tr class="bg-white border-bottom" data-record-id="1">
-              <th scope="row" class="py-4 px-4 fw-normal text-dark"><?=esc($index + 1)?></th>
-              <td class="py-4 px-4"><?=esc($honorarium['slot_name'] . ', ' . $honorarium['honorarium_year'])?></td>
-              <td class="py-4 px-4"><?=esc($honorarium['training_type'])?></td>
-              <td class="py-4 px-4"><?=esc($honorarium['training_institute_name'])?></td>
-              <td class="py-4 px-4">
-                <?=esc($honorarium['department_name_new'] == '' ? $honorarium['department_name'] : $honorarium['department_name_new'])?>
-              </td>
-              <td class="py-4 px-4"><span class="badge rounded-pill text-bg-success py-1 px-2">Completed</span></td>
-            </tr>
-            <?php endforeach?>
-            <?php else: ?>
-            <tr class="bg-white border-bottom">
-              <th scope="row" class="py-4 px-4 fw-normal text-dark text-center" colspan="8">No record found!</th>
-            </tr>
-            <?php endif?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  </div> -->
   <!-- Recent Announcements Panel -->
   <div class="col-lg-12">
     <div class="card p-4 rounded-3 shadow-sm">

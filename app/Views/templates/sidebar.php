@@ -69,7 +69,7 @@
             <p>Basic Information</p>
           </a>
         </li>
-        <?php if ($user && $user->inGroup('superadmin')) {?>
+        <?php if ($user && $user->inGroup('superadmin', 'user')) {?>
         <li class="nav-item <?=set_active('trainings/progress-reports')?>">
           <a href="<?=base_url('trainings/progress-reports')?>">
             <i class="fa fa-clipboard" aria-hidden="true"></i>
