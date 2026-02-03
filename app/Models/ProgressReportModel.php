@@ -68,7 +68,7 @@ class ProgressReportModel extends Model
     public function getProgressReportByRegNo($regNo)
     {
         $builder = $this->db->table('progress_reports pr');
-        $builder->select('pr.*, institute.name AS training_institute_name, speciality.name AS department_name, supervisors.supervisor_name AS new_supervisor_name');
+        $builder->select('pr.*, institute.name AS training_institute_name, speciality.name AS department_name, supervisors.supervisor_name AS new_supervisor_name, supervisors.mailing_address');
         $builder->join('institute', 'institute.institute_id  = pr.training_institute_id', 'left');
         $builder->join('speciality', 'speciality.speciality_id  = pr.department_id', 'left');
         $builder->join('supervisors', 'supervisors.id  = pr.supervisor_id', 'left');

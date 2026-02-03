@@ -34,7 +34,7 @@ class Dashboard extends BaseController
 
         $progressReports = $this->progressReportModel->getProgressReportByRegNo($user->username);
 
-        dd($progressReports);
+        //dd($progressReports);
         $honorariumWhere = [
             'ap.fcps_reg_no' => $user->username,
         ];
