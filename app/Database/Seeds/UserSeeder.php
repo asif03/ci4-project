@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
         // Define default users
         $users = [
             [
-                'username' => 'superadmin1',
+                'username' => 'superadmin',
                 'password' => 'superadmin123',
                 'role'     => 'superadmin',
             ],

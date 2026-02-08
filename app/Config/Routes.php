@@ -36,7 +36,7 @@ $routes->group('api', static function ($routes) {
 });
 
 $routes->group('fcps-part-one', static function ($routes) {
-    $routes->get('passed-candidates', 'PartOneController::index');
+    $routes->get('passed-candidates', 'PartOneController::index', ['as' => 'partone.list']);
     $routes->post('fetch-candidates', 'PartOneController::getSearchedCandidates');
 
     $routes->post('fetch-otp-candidate', 'Home::sendOtp');

@@ -21,10 +21,12 @@ class FcpsPartOneModel extends Model
 
         if (!empty($searchValue)) {
             $builder->groupStart()
-                ->like('ap.applicant_name', $searchValue)
+                ->like('ap.fcps_part_one_year_old', $searchValue)
+                ->orLike('ap.applicant_name', $searchValue)
                 ->orLike('ap.father_name', $searchValue)
                 ->orLike('ap.reg_no', $searchValue)
                 ->orLike('ap.cell', $searchValue)
+                ->orLike('ap.pen_number', $searchValue)
                 ->groupEnd();
         }
 
@@ -39,10 +41,12 @@ class FcpsPartOneModel extends Model
         // Apply search filter
         if (!empty($searchValue)) {
             $builder->groupStart()
-                ->like('ap.applicant_name', $searchValue)
+                ->like('ap.fcps_part_one_year_old', $searchValue)
+                ->orLike('ap.applicant_name', $searchValue)
                 ->orLike('ap.father_name', $searchValue)
                 ->orLike('ap.reg_no', $searchValue)
                 ->orLike('ap.cell', $searchValue)
+                ->orLike('ap.pen_number', $searchValue)
                 ->groupEnd();
         }
 
