@@ -47,7 +47,7 @@
           </span>
           <h4 class="text-section">Training Database</h4>
         </li>
-        <?php if ($user && $user->inGroup('superadmin', 'admin')) {?>
+        <?php if ($user && $user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user')) {?>
         <li class="nav-item <?=set_active('fcps-part-one/passed-candidates')?>">
           <a href="<?=base_url('fcps-part-one/passed-candidates')?>">
             <i class="fa fa-users" aria-hidden="true"></i>

@@ -64,6 +64,19 @@
     </div>
   </div>
 </div>
+
+<!-- Modal For View Applicant -->
+<div class="modal fade" id="viewPartIModal" tabindex="-1" aria-labelledby="partIModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="partIModalLabel">Part-I Passed Candidate Info</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="viewPartIContents"></div>
+    </div>
+  </div>
+</div>
 <?php $this->endSection()?>
 
 <?php $this->section('pageScripts')?>
@@ -107,7 +120,16 @@ $('#partOneList').DataTable({
     {
       "data": null,
       "render": function(data, type, row) {
-        return `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumModal" onclick="loadHonorariumView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
+        $action = '';
+        <?php if (auth()->user() && auth()->user()->can('partone.candidate.show')): ?>
+        $action +=
+          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewPartIModal" onclick="loadPartIView(${row.reg_no})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
+        <?php endif; ?>
+        <?php if (auth()->user() && auth()->user()->can('partone.candidate.edit')): ?>
+        $action +=
+          `<a href="<?=base_url('fcps-part-one/edit-part1-passed-candidate/')?>${row.reg_no}" class="btn btn-outline-info btn-sm btn-view" data-id="${row.reg_no}"><i class="fas fa-edit"></i></a> `;
+        <?php endif; ?>
+        return $action;
       }
     }
   ],
@@ -140,5 +162,18 @@ $('#partOneList').DataTable({
     },
   ]
 });
+
+function loadPartIView(regNo) {
+  $.ajax({
+    type: 'GET',
+    url: '<?php echo base_url(); ?>fcps-part-one/fetch-part1-passed-candidate/' + regNo,
+    success: function(response) {
+      $('#viewPartIContents').html(response);
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
 </script>
 <?php $this->endSection()?>

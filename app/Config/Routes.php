@@ -38,6 +38,8 @@ $routes->group('api', static function ($routes) {
 $routes->group('fcps-part-one', static function ($routes) {
     $routes->get('passed-candidates', 'PartOneController::index', ['as' => 'partone.list']);
     $routes->post('fetch-candidates', 'PartOneController::getSearchedCandidates');
+    $routes->get('fetch-part1-passed-candidate/(:num)', 'PartOneController::getCandidateByRegNo/$1', ['as' => 'partone.candidate.show']);
+    $routes->get('edit-part1-passed-candidate/(:num)', 'PartOneController::edit/$1', ['as' => 'partone.candidate.edit']);
 
     $routes->post('fetch-otp-candidate', 'Home::sendOtp');
     $routes->post('verify-otp', 'Home::verifyOtp');

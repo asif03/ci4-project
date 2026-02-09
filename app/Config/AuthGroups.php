@@ -140,10 +140,17 @@ class AuthGroups extends ShieldAuthGroups
             'users.create',
             'users.edit',
             'users.delete',
+
             'partone.list',
             'reports.*',
         ],
         'rtm-admin'  => [
+            //Part-I Data
+            'partone.list',
+            'partone.candidate.show',
+            'partone.candidate.edit',
+
+            //Applications permissions
             'applications.index',
             'applications.approve',
             'applications.reject',
@@ -153,6 +160,7 @@ class AuthGroups extends ShieldAuthGroups
             'applications.mbbs.update',
             'applications.bank.update',
 
+            //Honorarium Bill permissions
             'bills.index',
             'bills.approve',
             'bills.reject',
