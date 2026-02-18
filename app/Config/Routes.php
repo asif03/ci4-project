@@ -46,13 +46,16 @@ $routes->group('fcps-part-one', static function ($routes) {
 });
 
 $routes->group('trainings', static function ($routes) {
+
+    $routes->get('get-supervisors/(:num)', 'TraineeController::getSupervisorsByInstitute/$1');
+    $routes->get('get-supervisor-details/(:num)', 'TraineeController::getSupervisorById/$1');
+
     //For Trainee
     $routes->get('basic-info', 'TraineeController::traineeBasicInfo', ['as' => 'trainee.basic.info']);
     $routes->get('progress-reports', 'TraineeController::createProgressReport', ['as' => 'trainee.progress.reports.create']);
     $routes->post('progress-reports', 'TraineeController::storeProgressReport');
     $routes->get('fetch-progress-report/(:num)', 'TraineeController::showProgressReport/$1');
     $routes->get('progress-reports/(:num)', 'TraineeController::editProgressReport/$1');
-    $routes->get('get-supervisors/(:num)', 'TraineeController::getSupervisorsByInstitute/$1');
 
     $routes->get('training-application', 'TraineeController::trainingApplication', ['as' => 'trainee.training.application']);
     $routes->post('training-application', 'TraineeController::storeTrainingApplication');

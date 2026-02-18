@@ -82,6 +82,13 @@ class TraineeController extends BaseController
         return $this->response->setJSON($data);
     }
 
+    public function getSupervisorById($supervisorId)
+    {
+        $data = $this->supervisorModel->find($supervisorId);
+
+        return $this->response->setJSON($data);
+    }
+
     public function createProgressReport()
     {
         // Check if the authenticated user has the 'trainee.progress.reports.create' permission
@@ -179,6 +186,9 @@ class TraineeController extends BaseController
             ]);
         } else {
             $supervisorId = $this->request->getPost('supervisor');
+
+            $supervisorDesignationDetails = $this->designationModel->find($validData['supervisorDesignation']);
+            dd($supervisorDesignationDetails);
         }
 
         $successId = $model->insert([
@@ -195,7 +205,7 @@ class TraineeController extends BaseController
 
             'supervisor_id'            => $supervisorId,
             //'supervisor_name'          => $validData['supervisorName'],
-            //'designation_id'           => $validData['supervisorDesignation'],
+            'supervisor_designation'   => $validData['supervisorDesignation'],
             //'subject_id'               => $validData['supervisorSubject'],
             //'supervisor_mobile_no'     => $validData['supervisorMobile'],
 

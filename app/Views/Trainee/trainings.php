@@ -110,6 +110,7 @@
           <div class="col-md-6 mb-3">
             <label for="attendance" class="form-label fw-semibold text-dark">Attendance</label>
             <select class="form-select rounded-lg" id="attendance" name="attendance">
+              <option selected disabled value="">Select a performance</option>
               <option value="Poor">Poor</option>
               <option value="Average">Average</option>
               <option value="Satisfactory">Satisfactory</option>
@@ -120,6 +121,7 @@
           <div class="col-md-6 mb-3">
             <label for="knowledge" class="form-label fw-semibold text-dark">Knowledge</label>
             <select class="form-select rounded-lg" id="knowledge" name="knowledge">
+              <option selected disabled value="">Select a performance</option>
               <option value="Poor">Poor</option>
               <option value="Average">Average</option>
               <option value="Satisfactory">Satisfactory</option>
@@ -130,6 +132,7 @@
           <div class="col-md-6">
             <label for="skill" class="form-label fw-semibold text-dark">Skill</label>
             <select class="form-select rounded-lg" id="skill" name="skill">
+              <option selected disabled value="">Select a performance</option>
               <option value="Poor">Poor</option>
               <option value="Average">Average</option>
               <option value="Satisfactory">Satisfactory</option>
@@ -140,6 +143,7 @@
           <div class="col-md-6">
             <label for="attitude" class="form-label fw-semibold text-dark">Attitude</label>
             <select class="form-select rounded-lg" id="attitude" name="attitude">
+              <option selected disabled value="">Select a performance</option>
               <option value="Poor">Poor</option>
               <option value="Average">Average</option>
               <option value="Satisfactory">Satisfactory</option>
@@ -156,8 +160,8 @@
           <div class="col-md-6 mb-3">
             <label for="supervisor" class="form-label fw-semibold text-dark">Select Supervisor</label>
             <!-- Supervisor Dropdown -->
-            <select class="form-select mt-2" name="supervisor" id="supervisor">
-              <option value="">Select Supervisor...</option>
+            <select class="form-select mt-2" name="supervisor" id="supervisor" onchange="selectSupervisor(this.value)">
+              <option selected disabled value="">Select a supervisor</option>
             </select>
             <!-- Optional loading indicator -->
             <div id="supervisor-loading" class="text-muted mt-1" style="display:none;">Loading supervisors...</div>
@@ -233,6 +237,8 @@ function fetchSupervisor(instituteId) {
     $('#supervisorMobile').val('');
     $('#supervisorDesignation').val('');
     $('#supervisorSubject').val('');
+    $('#supervisorEmail').val('');
+    $('#supervisorAddress').val('');
     return;
   }
 
@@ -280,6 +286,57 @@ function fetchSupervisor(instituteId) {
       loadingText.style.display = 'none';
       supervisorSelect.innerHTML = '<option value="">Error loading supervisors</option>';
     });
+}
+
+function selectSupervisor(supervisorId) {
+  if (supervisorId === '99999999') {
+    // Clear fields for "Others"
+    $('#supervisorName').val('');
+    $('#supervisorName').prop('disabled', false);
+    $('#supervisorMobile').val('');
+    $('#supervisorMobile').prop('disabled', false);
+    $('#supervisorDesignation').val('');
+    $('#supervisorSubject').val('');
+    $('#supervisorSubject').prop('disabled', false);
+    $('#supervisorEmail').val('');
+    $('#supervisorEmail').prop('disabled', false);
+    $('#supervisorAddress').val('');
+    $('#supervisorAddress').prop('disabled', false);
+  } else if (supervisorId) {
+    // Fetch supervisor details via AJAX
+    fetch("<?=base_url('trainings/get-supervisor-details')?>/" + supervisorId)
+      .then(response => response.json())
+      .then(data => {
+        $('#supervisorName').val(data.supervisor_name);
+        $('#supervisorName').prop('disabled', true);
+        $('#supervisorMobile').val(data.mobile);
+        $('#supervisorMobile').prop('disabled', true);
+        $('#supervisorDesignation').val(data.designation_id);
+        $('#supervisorSubject').val(data.subject_id);
+        $('#supervisorSubject').prop('disabled', true);
+        $('#supervisorEmail').val(data.email);
+        $('#supervisorEmail').prop('disabled', true);
+        $('#supervisorAddress').val(data.mailing_address);
+        $('#supervisorAddress').prop('disabled', true);
+      })
+      .catch(err => {
+        console.error('Error loading supervisor details:', err);
+        alert('Error loading supervisor details. Please try again.');
+      });
+  } else {
+    // Clear fields if no supervisor selected
+    $('#supervisorName').val('');
+    $('#supervisorName').prop('disabled', false);
+    $('#supervisorMobile').val('');
+    $('#supervisorMobile').prop('disabled', false);
+    $('#supervisorDesignation').val('');
+    $('#supervisorSubject').val('');
+    $('#supervisorSubject').prop('disabled', false);
+    $('#supervisorEmail').val('');
+    $('#supervisorEmail').prop('disabled', false);
+    $('#supervisorAddress').val('');
+    $('#supervisorAddress').prop('disabled', false);
+  }
 }
 </script>
 <?php $this->endSection()?>
