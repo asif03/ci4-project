@@ -97,7 +97,83 @@
         </div>
       </form>
     </div>
+
+    <div class="tab-pane fade" id="fcps-info" role="tabpanel" aria-labelledby="fcps-tab">
+      <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-tab border">
+        <h6 class="text-left mb-3 fw-bold">FCPS Part-I Information</h6>
+        <form action="<?=base_url('fcps-part-one/update-part1-info')?>" method="post">
+          <?=csrf_field()?>
+          <input type="hidden" name="_method" value="PUT" />
+          <input type="hidden" name="candidateId" value="<?=esc($candidate['reg_no'])?>" />
+          <div class="mb-3 row">
+            <label for="fcpsYear" class="col-sm-6 col-form-label">Year of Passing:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="fcpsYear" id="fcpsYear" disabled>
+                <?php for ($iLoop = date('Y'); $iLoop >= 2008; $iLoop--) {?>
+                <option value="<?=$iLoop?>" <?php if ($iLoop == $candidate['fcps_part_one_year']) {echo 'selected';}?>>
+                  <?=$iLoop?></option>
+                <?php }?>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="fcpsSession" class="col-sm-6 col-form-label">Session:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="fcpsSession" id="fcpsSession"
+                disabled>
+                <option value="January"
+                  <?php if ('January' == $candidate['fcps_part_one_session']) {echo 'selected';}?>>
+                  January</option>
+                <option value="July" <?php if ('July' == $candidate['fcps_part_one_session']) {echo 'selected';}?>>
+                  July</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="specialty" class="col-sm-6 col-form-label">Specialty:</label>
+            <div class="col-sm-6">
+              <select class="form-select" aria-label="Default select example" name="specialty" id="specialty" disabled>
+                <?php foreach ($specialities as $speciality) {?>
+                <option value="<?=$speciality['name']?>"
+                  <?php if ($speciality['name'] == $candidate['subject_id']) {echo 'selected';}?>>
+                  <?=$speciality['name']?></option>
+                <?php }?>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="fcpcRollNo" class="col-sm-6 col-form-label">Roll No./BMDC Reg. No.:</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="fcpcRollNo" id="fcpcRollNo" placeholder="12345678"
+                value="<?=esc($candidate['roll'])?>" required />
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="bcpsRegNo" class="col-sm-6 col-form-label">Online Reg. No./Reg. No. (after passing FCPS
+              Part-I):</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="bcpsRegNo" id="bcpsRegNo" placeholder="10 digit reg. no."
+                value="<?=esc($candidate['pen_number'])?>" disabled />
+            </div>
+          </div>
+          <?php if (auth()->user() && auth()->user()->can('applications.fcps.update')): ?>
+          <button type="submit" class="btn btn-primary text-light">Update</button>
+          <?php endif; ?>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
+<?php $this->endSection()?>
+
+<?php $this->section('pageScripts')?>
+<script>
+$(document).ready(function() {
+  $('#dob').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true
+  });
+});
+</script>
 <?php $this->endSection()?>

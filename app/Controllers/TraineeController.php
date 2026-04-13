@@ -149,10 +149,10 @@ class TraineeController extends BaseController
             'facultyMembers'        => 'required|is_natural',
             'fromDate'              => 'required',
             'toDate'                => 'required',
-            'supervisorName'        => 'required',
-            'supervisorDesignation' => 'required',
-            'supervisorMobile'      => 'required',
-            'supervisorSubject'     => 'required',
+            'supervisorName'        => 'required_if[supervisor,99999999]',
+            'supervisorDesignation' => 'required_if[supervisor,99999999]',
+            'supervisorMobile'      => 'required_if[supervisor,99999999]',
+            'supervisorSubject'     => 'required_if[supervisor,99999999]',
             'attendance'            => 'required',
             'knowledge'             => 'required',
             'skill'                 => 'required',
@@ -803,18 +803,18 @@ class TraineeController extends BaseController
 
     public function honorariumBillApplication()
     {
-// Check if the authenticated user has the 'trainee.honorarium.application' permission
+        // Check if the authenticated user has the 'trainee.honorarium.application' permission
         if (!auth()->user()->can('trainee.honorarium.application')) {
-// User does not have permission, so deny access.
-//return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-//return redirect()->to('/403');
-//return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
+            //return redirect()->to('/403')->with('error', 'You are not authorized to approve bills.');
             return $this->response->setJSON(['status' => 'error', 'message' => 'You are not authorized to create bills.']);
         }
 
         $billInfos = $this->checkHonorariumRestrictions(auth()->user()->username);
 
-//dd($billInfos);
+        //dd($billInfos);
 
         if ($billInfos['isError']) {
             return view('Trainee/honorarium-status', $billInfos);
@@ -870,7 +870,7 @@ class TraineeController extends BaseController
                 $prevTrainingData   =
                 $this->honorariumPreviousTrainingModel->getPreviousTrainingsByApplicationId($applicant['applicant_id']);
 
-//dd($prevTrainingData);
+                //dd($lastHonorariumData);
 
                 if ($prevTrainingData) {
                     foreach ($prevTrainingData as $prevTraining) {
@@ -887,6 +887,7 @@ class TraineeController extends BaseController
                             'training_category_id'    => $prevTraining['training_category_id'],
                             'training_category_title' => $prevTraining['training_category_title'],
                             'honorarium_taken'        => $prevTraining['honorarium_taken'],
+                            'disable_for_bill'        => true, // Set this flag to true for all previous trainings
                         ];
                     }
                 } else {
@@ -896,7 +897,9 @@ class TraineeController extends BaseController
 //dd($trainings);
 //echo count($trainings);
 
-                $lastHonorariumData = [];
+                //$lastHonorariumData = [];
+
+                //dd($lastHonorariumData);
 
                 if (count($lastHonorariumData) > 0) {
 
@@ -921,13 +924,14 @@ class TraineeController extends BaseController
                         'training_category_id'    => null,
                         'training_category_title' => null,
                         'honorarium_taken'        => true,
+                        'disable_for_bill'        => false, // Set this flag to true for all previous trainings
                     ];
 
                     $trainings[count($trainings) > 0 ? count($trainings) : 0] = $lastTrainingData;
 
                     $data['totalTrainings'] = $trainings;
                 } else {
-                    $data['totalTrainings'] = [];
+                    $data['totalTrainings'] = $trainings;
                 }
 
                 if ($data['honorarium']->maxHonorariumCnt == null) {
@@ -935,7 +939,7 @@ class TraineeController extends BaseController
                 }
             }
 
-//dd($data);
+            //dd($data);
 
             return view('Trainee/honorarium-application', $data);
         }

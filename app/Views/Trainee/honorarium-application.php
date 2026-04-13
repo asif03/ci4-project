@@ -282,11 +282,11 @@
               <select name="honorariumPeriod" id="honorariumPeriod" class="form-select" required>
                 <option value="">Select Please</option>
                 <?php foreach ($slots as $slot) {?>
-                <option value="<?php echo $slot['id']; ?>"<?php if (date('m') <= 6 && $slot['id'] == 1) {
-        echo 'selected';
-    } elseif (date('m') > 6 && $slot['id'] == 2) {
-    echo 'selected';
-}?>>
+                <option value="<?php echo $slot['id']; ?>" <?php if (date('m') <= 6 && $slot['id'] == 1) {
+          echo 'selected';
+      } elseif (date('m') > 6 && $slot['id'] == 2) {
+      echo 'selected';
+  }?>>
                   <?php echo $slot['slot_name']; ?></option>
                 <?php }?>
               </select>
@@ -307,10 +307,10 @@
               <?php
                   for ($cnt = 0; $cnt <= 54; $cnt = $cnt + 6) {
                   ?>
-              <option value="<?php echo $cnt; ?>"<?php if ((count($totalTrainings) * 6) == $cnt) {
-            echo 'selected';
-    }
-    ?>>
+              <option value="<?php echo $cnt; ?>" <?php if ((count($totalTrainings) * 6) == $cnt) {
+              echo 'selected';
+      }
+      ?>>
                 <?php echo $cnt; ?></option>
               <?php
                   }
@@ -359,19 +359,19 @@
               <?php
                   for ($cnt = 1; $cnt <= 10; $cnt++) {
                   ?>
-              <option value="<?php echo $cnt; ?>"<?php if ($honorarium->maxHonorariumCnt + 1 == $cnt) {
-            echo 'selected';
-    }
-    ?>>
+              <option value="<?php echo $cnt; ?>" <?php if ($honorarium->maxHonorariumCnt + 1 == $cnt) {
+              echo 'selected';
+      }
+      ?>>
                 <?php echo $cnt ?><?php if ($cnt == 1) {
-            echo 'st';
-        } elseif ($cnt == 2) {
-            echo 'nd';
-        } elseif ($cnt == 3) {
-            echo 'rd';
-        } else {
+              echo 'st';
+          } elseif ($cnt == 2) {
+              echo 'nd';
+          } elseif ($cnt == 3) {
+              echo 'rd';
+          } else {
         echo 'th';
-    }?></option>
+      }?></option>
               <?php
                   }
               ?>
@@ -384,19 +384,19 @@
               <?php
                   for ($cnt = 1; $cnt <= 10; $cnt++) {
                   ?>
-              <option value="<?php echo $cnt; ?>"<?php if ($cnt == 1) {
-            echo 'selected';
-    }
-    ?>>
+              <option value="<?php echo $cnt; ?>" <?php if ($cnt == 1) {
+              echo 'selected';
+      }
+      ?>>
                 <?php echo $cnt ?><?php if ($cnt == 1) {
-            echo 'st';
-        } elseif ($cnt == 2) {
-            echo 'nd';
-        } elseif ($cnt == 3) {
-            echo 'rd';
-        } else {
+              echo 'st';
+          } elseif ($cnt == 2) {
+              echo 'nd';
+          } elseif ($cnt == 3) {
+              echo 'rd';
+          } else {
         echo 'th';
-    }?></option>
+      }?></option>
               <?php
                   }
               ?>
@@ -465,10 +465,10 @@
               <?php if ($honorarium->maxHonorariumCnt != 0) {echo 'disabled';} else {echo 'required';}?>>
               <option value="" disabled selected>Select Please</option>
               <?php foreach ($banks as $bank) {?>
-              <option value="<?php echo $bank['id']; ?>"<?php if ($applicantInfo['bank_id'] == $bank['id']) {
-        echo 'selected';
-}
-    ?>><?php echo $bank['bank_name']; ?></option>
+              <option value="<?php echo $bank['id']; ?>" <?php if ($applicantInfo['bank_id'] == $bank['id']) {
+          echo 'selected';
+  }
+      ?>><?php echo $bank['bank_name']; ?></option>
               <?php }?>
             </select>
           </div>
@@ -732,19 +732,19 @@ function createTrainingRowHTML(id) {
   return `
             <tr data-row-id="${id}">
                 <td class="p-2">
-                    <select name="prevTrainingSlot[${id}]" class="form-select" required>
+                    <select name="prevTrainingSlot[${id}]" class="form-select" required ${prevHonorariumTrainings[rowId]?.disable_for_bill == true ? 'disabled' : ''}>
                         <option value="" disabled selected>Select Slot</option>
                         <?php for ($cnt = 1; $cnt <= 10; $cnt++) {?>
                         <option value="<?php echo $cnt; ?>" ${prevHonorariumTrainings[rowId]?.slot_sl_no ==<?php echo $cnt; ?> ? 'selected' : ''}>
                           <?php echo $cnt ?><?php if ($cnt == 1) {
-        echo 'st';
-    } elseif ($cnt == 2) {
-        echo 'nd';
-    } elseif ($cnt == 3) {
-        echo 'rd';
-    } else {
-        echo 'th';
-}?>
+          echo 'st';
+      } elseif ($cnt == 2) {
+          echo 'nd';
+      } elseif ($cnt == 3) {
+          echo 'rd';
+      } else {
+          echo 'th';
+  }?>
                         </option>
                         <?php }?>
                     </select>

@@ -40,6 +40,7 @@ $routes->group('fcps-part-one', static function ($routes) {
     $routes->post('fetch-candidates', 'PartOneController::getSearchedCandidates');
     $routes->get('fetch-part1-passed-candidate/(:num)', 'PartOneController::getCandidateByRegNo/$1', ['as' => 'partone.candidate.show']);
     $routes->get('edit-part1-passed-candidate/(:num)', 'PartOneController::edit/$1', ['as' => 'partone.candidate.edit']);
+    $routes->put('update-part1-info', 'PartOneController::updatePart1Info', ['as' => 'partone.candidate.part1.update']);
 
     $routes->post('fetch-otp-candidate', 'Home::sendOtp');
     $routes->post('verify-otp', 'Home::verifyOtp');
@@ -71,7 +72,7 @@ $routes->group('trainings', static function ($routes) {
 
 });
 
-$routes->group('applications', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static function ($routes) {
+$routes->group('applications', ['filter' => 'groups:superadmin,admin,rtm-admin,rtm-user'], static function ($routes) {
     $routes->get('/', 'Application::index', ['as' => 'applications.index']);
     $routes->post('fetch-applicants', 'Application::getSearchedApplicants', ['as' => 'applications.get']);
 
@@ -91,7 +92,7 @@ $routes->group('applications', ['filter' => 'groups:admin,rtm-admin,rtm-user,use
     $routes->get('download-application-form/(:num)', 'Application::downloadApplicationForm/$1');
 });
 
-$routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user'], static function ($routes) {
+$routes->group('bills', ['filter' => 'groups:superadmin,admin,rtm-admin,rtm-user'], static function ($routes) {
     $routes->get('/', 'Honorarium::index', ['as' => 'bills.index']);
     $routes->post('get-statistics', 'Honorarium::getStatistics');
     $routes->post('fetch-honorariums', 'Honorarium::getSearchedHonorariums');
@@ -133,7 +134,7 @@ $routes->group('users', static function ($routes) {
 });
 
 $routes->group('superadmin', ['filter' => 'groups:superadmin'], static function ($routes) {
-//$routes->group('superadmin', static function ($routes) {
+    //$routes->group('superadmin', static function ($routes) {
     $routes->get('db-seed', 'SeedController::index');
 });
 

@@ -62,7 +62,7 @@
         </li>
         <?php }?>
 
-        <?php if ($user && $user->inGroup('superadmin', 'user')) {?>
+        <?php if ($user && $user->inGroup('user')) {?>
         <li class="nav-item <?=set_active('trainings/basic-info')?>">
           <a href="<?=base_url('trainings/basic-info')?>">
             <i class="fa fa-user-md" aria-hidden="true"></i>
@@ -85,7 +85,7 @@
           </span>
           <h4 class="text-section">Honorarium Info</h4>
         </li>
-        <?php if ($user && $user->inGroup('superadmin', 'user')) {?>
+        <?php if ($user && $user->inGroup('user')) {?>
         <li class="nav-item <?=set_active('trainings/training-application')?>">
           <a href="<?=base_url('trainings/training-application')?>">
             <i class="fa fa-stethoscope" aria-hidden="true"></i>
@@ -185,12 +185,17 @@
             <ul class="nav nav-collapse">
               <li>
                 <a href="forms/forms.html">
-                  <span class="sub-item">User Management</span>
+                  <span class="sub-item">User List</span>
                 </a>
               </li>
               <li class="<?=set_active('users/assign-user-role')?>">
                 <a href="<?=base_url('users/assign-user-role')?>">
                   <span class="sub-item">Assign Role</span>
+                </a>
+              </li>
+              <li class="<?=set_active('users/assign-user-role')?>">
+                <a href="<?=base_url('users/assign-user-role')?>">
+                  <span class="sub-item">Part-I User Creation</span>
                 </a>
               </li>
             </ul>
