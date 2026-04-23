@@ -732,6 +732,7 @@ function createTrainingRowHTML(id) {
   return `
             <tr data-row-id="${id}">
                 <td class="p-2">
+                <input type="hidden" name="prevTrainingBillStatus[${id}]" value="${prevHonorariumTrainings[rowId]?.disable_for_bill == true ? true : false}" />
                     <select name="prevTrainingSlot[${id}]" class="form-select" required ${prevHonorariumTrainings[rowId]?.disable_for_bill == true ? 'disabled' : ''}>
                         <option value="" disabled selected>Select Slot</option>
                         <?php for ($cnt = 1; $cnt <= 10; $cnt++) {?>
@@ -900,7 +901,8 @@ handlePreview = function() {
         category: form.querySelector(`[name="prevTrainingCategory[${id}]"]`).value,
         honorariumTaken: form.querySelector(`[name="prevTrainingHonorariumTaken[${id}]"]`) ? form
           .querySelector(
-            `[name="prevTrainingHonorariumTaken[${id}]"]`).checked : false // Check if element exists
+            `[name="prevTrainingHonorariumTaken[${id}]"]`).checked : false, // Check if element exists
+        honorariumBillStatus: form.querySelector(`[name="prevTrainingBillStatus[${id}]"]`).value
       };
 
       dynamicRowsData.push(rowData);

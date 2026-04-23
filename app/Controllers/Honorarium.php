@@ -304,6 +304,21 @@ class Honorarium extends BaseController
 
     }
 
+    public function getPreviousTrainingsByApplicantId($applicationId)
+    {
+        $previousTrainings = $this->honorariumModel->getPreviousTrainings($applicationId);
+
+        //dd($previousTrainings);
+
+        $data = [
+            'title'             => 'Previous Training Details',
+            'previousTrainings' => $previousTrainings,
+        ];
+
+        return view('Honorarium/view_prev_training_details', $data);
+
+    }
+
     public function getHonorariumTrainingInfo($honorariumId)
     {
         $honorarium = $this->honorariumModel->getHonorarium($honorariumId);

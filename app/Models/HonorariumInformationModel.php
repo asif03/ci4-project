@@ -207,6 +207,20 @@ class HonorariumInformationModel extends Model
         return $builder->get()->getResultArray();
     }
 
+    public function getPreviousTrainings($applicationId)
+    {
+        $builder = $this->db->table('honorarium_previous_trainings hpt');
+        $builder->select('hpt.id, hpt.honorarium_id, hpt.slot_sl_no AS training_slot_sl, hpt.training_from, hpt.training_to, hpt.training_institute_id, ti.name AS training_institute_name, hpt.speciality_id, sp.name AS department_name, hpt.training_category_id, tc.training_category_title, hpt.honorarium_taken');
+        $builder->join('honorarium_information hi', 'hpt.honorarium_id = hi.id');
+        $builder->join('institute ti', 'hpt.training_institute_id = ti.institute_id');
+        $builder->join('speciality sp', 'hpt.speciality_id = sp.speciality_id');
+        $builder->join('training_categories tc', 'hpt.training_category_id = tc.id');
+        $builder->where('hi.applicant_id', $applicationId);
+        $builder->orderBy('hpt.slot_sl_no', 'ASC');
+
+        return $builder->get()->getResultArray();
+    }
+
     public function getApprovedHonorariumByApplicantId($applicantId)
     {
         $builder = $this->db->table('honorarium_information');

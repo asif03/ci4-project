@@ -894,8 +894,8 @@ class TraineeController extends BaseController
                     $trainings = [];
                 }
 
-//dd($trainings);
-//echo count($trainings);
+                //dd($trainings);
+                //echo count($trainings);
 
                 //$lastHonorariumData = [];
 
@@ -947,17 +947,17 @@ class TraineeController extends BaseController
 
     public function storeBillApplication()
     {
-// Check if the authenticated user has the 'trainee.honorarium.application' permission
+        // Check if the authenticated user has the 'trainee.honorarium.application' permission
         if (!auth()->user()->can('trainee.honorarium.application')) {
-// User does not have permission, so deny access.
-//return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-//return redirect()->to('/403');
+            // User does not have permission, so deny access.
+            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+            //return redirect()->to('/403');
             return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
         }
 
         $request = service('request');
 
-// --- STEP 1: RETRIEVE NON-FILE DATA ---
+        // --- STEP 1: RETRIEVE NON-FILE DATA ---
         $collectedDataJson = $request->getPost('collectedDataJson');
         if (empty($collectedDataJson)) {
             return $this->response->setJSON([
@@ -966,7 +966,7 @@ class TraineeController extends BaseController
             ])->setStatusCode(400);
         }
 
-// Decode the JSON string back into a PHP array
+        // Decode the JSON string back into a PHP array
         $data = json_decode($collectedDataJson, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -986,8 +986,8 @@ class TraineeController extends BaseController
         $applicantId = $applicant['applicant_id'];
         $bmdcRegNo   = $applicant['bmdc_reg_no'];
 
-// --- Step 1: Server-Side Validation ---
-// You should perform model or service validation here using CI4's Validation library
+        // --- Step 1: Server-Side Validation ---
+        // You should perform model or service validation here using CI4's Validation library
         if ($bmdcValidity < date('Y-m-d')) {
             return $this->response->setJSON([
                 'status'  => 'error',
@@ -1241,25 +1241,64 @@ class TraineeController extends BaseController
                 //print_r($updatedData);
                 //dd($data);
 
-                //Inser previous training details
-                if ($data['coursePeriod'] > 0) {
+                //print_r($data['previousTrainingDetails']);
 
-                    foreach ($data['previousTrainingDetails'] as $prevTraining) {
-                        $prevTrainingData[] = [
-                            'honorarium_id'         => $newHonorariumId,
-                            'slot_sl_no'            => $prevTraining['slot'],
-                            'training_from'         => $prevTraining['fromDate'],
-                            'training_to'           => $prevTraining['toDate'],
-                            'speciality_id'         => $prevTraining['subject'],
-                            'training_institute_id' => $prevTraining['institute'],
-                            'training_category_id'  => $prevTraining['category'],
-                            'honorarium_taken'      => $prevTraining['honorariumTaken'],
-                        ];
+                $prevTrainings = $this->honorariumPreviousTrainingModel->getPreviousTrainingsByApplicationId($applicant['applicant_id']);
+
+                if ($prevTrainings) {
+
+                    //Delete existing previous training details
+                    //$this->honorariumPreviousTrainingModel->where('honorarium_id', $newHonorariumId)->delete();
+
+                    //Insert updated previous training details
+                    if ($data['coursePeriod'] > 0) {
+
+                        foreach ($data['previousTrainingDetails'] as $prevTraining) {
+
+                            //print_r($prevTraining);
+                            echo $prevTraining['honorariumBillStatus'];
+
+                            if ($prevTraining['honorariumBillStatus'] == 'false') {
+                                // Update existing record
+
+                                $prevTrainingData[] = [
+                                    'honorarium_id'         => $newHonorariumId,
+                                    'slot_sl_no'            => $prevTraining['slot'],
+                                    'training_from'         => $prevTraining['fromDate'],
+                                    'training_to'           => $prevTraining['toDate'],
+                                    'speciality_id'         => $prevTraining['subject'],
+                                    'training_institute_id' => $prevTraining['institute'],
+                                    'training_category_id'  => $prevTraining['category'],
+                                    'honorarium_taken'      => true,
+                                ];
+                            }
+                        }
+
+                        //print_r($prevTrainingData);
+
+                        $this->honorariumPreviousTrainingModel->insertBatch($prevTrainingData);
                     }
+                } else {
 
-                    $this->honorariumPreviousTrainingModel->insertBatch($prevTrainingData);
+                    //Inser previous training details
+                    if ($data['coursePeriod'] > 0) {
+
+                        foreach ($data['previousTrainingDetails'] as $prevTraining) {
+                            $prevTrainingData[] = [
+                                'honorarium_id'         => $newHonorariumId,
+                                'slot_sl_no'            => $prevTraining['slot'],
+                                'training_from'         => $prevTraining['fromDate'],
+                                'training_to'           => $prevTraining['toDate'],
+                                'speciality_id'         => $prevTraining['subject'],
+                                'training_institute_id' => $prevTraining['institute'],
+                                'training_category_id'  => $prevTraining['category'],
+                                'honorarium_taken'      => $prevTraining['honorariumTaken'],
+                            ];
+                        }
+
+                        $this->honorariumPreviousTrainingModel->insertBatch($prevTrainingData);
+                    }
                 }
-
                 //Insert or Update files
                 $applicantFiles = $this->applicantFileModel
                     ->where('applicant_id', $applicant['applicant_id'])
