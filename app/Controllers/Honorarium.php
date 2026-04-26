@@ -291,8 +291,9 @@ class Honorarium extends BaseController
 
     public function getHonorariumTrainings($honorariumId)
     {
-        $honorarium          = $this->honorariumModel->getHonorarium($honorariumId);
-        $honorariumTrainings = $this->honorariumModel->getHonorariumTrainings($honorariumId);
+        $honorarium = $this->honorariumModel->getHonorarium($honorariumId);
+        //$honorariumTrainings = $this->honorariumModel->getHonorariumTrainings($honorariumId);
+        $honorariumTrainings = $this->honorariumModel->getPreviousTrainings($honorarium['applicant_id']);
 
         $data = [
             'title'               => 'Bill Details',
@@ -301,21 +302,6 @@ class Honorarium extends BaseController
         ];
 
         return view('Honorarium/view_training_details', $data);
-
-    }
-
-    public function getPreviousTrainingsByApplicantId($applicationId)
-    {
-        $previousTrainings = $this->honorariumModel->getPreviousTrainings($applicationId);
-
-        //dd($previousTrainings);
-
-        $data = [
-            'title'             => 'Previous Training Details',
-            'previousTrainings' => $previousTrainings,
-        ];
-
-        return view('Honorarium/view_prev_training_details', $data);
 
     }
 
@@ -329,7 +315,8 @@ class Honorarium extends BaseController
             'institutes'        => $this->instituteModel->where('status', true)->findAll(),
             'categories'        => $this->trainingCategoryModel->findAll(),
             'honorarium'        => $honorarium,
-            'previousTrainings' => $this->honorariumModel->getHonorariumTrainings($honorariumId),
+            //'previousTrainings' => $this->honorariumModel->getHonorariumTrainings($honorariumId),
+            'previousTrainings' => $this->honorariumModel->getPreviousTrainings($honorarium['applicant_id']),
         ];
 
         if ($honorarium) {

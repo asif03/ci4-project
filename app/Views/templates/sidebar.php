@@ -40,7 +40,7 @@
           </a>
         </li>
 
-        <?php if ($user && $user->inGroup('superadmin', 'admin', 'rtm-admin', 'rtm-user', 'user')) {?>
+        <?php if ($user && $user->inGroup('superadmin', 'admin' /*, 'rtm-admin', 'rtm-user', 'user'*/)) {?>
         <li class="nav-section">
           <span class="sidebar-mini-icon">
             <i class="fa fa-user" aria-hidden="true"></i>
@@ -194,7 +194,7 @@
                 </a>
               </li>
               <li class="<?=set_active('users/assign-user-role')?>">
-                <a href="<?=base_url('users/assign-user-role')?>">
+                <a href="<?=base_url('superadmin/db-seed')?>">
                   <span class="sub-item">Part-I User Creation</span>
                 </a>
               </li>

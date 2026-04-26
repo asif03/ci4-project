@@ -118,7 +118,6 @@ $routes->get('/permissions/(:num)', 'Admin::permission/$1', ['as' => 'admin.perm
 $routes->group('bills', ['filter' => 'groups:admin,rtm-admin,rtm-user,user'], static function ($routes) {
     $routes->get('download-honorarium-form/(:num)', 'Honorarium::downloadHonorariumForm/$1');
     $routes->get('fetch-honorarium-trainings/(:num)', 'Honorarium::getHonorariumTrainings/$1');
-    $routes->get('fetch-previous-trainings/(:num)', 'Honorarium::getPreviousTrainingsByApplicantId/$1');
 });
 
 $routes->group('reports', ['filter' => 'groups:superadmin,admin'], static function ($routes) {
