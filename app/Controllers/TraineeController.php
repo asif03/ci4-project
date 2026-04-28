@@ -523,6 +523,10 @@ class TraineeController extends BaseController
                 mkdir($uploadPath, 0777, true);
             }
 
+            /*echo '<pre>';
+            print_r($uploadedFiles);
+            echo '</pre>';*/
+
             // Loop through the expected file fields (enclosure1, enclosure2, etc.)
             foreach ($uploadedFiles as $fieldName => $file) {
 
@@ -586,22 +590,6 @@ class TraineeController extends BaseController
                         ];
                     }
 
-                    //
-                    if (!empty($savedFileNames)) {
-
-                        $inputFileData = [];
-                        foreach ($savedFileNames as $fileData) {
-                            $inputFileData[] = [
-                                'applicant_id' => $successId,
-                                'file_name'    => $fileData['fileName'],
-                                'type'         => $fileData['fileType'],
-                                'status'       => 1,
-                            ];
-                        }
-
-                        $this->applicantFileModel->insertBatch($inputFileData);
-                    }
-
                     if (isset($newName)) {
                         // Reset for the next file
                         unset($newName);
@@ -613,6 +601,28 @@ class TraineeController extends BaseController
                         'message' => "File upload failed for {$fieldName}: " . $file->getErrorString(),
                     ])->setStatusCode(400);
                 }
+            }
+
+            /*echo '<pre>';
+            print_r($savedFileNames);
+            echo '</pre>';*/
+
+            //Save file information in the database
+            if (!empty($savedFileNames)) {
+
+                $inputFileData = [];
+                foreach ($savedFileNames as $fileData) {
+                    $inputFileData[] = [
+                        'applicant_id' => $successId,
+                        'file_name'    => $fileData['fileName'],
+                        'type'         => $fileData['fileType'],
+                        'status'       => 1,
+                    ];
+                }
+
+                //dd($inputFileData);
+
+                $this->applicantFileModel->insertBatch($inputFileData);
             }
 
             if ($this->request->getPost('hasPreviousTraining') == 'on') {

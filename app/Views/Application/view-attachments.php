@@ -1,18 +1,18 @@
 <?php
     $attachments = [
-        ['type' => 'signature', 'attachement_title' => 'Applicant’s Signature & Date'],
-        ['type' => 'photograph', 'attachement_title' => 'Recent passport size color photograph'],
-        ['type' => 'letter', 'attachement_title' => 'Congratulation letter of FCPS Part-I'],
-        ['type' => 'certificate', 'attachement_title' => 'Certificate of MBBS/BDS'],
-        ['type' => 'registration', 'attachement_title' => 'Permanent registration certificate of BMDC'],
-        ['type' => 'training_certificate', 'attachement_title' => 'Training certificates (if applicable)'],
-        ['type' => 'nid_card', 'attachement_title' => 'National ID Card'],
-        ['type' => 'cheque', 'attachement_title' => 'Bank Cheque Book'],
-        ['type' => 'provi_certifice', 'attachement_title' => 'Provisional training certificate'],
-        ['type' => 'other_document1', 'attachement_title' => 'Joining letter/ Testimonial'],
-        ['type' => 'other_document2', 'attachement_title' => 'Other necessary documents'],
-        ['type' => 'fcps_congrats', 'attachement_title' => 'FCPS Part-I Congratulations Letter'],
-        ['type' => 'midterm_congrats', 'attachement_title' => 'FCPS Midterm Congratulations Letter (if applicable)'],
+    ['type' => 'signature', 'attachement_title' => 'Applicant’s Signature & Date'],
+    ['type' => 'photograph', 'attachement_title' => 'Recent passport size color photograph'],
+    ['type' => 'letter', 'attachement_title' => 'Congratulation letter of FCPS Part-I'],
+    ['type' => 'certificate', 'attachement_title' => 'Certificate of MBBS/BDS'],
+    ['type' => 'registration', 'attachement_title' => 'Permanent registration certificate of BMDC'],
+    ['type' => 'training_certificate', 'attachement_title' => 'Training certificates (if applicable)'],
+    ['type' => 'nid_card', 'attachement_title' => 'National ID Card'],
+    ['type' => 'cheque', 'attachement_title' => 'Bank Cheque Book'],
+    ['type' => 'provi_certifice', 'attachement_title' => 'Provisional training certificate'],
+    ['type' => 'other_document1', 'attachement_title' => 'Joining letter/ Testimonial'],
+    ['type' => 'other_document2', 'attachement_title' => 'Other necessary documents'],
+    ['type' => 'fcps_congrats', 'attachement_title' => 'FCPS Part-I Congratulations Letter'],
+    ['type' => 'midterm_congrats', 'attachement_title' => 'FCPS Midterm Congratulations Letter (if applicable)'],
     ];
 ?>
 <table class="table">

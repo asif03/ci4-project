@@ -72,7 +72,7 @@
 </header>
 <!-- Summary Cards Section -->
 <section class="row g-4 mb-4">
-  <div class="col-12 col-md-6 col-lg-3">
+  <!-- <div class="col-12 col-md-6 col-lg-3">
     <div class="card p-4 rounded-3 shadow-sm summary-card h-80">
       <div class="card-body p-0">
         <div class="d-flex align-items-center">
@@ -86,7 +86,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="col-12 col-md-6 col-lg-3">
     <div class="card p-4 rounded-3 shadow-sm summary-card h-80">
       <div class="card-body p-0">
@@ -104,8 +104,8 @@
   </div>
 </section>
 <!-- Personal Records Table Panel -->
-<section class="mb-4">
-  <!-- Progress Chart Panel -->
+<!-- <section class="mb-4">
+
   <div class="col-lg-6">
     <div class="card p-4 rounded-3 shadow-sm h-100">
       <h5 class="fw-bold text-dark mb-4">My Progress</h5>
@@ -249,7 +249,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 <section class="row g-4 mb-4">
   <!-- Recent Announcements Panel -->
   <div class="col-lg-12">
