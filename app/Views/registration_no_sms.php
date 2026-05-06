@@ -172,26 +172,25 @@
               <div class="mb-3">
                 <label class="form-label fw-semibold text-dark mb-2">Preferred Delivery Method</label>
                 <div class="d-flex gap-4">
-                  <!-- <div class="form-check">
-                    <input class="form-check-input" type="radio" name="deliveryMethod" id="deliveryEmail"
-                      value="email" />
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="deliveryMethod" id="deliveryEmail" value="email"
+                      checked />
                     <label class="form-check-label text-muted" for="deliveryEmail">
                       Email
                     </label>
-                  </div> -->
+                  </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="deliveryMethod" id="deliverySms" value="sms"
-                      checked />
+                    <input class="form-check-input" type="radio" name="deliveryMethod" id="deliverySms" value="sms" />
                     <label class="form-check-label text-muted" for="deliverySms">
                       SMS (Only 2 Times)
                     </label>
                   </div>
-                  <!-- <div class="form-check">
+                  <div class="form-check">
                     <input class="form-check-input" type="radio" name="deliveryMethod" id="deliveryBoth" value="both">
                     <label class="form-check-label text-muted" for="deliveryBoth">
                       Both
                     </label>
-                  </div> -->
+                  </div>
                 </div>
               </div>
               <div class="d-grid mb-4">

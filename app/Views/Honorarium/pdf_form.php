@@ -1,8 +1,8 @@
 <?php
     /*echo '<pre>';
     print_r($honorarium);
-    echo '</pre>';*/
-    //die;
+    echo '</pre>';
+    die;*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,63 +86,83 @@
     </table>
     <table width="100%" border="0" style="margin-top: 0px; padding: 5px; font-size: 12px;">
       <tr>
-        <td colspan="2">Name of the Trainee (In capital letters as per NID card):                                                                                  <?php echo $honorarium['name']; ?>
+        <td colspan="2">Name of the Trainee (In capital letters as per NID card): <?php echo $honorarium['name']; ?>
         </td>
       </tr>
       <tr>
-        <td colspan="2">BCPS Registration No. (10 Digit after passing FCPS Part-I):
+        <td>Registration No. of BCPS:
           <?php echo $honorarium['fcps_reg_no']; ?>
         </td>
+        <td>Subject: <?php echo $honorarium['speciality_name']; ?></td>
       </tr>
       <tr>
-        <td>BMDC Registration No:                                  <?php echo $honorarium['bmdc_reg_no']; ?></td>
-        <td>Date of Birth:                           <?php echo $honorarium['date_of_birth']; ?></td>
+        <td colspan="2">
+          <table width="100%" border="0" style="border-collapse: collapse;">
+            <tr>
+              <td align="left">
+                BMDC Registration No: <?php echo $honorarium['bmdc_reg_no']; ?>
+              </td>
+              <td align="center">
+                Date of Birth: <?php echo $honorarium['date_of_birth']; ?>
+              </td>
+              <td align="right">
+                Gender: <?php echo $honorarium['gander']; ?>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <!-- <td style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Registration No: <?php echo $honorarium['bmdc_reg_no']; ?></span>
+          <span>Date of Birth: <?php echo $honorarium['date_of_birth']; ?></span>
+        </td>
+        <td>Gender: <?php echo $honorarium['gander']; ?></td> -->
       </tr>
       <tr>
         <td colspan="2">National Identity Card No. (NID-17 Digits / Smart Card 10 Digits):
           <?php echo $honorarium['nid']; ?></td>
       </tr>
       <tr>
-        <td>Mobile Number (Personal):                                      <?php echo $honorarium['mobile']; ?>
+        <td>Mobile Number (Personal): <?php echo $honorarium['mobile']; ?></td>
+        <td>
+          Applying for Honorarium: <?php if ($honorarium['honorarium_position'] == 1) {
+                                           echo $honorarium['honorarium_position'] . 'st';
+                                       } elseif ($honorarium['honorarium_position'] == 2) {
+                                           echo $honorarium['honorarium_position'] . 'nd';
+                                       } elseif ($honorarium['honorarium_position'] == 3) {
+                                           echo $honorarium['honorarium_position'] . 'rd';
+                                       } else {
+                                       echo $honorarium['honorarium_position'] . 'th';
+                                   }?> Time
         </td>
-        <td>Gender:                    <?php echo $honorarium['gander']; ?></td>
       </tr>
       <tr>
-        <td colspan="2">Institute Name:                                        <?php echo $honorarium['training_institute_name']; ?></td>
+        <td colspan="2">Institute Name: <?php echo $honorarium['training_institute_name']; ?></td>
       </tr>
       <tr>
-        <td colspan="2">Department:                                    <?php echo $honorarium['department_name']; ?></td>
+        <td colspan="2">Department: <?php echo $honorarium['department_name']; ?></td>
       </tr>
       <tr>
-        <td>Current Training Session:<?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>,
-          Current Training Slot:                                 <?php if ($honorarium['current_training_slot'] == 1) {
-                                         echo $honorarium['current_training_slot'] . 'st';
-                                     } elseif ($honorarium['current_training_slot'] == 2) {
-                                         echo $honorarium['current_training_slot'] . 'nd';
-                                     } elseif ($honorarium['current_training_slot'] == 3) {
-                                         echo $honorarium['current_training_slot'] . 'rd';
-                                     } else {
-                                         echo $honorarium['current_training_slot'] . 'th';
-                                 }?>
+        <td>Current Training Session:<?php echo $honorarium['slot_name'] . ', ' . $honorarium['honorarium_year']; ?>
         </td>
-        <td>Applying for Honorarium:                                     <?php if ($honorarium['honorarium_position'] == 1) {
-                                             echo $honorarium['honorarium_position'] . 'st';
-                                         } elseif ($honorarium['honorarium_position'] == 2) {
-                                             echo $honorarium['honorarium_position'] . 'nd';
-                                         } elseif ($honorarium['honorarium_position'] == 3) {
-                                             echo $honorarium['honorarium_position'] . 'rd';
-                                         } else {
-                                         echo $honorarium['honorarium_position'] . 'th';
-                                     }?> Time</td>
-      </tr>
-      <tr>
-        <td style="font-weight: bold;">Name of the Bank:                                                         <?php echo $honorarium['new_bank_name']; ?></td>
-        <td style="font-weight: bold;">Branch Name:                                                    <?php echo $honorarium['branch_name']; ?></td>
-      </tr>
-      <tr>
-        <td style="font-weight: bold;">Bank Account Number (Personal-Online):                                                                              <?php echo $honorarium['account_no']; ?>
+        <td>Current Training Slot: <?php if ($honorarium['current_training_slot'] == 1) {
+                                           echo $honorarium['current_training_slot'] . 'st';
+                                       } elseif ($honorarium['current_training_slot'] == 2) {
+                                           echo $honorarium['current_training_slot'] . 'nd';
+                                       } elseif ($honorarium['current_training_slot'] == 3) {
+                                           echo $honorarium['current_training_slot'] . 'rd';
+                                       } else {
+                                           echo $honorarium['current_training_slot'] . 'th';
+                                   }?>
         </td>
-        <td style="font-weight: bold;">Routing Number:                                                       <?php echo $honorarium['routing_number']; ?></td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Name of the Bank: <?php echo $honorarium['new_bank_name']; ?></td>
+        <td style="font-weight: bold;">Branch Name: <?php echo $honorarium['branch_name']; ?></td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Bank Account Number (Personal-Online): <?php echo $honorarium['account_no']; ?>
+        </td>
+        <td style="font-weight: bold;">Routing Number: <?php echo $honorarium['routing_number']; ?></td>
       </tr>
       <tr>
         <td colspan="2"

@@ -59,7 +59,7 @@ $routes->group('trainings', static function ($routes) {
     $routes->get('progress-reports/(:num)', 'TraineeController::editProgressReport/$1');
 
     $routes->get('training-application', 'TraineeController::trainingApplication', ['as' => 'trainee.training.application']);
-    $routes->post('training-application', 'TraineeController::storeTrainingApplication');
+    $routes->post('training-store-application', 'TraineeController::storeTrainingApplication');
     $routes->get('honorarium-bill-application', 'TraineeController::honorariumBillApplication', ['as' => 'trainee.honorarium.application']);
     $routes->post('honorarium-bill-application', 'TraineeController::storeBillApplication');
 

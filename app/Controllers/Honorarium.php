@@ -45,9 +45,15 @@ class Honorarium extends BaseController
         $data = [
             'title'       => 'Honorarium',
             'pageTitle'   => 'Bills Information',
-            'slots'       => $this->honorariumModel->getSlots(),
+            //'slots'       => $this->honorariumModel->getSlots(),
+            'slots'       => array(
+                ['id' => 1, 'slot_name' => 'January - June'],
+                ['id' => 2, 'slot_name' => 'July - December'],
+            ),
             'honorariums' => $this->honorariumModel->getHonorariums(),
         ];
+
+        //dd($data['slots']);
 
         return view('Honorarium/index', $data);
     }

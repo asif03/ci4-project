@@ -155,7 +155,7 @@
             contact
             with BCPS. Please fill up the
             form below and submit.</h6>
-          <form action="<?=base_url('trainings/training-application')?>" method="post" id="registrationForm"
+          <form action="<?=base_url('trainings/training-store-application')?>" method="post" id="registrationForm"
             enctype="multipart/form-data" novalidate>
             <?=csrf_field()?>
 

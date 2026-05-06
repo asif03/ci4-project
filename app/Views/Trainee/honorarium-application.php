@@ -645,7 +645,7 @@ function changeMidTerm() {
   const trainingTypeSelection = checkedOption ? checkedOption.value : null;
 
   if (value == '1') {
-    alert('You have selected that you have appeared for the Mid-Term Exam.');
+    //alert('You have selected that you have appeared for the Mid-Term Exam.');
     $('#advanceTraining').prop('checked', true);
     $('#midTermExam').show();
   } else {

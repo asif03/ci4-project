@@ -275,16 +275,22 @@ $('#billList').DataTable({
           `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumModal" onclick="loadHonorariumView(${row.id})"><i class="fa fa-eye" aria-hidden="true"></i></button>`;
         $action +=
           `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewTrainingModal" onclick="loadTrainingView(${row.id})"><i class="fa fa-list"></i></button>`;
-        <?php if (auth()->user() && auth()->user()->can('bills.edit')): ?>
-        $action +=
-          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumEditModal" onclick="loadEditView(${row.id})"><i class="fas fa-edit"></i></button>`;
-        <?php endif; ?>
-        <?php if (auth()->user() && auth()->user()->can('bills.training.edit')): ?>
-        $action +=
-          `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumTrainingEditModal" onclick="loadEditTrainingView(${row.id})"><i class="fa fa-tasks" aria-hidden="true"></i></button>`;
-        <?php endif; ?>
-        $action +=
-          `<a class="btn btn-outline-info btn-sm" href="<?=base_url('bills/download-honorarium-form')?>/${row.id}" target="_blank"><i class="fas fa-download"></i></a>`;
+        if (row.eligible_status == 'P') {
+          <?php if (auth()->user() && auth()->user()->can('bills.edit')): ?>
+          $action +=
+            `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumEditModal" onclick="loadEditView(${row.id})"><i class="fas fa-edit"></i></button>`;
+          <?php endif; ?>
+        }
+        if (row.eligible_status == 'P') {
+          <?php if (auth()->user() && auth()->user()->can('bills.training.edit')): ?>
+          $action +=
+            `<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewHonorariumTrainingEditModal" onclick="loadEditTrainingView(${row.id})"><i class="fa fa-tasks" aria-hidden="true"></i></button>`;
+          <?php endif; ?>
+        }
+        if (row.eligible_status == 'P') {
+          $action +=
+            `<a class="btn btn-outline-info btn-sm" href="<?=base_url('bills/download-honorarium-form')?>/${row.id}" target="_blank"><i class="fas fa-download"></i></a>`;
+        }
         return $action;
       }
     }

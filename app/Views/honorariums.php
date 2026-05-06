@@ -230,12 +230,12 @@
                 Cheque
                 book). Ensure files are clear and under the maximum size limit.</p>
               <ul>
-                <li class="small text-muted">Enclosure 1: Provisional training certificate (Max 300KB, PDF/JPG)</li>
-                <li class="small text-muted">Enclosure 2: Bank Cheque book/Bank Statement (Max 300KB, PDF/JPG)</li>
-                <li class="small text-muted">Enclosure 3: FCPS Part-I Congratulations Letter (Max 300KB, PDF/JPG)</li>
+                <li class="small text-muted">Enclosure 1: Provisional training certificate (Max 100KB, JPG)</li>
+                <li class="small text-muted">Enclosure 2: Bank Cheque book/Bank Statement (Max 100KB, JPG)</li>
+                <li class="small text-muted">Enclosure 3: FCPS Part-I Congratulations Letter (Max 100KB, JPG)</li>
                 <li class="small text-muted">Enclosure 4: Congratulations Letter of FCPS Midterm (if applicable) (Max
-                  300KB, PDF/JPG)</li>
-                <li class="small text-muted">Enclosure 5: National Identity Card (Max 300KB, PDF/JPG)</li>
+                  100KB, JPG)</li>
+                <li class="small text-muted">Enclosure 5: National Identity Card (Max 100KB, JPG)</li>
               </ul>
             </div>
           </div>

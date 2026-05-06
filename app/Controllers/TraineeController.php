@@ -368,13 +368,14 @@ class TraineeController extends BaseController
 
     public function storeTrainingApplication()
     {
+        //dd($this->request->getPost());
         // Check if the authenticated user has the 'trainee.training.application' permission
-        if (!auth()->user()->can('trainee.training.application')) {
-            // User does not have permission, so deny access.
-            //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
-            //return redirect()->to('/403');
-            return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
-        }
+        /*if (!auth()->user()->can('trainee.training.application')) {
+        // User does not have permission, so deny access.
+        //return redirect()->back()->with('error', 'You are not authorized to edit posts.');
+        //return redirect()->to('/403');
+        return redirect()->to('/403')->with('error', 'You are not authorized to access this information.');
+        }*/
 
         helper('form');
         $validation = service('validation');
@@ -1106,7 +1107,7 @@ class TraineeController extends BaseController
             if ($file->isValid() && !$file->hasMoved()) {
 
                 // 🔥 CHECK FILE SIZE BEFORE UPLOAD
-                $maxSize = 300 * 1024; // 300 KB
+                $maxSize = 100 * 1024; // 100 KB
                 if ($file->getSize() > $maxSize) {
 
                     if ($fieldName == 'enclosure1') {
@@ -1123,12 +1124,26 @@ class TraineeController extends BaseController
 
                     return $this->response->setJSON([
                         'status'  => 'error',
-                        'message' => "{$fieldName} file exceeds 300 KB limit.",
+                        'message' => "{$fieldName} file exceeds 100 KB limit.",
                     ]);
                 }
 
+                $fileTitle = '';
+                if ($fieldName == 'enclosure1') {
+                    $fileTitle = 'Provisional_Certificate';
+                } elseif ($fieldName == 'enclosure2') {
+                    $fileTitle = 'Cheque_Book';
+                } elseif ($fieldName == 'enclosure3') {
+                    $fileTitle = 'FCPS_Congratulation';
+                } elseif ($fieldName == 'enclosure4') {
+                    $fileTitle = 'Mid-Term_Congratulation';
+                } elseif ($fieldName == 'enclosure5') {
+                    $fileTitle = 'NID_Card';
+                }
+
                 // Generate a secure, unique name for the file to prevent conflicts
-                $newName = $file->getRandomName();
+                $uniqueFileNme = $file->getRandomName();
+                $newName       = $applicant['bmdc_reg_no'] . '-' . $fileTitle . '-' . $uniqueFileNme;
 
                 // Move the file from temp storage to your desired folder
                 $file->move($uploadPath, $newName);
