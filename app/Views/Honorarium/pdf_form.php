@@ -167,10 +167,10 @@
       <tr>
         <td colspan="2"
           style="background-color: #000000; color: #FFFFFF; padding: 5px; text-align: center; font-size: 8px;">NB: 1.
-          Attested Training Certificate/ Provisional Training Certificate, 2. Copy of FCPS Part-1 Congratulations Letter
-          3. Copy of FCPS Midterm Congratulations Letter (if applicable) 4. Copy of any page of the Personal bank MICR
-          cheque / Bank Statement with printed Name & Routing Number and 5. Copy of NID/ Smart Card of the trainee must
-          be attached herewith</td>
+          Attested Training Certificate/ Provisional Training Certificate (Original Copy), 2. Copy of FCPS Part-1
+          Congratulations Letter 3. Copy of FCPS Midterm Congratulations Letter/ Failed Result (if applicable) 4. Copy
+          of any page of the Personal bank MICR cheque/Bank Statement with printed Name & Routing Number and 5. Copy of
+          NID/ Smart Card of the trainee must be attached herewith</td>
       </tr>
       <tr>
         <td colspan="2">I have received 35,000x6=2,10,000/- (In words: Two lakh and ten thousand) as training

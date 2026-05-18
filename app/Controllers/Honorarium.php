@@ -279,11 +279,21 @@ class Honorarium extends BaseController
             return redirect()->back()->with('error', 'Invalid applicant ID.');
         }
 
-        // Update applicant information
+        $department = $this->specialityModel->where('name', $request->getPost('department'))->first();
+
+        if ($department) {
+            $departmentId = $department['speciality_id'];
+        } else {
+            $departmentId = '';
+        }
+
+        // Update honorarium information
         $data = [
             'training_institute_id'     => $request->getPost('trainingInstitute'),
+            'department_id'             => $departmentId,
             'department_name'           => $request->getPost('department'),
             'previous_training_inmonth' => $request->getPost('previousTrainingPeriod'),
+            'current_training_slot'     => $request->getPost('currentTrainingSlot'),
             'updated_at'                => date('Y-m-d H:i:s'),
             'updated_by'                => service('auth')->user()->id,
         ];

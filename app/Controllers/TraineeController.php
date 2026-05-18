@@ -733,37 +733,37 @@ class TraineeController extends BaseController
 
         if ($honorariumStatus == 'close') {
 
-            /*$applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
+            $applicant = $this->applicantInformationModel->getApplicantInfoByRegNo($bcpsRegNo);
 
             if (!$applicant) {
-            $data = [
-            'isError'    => true,
-            'message'    => 'Training application not found! Please apply before submit the bill form. For apply <a class="text-success" href="' . base_url("trainings/training-application") . '"><u>Click Here</u></a>',
-            'honorarium' => null,
-            ];
-            return $data;
+                $data = [
+                    'isError'    => true,
+                    'message'    => 'Training application not found! Please apply before submit the bill form. For apply <a class="text-success" href="' . base_url("trainings/training-application") . '"><u>Click Here</u></a>',
+                    'honorarium' => null,
+                ];
+                return $data;
             }
 
             $where = [
-            'hi.applicant_id'       => $applicant['applicant_id'],
-            'hi.honorarium_slot_id' => env('bill.currentSlot', 0),
-            'hi.honorarium_year'    => env('bill.currentYear', date('Y')),
+                'hi.applicant_id'       => $applicant['applicant_id'],
+                'hi.honorarium_slot_id' => env('bill.currentSlot', 0),
+                'hi.honorarium_year'    => env('bill.currentYear', date('Y')),
             ];
 
             $billInfos = $this->honorariumInformationModel->getBillInfos($where);
 
             if (count($billInfos) > 0) {
 
-            $slotYear = env('bill.currentSlot', 0) == 1 ? 'January-June, ' : 'July-December, ' . env('bill.currentYear', date('Y'));
+                $slotYear = env('bill.currentSlot', 0) == 1 ? 'January-June, ' . env('bill.currentYear', date('Y')) : 'July-December, ' . env('bill.currentYear', date('Y'));
 
-            $data = [
-            'isError'    => true,
-            'message'    => 'You have already applied for ' . $slotYear,
-            'honorarium' => $billInfos,
-            ];
+                $data = [
+                    'isError'    => true,
+                    'message'    => 'You have already applied for ' . $slotYear,
+                    'honorarium' => $billInfos,
+                ];
 
-            return $data;
-            }*/
+                return $data;
+            }
 
             $data = [
                 'isError'    => true,

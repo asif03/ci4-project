@@ -65,10 +65,10 @@
           <select name="trainingInstitute" class="form-select" required>
             <option value="">Select Please</option>
             <?php foreach ($institute as $value) {?>
-            <option value="<?php echo $value['institute_id']; ?>"<?php if ($honorarium['training_institute_id'] == $value['institute_id']) {
-        echo 'selected';
-}
-    ?>>
+            <option value="<?php echo $value['institute_id']; ?>" <?php if ($honorarium['training_institute_id'] == $value['institute_id']) {
+          echo 'selected';
+  }
+      ?>>
               <?php echo $value['name']; ?></option>
             <?php }?>
           </select>
@@ -80,10 +80,10 @@
           <select name="department" id="department" class="form-select" required>
             <option value="">Select Please</option>
             <?php foreach ($speciality as $value) {?>
-            <option value="<?php echo $value['name']; ?>"<?php if ($honorarium['department_name'] == $value['name']) {
-        echo 'selected';
-}
-    ?>>
+            <option value="<?php echo $value['name']; ?>" <?php if ($honorarium['department_name'] == $value['name']) {
+          echo 'selected';
+  }
+      ?>>
               <?php echo $value['name']; ?></option>
             <?php }?>
           </select>
@@ -116,10 +116,10 @@
           <select name="previousTrainingPeriod" id="previousTrainingPeriod" class="form-select" required>
             <option value="" disabled selected>Select</option>
             <?php for ($cnt = 0; $cnt <= 54; $cnt = $cnt + 6) {?>
-            <option value="<?php echo $cnt; ?>"<?php if ($honorarium['previous_training_inmonth'] == $cnt) {
-        echo 'selected';
-}
-    ?>>
+            <option value="<?php echo $cnt; ?>" <?php if ($honorarium['previous_training_inmonth'] == $cnt) {
+          echo 'selected';
+  }
+      ?>>
               <?php echo $cnt; ?></option>
             <?php
                 }
@@ -133,6 +133,23 @@
         </div>
       </div>
       <div class="row mb-1">
+        <label for="previousTrainingPeriod" class="col-sm-6 col-form-label">Current Training Slot</label>
+        <div class="col-sm-3">
+          <select name="currentTrainingSlot" id="currentTrainingSlot" class="form-select" required>
+            <option value="" disabled selected>Select</option>
+            <?php for ($cnt = 1; $cnt <= 10; $cnt = $cnt + 1) {?>
+            <option value="<?php echo $cnt; ?>" <?php if ($honorarium['current_training_slot'] == $cnt) {
+          echo 'selected';
+  }
+      ?>>
+              <?php echo $cnt; ?></option>
+            <?php
+                }
+            ?>
+          </select>
+        </div>
+      </div>
+      <div class="row mb-1">
         <label for="honorariumPosition" class="col-sm-6 col-form-label">Applying for honorarium: </label>
         <div class="col-sm-6">
           <select name="honorariumPosition" id="honorariumPosition" class="form-select" disabled>
@@ -141,14 +158,14 @@
             <option value="<?php echo $cnt; ?>"
               <?php if ($honorarium['honorarium_position'] == $cnt) {echo 'selected';}?>>
               <?php echo $cnt ?><?php if ($cnt == 1) {
-        echo 'st';
-    } elseif ($cnt == 2) {
-        echo 'nd';
-    } elseif ($cnt == 3) {
-        echo 'rd';
-    } else {
-    echo 'th';
-}?></option>
+          echo 'st';
+      } elseif ($cnt == 2) {
+          echo 'nd';
+      } elseif ($cnt == 3) {
+          echo 'rd';
+      } else {
+      echo 'th';
+  }?></option>
             <?php
                 }
             ?>
@@ -156,7 +173,7 @@
         </div>
       </div>
     </div>
-    <div class="row mb-1 p-2">
+    <!-- <div class="row mb-1 p-2">
       <div class="border border-secondary text-center fs-4 rounded-pill mb-3">Enclosures: (The applicants have to scan
         and
         upload the following documents)</div>
@@ -167,7 +184,7 @@
           <input type="file" name="certificate" class="form-control" />
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div class="modal-footer d-flex justify-content-between">
     <button type="submit" class="btn btn-primary">Update</button>
